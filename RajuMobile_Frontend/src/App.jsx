@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import Navbar from "./components/Navbar";
+import WhatsAppButton from "./components/WhatsappButton";
 import Footer from "./components/Footer";
 import SearchModal from "./components/SearchModal";
 import HomePage from "./pages/HomePage";
@@ -25,6 +26,7 @@ function Layout({ children }) {
   return (
     <>
       <Navbar onSearchOpen={() => setSearchOpen(true)} />
+        <WhatsAppButton />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <main>{children}</main>
       <Footer />
