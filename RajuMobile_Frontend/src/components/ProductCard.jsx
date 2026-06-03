@@ -1,15 +1,26 @@
 import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 function ProductCard({ product }) {
   const { addToCart, toggleWishlist, isWishlisted } = useCart();
+  const { requireAuth } = useAuth();
+
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
 
+  const handleAddToCart = () => {
+    requireAuth(() => addToCart(product));
+  };
+
+  const handleWishlist = () => {
+    requireAuth(() => toggleWishlist(product));
+  };
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden border border-gray-100 flex flex-col">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group overflow-hidden border border-gray-100 flex flex-col">
       {/* Image */}
       <div className="relative overflow-hidden bg-gray-50 h-48">
         <Link to={`/product/${product.id}`}>
@@ -31,7 +42,7 @@ function ProductCard({ product }) {
         )}
         <button
           className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow hover:scale-110 transition"
-          onClick={() => toggleWishlist(product)}
+          onClick={handleWishlist}
         >
           <FaHeart className={isWishlisted(product.id) ? "text-pink-500" : "text-gray-300"} />
         </button>
@@ -46,20 +57,15 @@ function ProductCard({ product }) {
           </h3>
         </Link>
 
-        {/* Rating */}
         <div className="flex items-center gap-1 mb-2">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <FaStar
-                key={i}
-                className={`text-[10px] ${i < Math.floor(product.rating) ? "text-yellow-400" : "text-gray-200"}`}
-              />
+              <FaStar key={i} className={`text-[10px] ${i < Math.floor(product.rating) ? "text-yellow-400" : "text-gray-200"}`} />
             ))}
           </div>
           <span className="text-[10px] text-gray-400">({product.reviews})</span>
         </div>
 
-        {/* Price */}
         <div className="flex items-end gap-1.5 mb-2 mt-auto">
           <span className="text-gray-900 font-bold text-base">₹{product.price.toLocaleString()}</span>
           {product.originalPrice && (
@@ -70,10 +76,9 @@ function ProductCard({ product }) {
           )}
         </div>
 
-        {/* Add to cart */}
         <button
           disabled={!product.inStock}
-          onClick={() => addToCart(product)}
+          onClick={handleAddToCart}
           className="w-full bg-black hover:bg-cyan-600 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-semibold py-2 rounded-xl transition-colors duration-200 flex items-center justify-center gap-1.5 mt-1"
         >
           <FaShoppingCart className="text-xs" />

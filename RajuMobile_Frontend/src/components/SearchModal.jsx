@@ -105,7 +105,6 @@ function SearchModal({ isOpen, onClose }) {
           </div>
         )}
       </div>
-      
     </div>
   );
 }

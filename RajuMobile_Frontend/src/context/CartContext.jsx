@@ -9,23 +9,16 @@ export function CartProvider({ children }) {
   const addToCart = (product, qty = 1) => {
     setCartItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, qty: i.qty + qty } : i
-        );
-      }
+      if (existing) return prev.map((i) => i.id === product.id ? { ...i, qty: i.qty + qty } : i);
       return [...prev, { ...product, qty }];
     });
   };
 
-  const removeFromCart = (id) =>
-    setCartItems((prev) => prev.filter((i) => i.id !== id));
+  const removeFromCart = (id) => setCartItems((prev) => prev.filter((i) => i.id !== id));
 
   const updateQty = (id, qty) => {
     if (qty < 1) return removeFromCart(id);
-    setCartItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, qty } : i))
-    );
+    setCartItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
   };
 
   const clearCart = () => setCartItems([]);
@@ -39,25 +32,11 @@ export function CartProvider({ children }) {
   };
 
   const isWishlisted = (id) => wishlist.some((i) => i.id === id);
-
   const cartCount = cartItems.reduce((sum, i) => sum + i.qty, 0);
   const cartTotal = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        updateQty,
-        clearCart,
-        wishlist,
-        toggleWishlist,
-        isWishlisted,
-        cartCount,
-        cartTotal,
-      }}
-    >
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQty, clearCart, wishlist, toggleWishlist, isWishlisted, cartCount, cartTotal }}>
       {children}
     </CartContext.Provider>
   );
