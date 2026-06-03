@@ -28,7 +28,7 @@ function Navbar({ onSearchOpen }) {
   };
 
   return (
-    <nav className="bg-black text-white sticky top-0 z-50 shadow-lg">
+    <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white sticky top-0 z-50 shadow-lg">
       {/* Announcement bar */}
       <div className="bg-pink-700 text-white text-center text-xs py-1.5 tracking-wide font-medium overflow-hidden">
         <div className="animate-marquee whitespace-nowrap">

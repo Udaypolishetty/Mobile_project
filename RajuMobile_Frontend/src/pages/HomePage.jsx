@@ -102,16 +102,16 @@ function HomePage() {
 
       {/* ── HERO (matches the image: red bg card + text below) ── */}
       <section className="max-w-7xl mx-auto px-4 py-6">
-        <div className="relative rounded-3xl overflow-hidden bg-[#c8102e] shadow-xl min-h-[320px] md:min-h-[380px] flex flex-col md:flex-row items-end md:items-stretch">
+        <div className="relative rounded-3xl overflow-hidden  shadow-xl min-h-[320px] md:min-h-[380px] flex flex-col md:flex-row items-end md:items-stretch">
           {/* Red bg image side */}
           <div className="w-full md:w-3/5 relative flex-shrink-0 min-h-[200px] md:min-h-0">
             <img
-              src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&q=80"
+              src="./background_img2.png"
               alt="Mobile Accessories"
-              className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+              className="absolute inset-0 w-full h-full object-cover "
             />
             {/* Accessories flat lay overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/80 to-[#8b0000]/60" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/20 to-[#8b0000]/10" />
             {/* Store logo badge */}
             <div className="absolute top-5 right-5 md:top-8 md:right-8 bg-[#c8102e] border-2 border-white/30 rounded-2xl px-4 py-3 text-center shadow-lg">
               <p className="text-white text-[10px] font-bold tracking-widest uppercase">Raju's</p>
@@ -244,12 +244,12 @@ function HomePage() {
 
       {/* ── SUBSCRIBE ── */}
       <AnimatedSection direction="up">
-        <section className="bg-black py-12">
+        <section className="bg-[#f5f0eb] py-12">
           <div className="max-w-xl mx-auto px-6 text-center">
-            <h2 className="text-2xl font-bold text-white mb-1">Subscribe to Our Emails</h2>
+            <h2 className="text-2xl font-bold text-black mb-1">Subscribe to Our Emails</h2>
             <p className="text-gray-400 text-sm mb-6">Join our email list for exclusive offers and the latest news.</p>
             <div className="flex max-w-md mx-auto">
-              <input type="email" placeholder="Email" className="flex-1 px-4 py-3 rounded-l-xl bg-white text-gray-800 outline-none text-sm" />
+              <input type="email" placeholder="Email" className="flex-1 px-4 py-3 rounded-l-xl bg-white text-black-900 outline-none text-sm" />
               <button className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-3 rounded-r-xl font-bold text-sm transition">→</button>
             </div>
           </div>
