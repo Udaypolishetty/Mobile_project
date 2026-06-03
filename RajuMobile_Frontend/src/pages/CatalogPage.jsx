@@ -20,12 +20,17 @@ function CatalogPage() {
   const [saleOnly, setSaleOnly] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [maxPrice, setMaxPrice] = useState(50000);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
 
   useEffect(() => {
     const cat = searchParams.get("category");
     const sale = searchParams.get("sale");
-    if (cat) setSelectedCat(cat);
-    if (sale) setSaleOnly(true);
+    if (cat) {
+    setSelectedCat(cat);
+  } else {
+    setSelectedCat("All");
+  }
   }, [searchParams]);
 
   const filtered = products
@@ -56,14 +61,24 @@ function CatalogPage() {
           </h1>
         </AnimatedSection>
 
-        <button className="md:hidden flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl mb-4 text-sm font-semibold" onClick={() => setShowFilter(!showFilter)}>
-          <FaFilter /> Filters
-        </button>
+       <div className="md:hidden flex items-center justify-between mb-5">
+  <button
+    onClick={() => setMobileFilterOpen(true)}
+    className="flex items-center gap-2 text-gray-700"
+  >
+    <FaFilter />
+    <span>Filter and sort</span>
+  </button>
 
-        <div className="flex gap-6">
+  <span className="text-gray-500">
+    {filtered.length} products
+  </span>
+</div>
+
+        <div>
           {/* Sidebar */}
-          <aside className={`${showFilter ? "flex" : "hidden"} md:flex flex-col gap-4 w-52 flex-shrink-0`}>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          {/* <aside className={`${showFilter ? "flex" : "hidden"} md:flex flex-col gap-4 w-52 flex-shrink-0`}>
+            {/* <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
               <h3 className="font-bold text-gray-700 mb-3 text-sm uppercase tracking-wide">Categories</h3>
               <ul className="space-y-1">
                 {categories.map((cat) => (
@@ -72,7 +87,7 @@ function CatalogPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> 
 
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
               <h3 className="font-bold text-gray-700 mb-3 text-sm uppercase tracking-wide">Price Range</h3>
@@ -88,19 +103,177 @@ function CatalogPage() {
                 Sale Items Only
               </label>
             </div>
-          </aside>
+          </aside> */}
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <p className="text-sm text-gray-500">{filtered.length} products</p>
-              <div className="flex items-center gap-2">
-                <FaSortAmountDown className="text-gray-400 text-sm" />
-                <select value={sort} onChange={(e) => setSort(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 outline-none bg-white">
-                  {SORT_OPTIONS.map((o) => (<option key={o.value} value={o.value}>{o.label}</option>))}
-                </select>
-              </div>
-            </div>
+            <div className=" hidden md:flex items-center justify-between mb-6 flex-wrap">
 
+  {/* Left Side */}
+  <p className="text-sm text-gray-500 whitespace-nowrap">
+    {filtered.length} Products
+  </p>
+
+  {/* Right Side */}
+  <div className="flex items-center gap-4">
+
+    <select
+      value={maxPrice}
+      onChange={(e) => setMaxPrice(Number(e.target.value))}
+      className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+    >
+      <option value={50000}>Price Range</option>
+      <option value={5000}>Up to ₹5,000</option>
+      <option value={10000}>Up to ₹10,000</option>
+      <option value={20000}>Up to ₹20,000</option>
+      <option value={50000}>Up to ₹50,000</option>
+    </select>
+
+   
+      {/* <input
+        type="checkbox"
+        checked={saleOnly}
+        onChange={(e) => setSaleOnly(e.target.checked)}
+        className="accent-cyan-500"
+      />
+      Availability */}
+<select
+  value={saleOnly ? "sale" : "all"}
+  onChange={(e) => setSaleOnly(e.target.value === "sale")}
+  className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+>
+  <option value="all">Availability</option>
+  <option value="sale">Sale Items</option>
+</select>
+    
+
+    <div className="flex items-center gap-2">
+      <FaSortAmountDown className="text-gray-400 text-sm" />
+
+      <select
+        value={sort}
+        onChange={(e) => setSort(e.target.value)}
+        className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+      >
+        {SORT_OPTIONS.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+
+  </div>
+</div>
+{mobileFilterOpen && (
+  <div className="fixed inset-0 z-[9999] bg-white md:hidden">
+
+    {/* Header */}
+    <div className="flex justify-between items-center px-6 py-5 border-b">
+      <div>
+        <h2 className="text-2xl font-semibold">
+          Filter and sort
+        </h2>
+
+        <p className="text-gray-500">
+          {filtered.length} products
+        </p>
+      </div>
+
+      <button
+        onClick={() => setMobileFilterOpen(false)}
+        className="text-4xl text-gray-500"
+      >
+        ×
+      </button>
+    </div>
+
+    {/* Body */}
+    <div className="p-6 space-y-8">
+
+      {/* Availability */}
+      <div>
+        <h3 className="text-lg font-medium mb-3">
+          Availability
+        </h3>
+
+       <select
+    value={saleOnly ? "sale" : "all"}
+    onChange={(e) => setSaleOnly(e.target.value === "sale")}
+    className="w-full border rounded-xl p-3"
+  >
+    <option value="all">All Products</option>
+    <option value="sale">Sale Items</option>
+  </select>
+      </div>
+
+      {/* Price */}
+      <div>
+        <h3 className="text-lg font-medium mb-3">
+          Price
+        </h3>
+
+        <select
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          className="w-full border rounded-xl p-3"
+        >
+          <option value={50000}>All Prices</option>
+          <option value={5000}>Up to ₹5,000</option>
+          <option value={10000}>Up to ₹10,000</option>
+          <option value={20000}>Up to ₹20,000</option>
+          <option value={50000}>Up to ₹50,000</option>
+        </select>
+      </div>
+
+      {/* Sort */}
+      <div>
+        <h3 className="text-lg font-medium mb-3">
+          Sort By
+        </h3>
+
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="w-full border rounded-xl p-3"
+        >
+          {SORT_OPTIONS.map((o) => (
+            <option
+              key={o.value}
+              value={o.value}
+            >
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+    </div>
+
+    {/* Footer */}
+    <div className="absolute bottom-0 left-0 right-0 border-t bg-white p-4 flex gap-4">
+
+      <button
+        className="flex-1 border rounded-xl py-3"
+        onClick={() => {
+          setSaleOnly(false);
+          setMaxPrice(50000);
+          setSort("az");
+        }}
+      >
+        Remove all
+      </button>
+
+      <button
+        className="flex-1 bg-pink-600 text-white rounded-xl py-3"
+        onClick={() => setMobileFilterOpen(false)}
+      >
+        Apply
+      </button>
+
+    </div>
+
+  </div>
+)}
             {filtered.length === 0 ? (
               <div className="text-center py-20 text-gray-400">
                 <p className="text-4xl mb-3">📦</p>

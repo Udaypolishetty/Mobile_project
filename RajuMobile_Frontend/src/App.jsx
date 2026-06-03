@@ -11,6 +11,7 @@ import CatalogPage from "./pages/CatalogPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import WhatsappButton from "./components/WhatsappButton";
+import Products from "./pages/Products";
 import {
   WishlistPage,
   AccountPage,
@@ -39,17 +40,20 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            <Route path="/" element={<Layout><HomePage /></Layout>} />
-            <Route path="/catalog" element={<Layout><CatalogPage /></Layout>} />
-            <Route path="/product/:id" element={<Layout><ProductPage /></Layout>} />
-            <Route path="/cart" element={<Layout><CartPage /></Layout>} />
-            <Route path="/wishlist" element={<Layout><WishlistPage /></Layout>} />
-            <Route path="/account" element={<Layout><AccountPage /></Layout>} />
-            <Route path="/checkout" element={<Layout><CheckoutPage /></Layout>} />
-            <Route path="/order-success" element={<OrderSuccessPage />} />
-            <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
-            <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
-          </Routes>
+  <Route path="/" element={<Layout><HomePage /></Layout>} />
+
+  <Route path="/products" element={<Layout><Products /></Layout>} />
+
+  <Route path="/catalog" element={<Layout><CatalogPage /></Layout>} />
+  <Route path="/product/:id" element={<Layout><ProductPage /></Layout>} />
+  <Route path="/cart" element={<Layout><CartPage /></Layout>} />
+  <Route path="/wishlist" element={<Layout><WishlistPage /></Layout>} />
+  <Route path="/account" element={<Layout><AccountPage /></Layout>} />
+  <Route path="/checkout" element={<Layout><CheckoutPage /></Layout>} />
+  <Route path="/order-success" element={<OrderSuccessPage />} />
+  <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
+  <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
+</Routes>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

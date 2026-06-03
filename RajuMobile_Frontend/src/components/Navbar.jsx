@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { Link, useNavigate,  useLocation } from "react-router-dom";
+import { FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart, FaUserCircle, FaSignOutAlt,  FaArrowLeft } from "react-icons/fa";
 import { MdOutlinePerson } from "react-icons/md";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -11,8 +11,17 @@ function Navbar({ onSearchOpen }) {
   const { cartCount, wishlist } = useCart();
   const { user, logout, setShowAuthModal } = useAuth();
   const navigate = useNavigate();
+const [showCategories, setShowCategories] = useState(false);
+const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
+
+const location = useLocation();
+
+const isProductPage =
+  location.pathname === "/catalog" ||
+  location.pathname.startsWith("/product");
 
   const navLinks = [
+    { label: "All Products", cat: "All"},
     { label: "Mobiles", cat: "Mobiles" },
     { label: "Cases & Covers", cat: "Cases & Covers" },
     { label: "Chargers", cat: "Chargers" },
@@ -23,12 +32,16 @@ function Navbar({ onSearchOpen }) {
   ];
 
   const goToCatalog = (cat) => {
+  if (cat === "All") {
+    navigate("/catalog");
+  } else {
     navigate(`/catalog?category=${encodeURIComponent(cat)}`);
-    setMenuOpen(false);
-  };
+  }
 
+  setMenuOpen(false);
+};
   return (
-    <nav className="bg-black text-white sticky top-0 z-50 shadow-lg">
+    <nav className="bg-black text-white  shadow-lg">
       {/* Announcement bar */}
       <div className="bg-pink-700 text-white text-center text-xs py-1.5 tracking-wide font-medium overflow-hidden">
         <div className="animate-marquee whitespace-nowrap">
@@ -81,7 +94,7 @@ function Navbar({ onSearchOpen }) {
       </div>
 
       {/* Mobile dropdown */}
-      {menuOpen && (
+      {/* {menuOpen && (
         <div className="md:hidden bg-gray-950 border-b border-gray-800 animate-fadeIn">
           <ul className="flex flex-col">
             {navLinks.map((link) => (
@@ -94,7 +107,75 @@ function Navbar({ onSearchOpen }) {
             </li>
           </ul>
         </div>
-      )}
+      )} */}
+      {menuOpen && (
+  <div className="md:hidden bg-gray-950 border-b border-gray-800">
+
+    {!mobileProductsOpen ? (
+      <ul className="flex flex-col">
+
+        <li
+          className="px-6 py-4 border-b border-gray-800 cursor-pointer"
+          onClick={() => {
+            navigate("/");
+            setMenuOpen(false);
+          }}
+        >
+          Home
+        </li>
+
+        <li
+          className="px-6 py-4 border-b border-gray-800 cursor-pointer"
+          onClick={() => {
+            setMobileProductsOpen(true);
+            navigate("/catalog");
+          }}
+        >
+          Products
+        </li>
+
+        <li
+          className="px-6 py-4 border-b border-gray-800 cursor-pointer"
+          onClick={() => {
+            navigate("/contact");
+            setMenuOpen(false);
+          }}
+        >
+          Contact
+        </li>
+
+      </ul>
+    ) : (
+      <ul className="flex flex-col">
+
+        <li
+          className="px-6 py-4 border-b border-gray-800 text-cyan-400 cursor-pointer"
+          onClick={() => {
+            setMobileProductsOpen(false);
+            navigate("/");
+          }}
+        >
+          ← Back
+        </li>
+
+        {navLinks.map((link) => (
+          <li
+            key={link.cat}
+            className="px-6 py-4 border-b border-gray-800 cursor-pointer"
+            onClick={() => {
+              goToCatalog(link.cat);
+              setMenuOpen(false);
+            }}
+          >
+            {link.label}
+          </li>
+        ))}
+
+      </ul>
+    )}
+
+  </div>
+)}
 
       {/* Desktop navbar */}
       <div className="hidden md:block">
@@ -174,19 +255,57 @@ function Navbar({ onSearchOpen }) {
         </div>
 
         <div className="border-t border-gray-800">
-          <div className="max-w-7xl mx-auto px-6">
-            <ul className="flex justify-center gap-8 py-3 font-semibold text-xs uppercase tracking-wider">
-              {navLinks.map((link) => (
-                <li key={link.cat} className="cursor-pointer hover:text-cyan-400 transition pb-0.5 border-b-2 border-transparent hover:border-cyan-400" onClick={() => goToCatalog(link.cat)}>
-                  {link.label}
-                </li>
-              ))}
-              <li className="cursor-pointer text-yellow-400 hover:text-yellow-300 transition" onClick={() => navigate("/catalog?sale=true")}>
-                🔥 Offers
-              </li>
-            </ul>
-          </div>
-        </div>
+  <div className="max-w-7xl mx-auto px-6">
+    <ul className="flex justify-center items-center gap-8 py-3 font-semibold text-sm uppercase tracking-wider">
+
+      {!isProductPage ? (
+        <>
+          <li
+            className="cursor-pointer hover:text-cyan-400 transition"
+            onClick={() => navigate("/")}
+          >
+            Home
+          </li>
+
+          <li
+            className="cursor-pointer hover:text-cyan-400"
+  onClick={() => navigate("/catalog")}
+          >
+            Products
+          </li>
+
+          <li
+            className="cursor-pointer hover:text-cyan-400 transition"
+            onClick={() => navigate("/contact")}
+          >
+            Contact
+          </li>
+        </>
+      ) : (
+        <>
+          <li
+            className="flex items-center gap-2 cursor-pointer text-cyan-400 hover:text-cyan-300"
+            onClick={() => navigate("/")}
+          >
+            <FaArrowLeft />
+            Back
+          </li>
+
+          {navLinks.map((link) => (
+            <li
+              key={link.cat}
+              className="cursor-pointer hover:text-cyan-400 transition whitespace-nowrap"
+              onClick={() => goToCatalog(link.cat)}
+            >
+              {link.label}
+            </li>
+          ))}
+        </>
+      )}
+
+    </ul>
+  </div>
+</div>
       </div>
     </nav>
   );
