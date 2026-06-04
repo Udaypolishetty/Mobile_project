@@ -4,6 +4,8 @@ import { FaArrowRight, FaChevronDown } from "react-icons/fa";
 import ProductCard from "../components/ProductCard";
 import AnimatedSection from "../components/AnimatedSection";
 import { products } from "../data/products";
+import { FaTruck, FaHeadset, FaShieldAlt } from "react-icons/fa";
+import { MdPayments } from "react-icons/md";
 
 const categories = [
   { label: "Mobiles", emoji: "📱", color: "from-blue-600 to-cyan-500" },
@@ -119,9 +121,9 @@ function HomePage() {
               <p className="text-white/80 text-[9px] tracking-widest uppercase">Accessories</p>
             </div>
             {/* Phone icon */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
+            {/* <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
               <div className="w-24 h-24 border-4 border-white rounded-3xl" />
-            </div>
+            </div> */}
           </div>
 
           {/* Bottom / Right text panel */}
@@ -150,24 +152,60 @@ function HomePage() {
           </div>
         </div>
 
+
+
         {/* Trust strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
-          {[
-            { icon: "🚚", t: "Free Shipping" },
-            { icon: "💵", t: "Cash on Delivery" },
-            { icon: "✅", t: "100% Genuine" },
-            { icon: "🎧", t: "24/7 Support" },
-          ].map((s) => (
-            <div key={s.t} className="bg-white rounded-xl py-2.5 px-3 flex items-center gap-2 shadow-sm border border-gray-100">
-              <span className="text-lg">{s.icon}</span>
-              <span className="text-gray-700 text-xs font-semibold">{s.t}</span>
-            </div>
-          ))}
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+  {[
+    {
+      icon: <FaTruck />,
+      title: "Free Shipping",
+      sub: "Across India",
+    },
+    {
+      icon: <MdPayments />,
+      title: "Cash on Delivery",
+      sub: "Pay at doorstep",
+    },
+    {
+      icon: <FaShieldAlt />,
+      title: "100% Genuine",
+      sub: "Trusted products",
+    },
+    {
+      icon: <FaHeadset />,
+      title: "24/7 Support",
+      sub: "Always available",
+    },
+  ].map((item) => (
+    <div
+      key={item.title}
+      className="group bg-white rounded-2xl p-4 border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-700 flex items-center justify-center text-white text-xl shadow-lg">
+          {item.icon}
         </div>
+
+        <div>
+          <h4 className="font-bold text-gray-900 text-sm">
+            {item.title}
+          </h4>
+          <p className="text-xs text-gray-500">
+            {item.sub}
+          </p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
       </section>
 
       {/* ── CATEGORIES quick buttons ── */}
-      <AnimatedSection direction="up" className="max-w-7xl mx-auto px-6 py-4">
+      {/* <AnimatedSection direction="up" className="max-w-7xl mx-auto px-6 py-4">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Shop by Category</h2>
         <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
           {categories.map((cat, i) => (
@@ -182,10 +220,10 @@ function HomePage() {
             </AnimatedSection>
           ))}
         </div>
-      </AnimatedSection>
+      </AnimatedSection> */}
 
       {/* ── PRODUCT SECTIONS (accordion style — click to reveal) ── */}
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <ProductSection title="🔥 Sale & Offers" filterKey="Sale" emoji="🔥" />
         <ProductSection title="Mobiles" filterKey="Mobiles" emoji="📱" />
         <ProductSection title="Earphones & Headphones" filterKey="Earphones" emoji="🎧" />
@@ -194,7 +232,7 @@ function HomePage() {
         <ProductSection title="Smart Watches" filterKey="Smart Watches" emoji="⌚" />
         <ProductSection title="Power Banks" filterKey="Power Banks" emoji="🔋" />
         <ProductSection title="Accessories" filterKey="Accessories" emoji="🎮" />
-      </div>
+      </div> */}
 
       {/* ── TESTIMONIALS ── */}
       <section className="bg-white py-14 mt-4">
