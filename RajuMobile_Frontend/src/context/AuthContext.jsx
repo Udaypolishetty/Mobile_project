@@ -1,4 +1,6 @@
 import { createContext, useContext, useState } from "react";
+import { loginUser } from "../api/authApi";
+
 
 const AuthContext = createContext();
 
@@ -6,11 +8,25 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authRedirectAction, setAuthRedirectAction] = useState(null);
+  const [authMode, setAuthMode] = useState("login");
 
-  const login = (email, name) => {
-    setUser({ email, name: name || email.split("@")[0] });
-    setShowAuthModal(false);
-  };
+ const login = async (email, password) => {
+  const res = await loginUser({
+    email,
+    password,
+  });
+
+  localStorage.setItem("token", res.data.access);
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(res.data.user)
+  );
+
+  setUser(res.data.user);
+
+  setShowAuthModal(false);
+};
 
   const logout = () => setUser(null);
 
@@ -29,7 +45,19 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, showAuthModal, setShowAuthModal, requireAuth, runPendingAction }}>
+    <AuthContext.Provider 
+    value={{
+    user,
+    login,
+    logout,
+    showAuthModal,
+    setShowAuthModal,
+    authMode,
+    setAuthMode,
+    requireAuth,
+    runPendingAction,
+  }}
+    >
       {children}
     </AuthContext.Provider>
   );
