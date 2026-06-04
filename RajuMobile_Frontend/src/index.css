@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+button {
+  cursor: pointer;
+}
 @layer utilities {
   .animate-fadeIn {
     animation: fadeIn 0.2s ease-out;

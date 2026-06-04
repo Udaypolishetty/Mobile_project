@@ -23,7 +23,7 @@ function Footer() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-3">Quick Links</h4>
+              <h4 className="text-cyan-400 font-bold mb-3">Quick Links</h4>
               <ul className="space-y-1.5">
                 {[
                   { label: "Home", to: "/" },
@@ -33,7 +33,7 @@ function Footer() {
                   { label: "Contact Us", to: "/contact" },
                 ].map((link) => (
                   <li key={link.to}>
-                    <Link to={link.to} className="text-gray-400 hover:text-cyan-400 text-sm transition">
+                    <Link to={link.to} className="text-gray-600 hover:text-cyan-400 text-sm transition">
                       {link.label}
                     </Link>
                   </li>
@@ -42,16 +42,16 @@ function Footer() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-3">Let's Talk</h4>
+              <h4 className="text-cyan-400 font-bold mb-3">Let's Talk</h4>
               <div className="space-y-2.5">
                 <a href="mailto:raju.mobile@gmail.com" className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 text-sm transition">
-                  <FaEnvelope className="text-cyan-600 flex-shrink-0" /> raju.mobile@gmail.com
+                  <FaEnvelope className="text-gray-600 " /> raju.mobile@gmail.com
                 </a>
                 <p className="flex items-center gap-2 text-gray-400 text-sm">
-                  <FaPhone className="text-cyan-600 flex-shrink-0" /> +91 98765 43210
+                  <FaPhone className="text-gray-600 flex-shrink-0" /> +91 98765 43210
                 </p>
                 <p className="flex items-center gap-2 text-gray-400 text-sm">
-                  <FaMapMarkerAlt className="text-cyan-600 flex-shrink-0" /> Hyderabad, Telangana, India
+                  <FaMapMarkerAlt className="text-gray-600 flex-shrink-0" /> Hyderabad, Telangana, India
                 </p>
               </div>
             </div>

@@ -6,6 +6,10 @@ import AnimatedSection from "../components/AnimatedSection";
 import { products } from "../data/products";
 import { FaTruck, FaHeadset, FaShieldAlt } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
+import buy from "/buy.png";
+import deliverytruck from "/deliverytruck.png";
+import star from "/star.png"
+import customerservice from "/customerservice.png"
 
 const categories = [
   { label: "Mobiles", emoji: "📱", color: "from-blue-600 to-cyan-500" },
@@ -24,10 +28,22 @@ const testimonials = [
 ];
 
 const whyUs = [
-  { icon: "⭐", title: "Top Rated & Lowest Prices", desc: "Guaranteed best prices on all products" },
-  { icon: "🚚", title: "Free & Fast Shipping", desc: "Free delivery across all of India" },
-  { icon: "💵", title: "Cash on Delivery", desc: "Pay when your order arrives" },
-  { icon: "🎧", title: "24/7 Customer Support", desc: "We're always here to help you" },
+  {
+    image: "/star.png",
+    title: "Top rated & Lowest prices offered!",
+  },
+  {
+    image: "/deliverytruck.png",
+    title: "Enjoy Free & Fast Shipping!",
+  },
+  {
+    image: "/buy.png",
+    title: "Cash on Delivery Available",
+  },
+  {
+    image: "/customerservice.png",
+    title: "24/7 Customer Support Available",
+  },
 ];
 
 function CategoryProducts({ category }) {
@@ -108,18 +124,20 @@ function HomePage() {
           {/* Red bg image side */}
           <div className="w-full md:w-3/5 relative flex-shrink-0 min-h-[200px] md:min-h-0">
             <img
-              src="./background_img2.png"
+              src="./background_img3.png"
               alt="Mobile Accessories"
               className="absolute inset-0 w-full h-full object-cover "
             />
             {/* Accessories flat lay overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/20 to-[#8b0000]/10" />
-            {/* Store logo badge */}
-            <div className="absolute top-5 right-5 md:top-8 md:right-8 bg-[#c8102e] border-2 border-white/30 rounded-2xl px-4 py-3 text-center shadow-lg">
-              <p className="text-white text-[10px] font-bold tracking-widest uppercase">Raju's</p>
-              <p className="text-white text-lg font-black leading-none">MOBILE</p>
-              <p className="text-white/80 text-[9px] tracking-widest uppercase">Accessories</p>
-            </div>
+{/* Store Logo */}
+{/* <div className="absolute top-5 right-5 md:top-8 md:right-8">
+  <img
+    src="/mobile_logo.png"
+    alt="Raju Mobile"
+    className="w-28 md:w-36 h-auto drop-shadow-xl bg-[#f5f0eb]"
+  />
+</div> */}
             {/* Phone icon */}
             {/* <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
               <div className="w-24 h-24 border-4 border-white rounded-3xl" />
@@ -130,14 +148,16 @@ function HomePage() {
           <div className="w-full md:w-2/5 bg-white md:rounded-none rounded-b-3xl px-6 py-6 md:py-8 md:px-8 flex flex-col justify-center">
             <AnimatedSection direction="left" delay={100}>
               <p className="text-red-600 text-xs font-bold uppercase tracking-widest mb-1">🔥 Summer Sale Live</p>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-                Smart Tools<br />Makes your Life<br /><span className="text-[#c8102e]">Easier</span>
-              </h1>
+<h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
+  Upgrade Your <span className="text-[#C70000]">Mobile</span><br />
+  Upgrade Your<br />
+  <span className="text-[#C70000]">Lifestyle</span>
+</h1>
               <p className="text-gray-500 text-sm mb-5">Best prices · Free shipping all over India</p>
               <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => navigate("/catalog")}
-                  className="bg-[#8b3fa8] hover:bg-[#7a35961] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition hover:opacity-90 shadow"
+                  className=" bg-gradient-to-br from-violet-800 to-indigo-600 hover:bg-[#7a35961] text-white font-bold px-6 py-2.5 rounded-xl text-sm transition hover:opacity-90 shadow"
                 >
                   Shop now
                 </button>
@@ -155,7 +175,7 @@ function HomePage() {
 
 
         {/* Trust strip */}
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+{/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
   {[
     {
       icon: <FaTruck />,
@@ -198,7 +218,7 @@ function HomePage() {
       </div>
     </div>
   ))}
-</div>
+</div> */}
 
 
 
@@ -235,50 +255,90 @@ function HomePage() {
       </div> */}
 
       {/* ── TESTIMONIALS ── */}
-      <section className="bg-white py-14 mt-4">
-        <div className="max-w-7xl mx-auto px-6">
-          <AnimatedSection direction="up">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Testimonials</h2>
-            <p className="text-gray-400 text-sm mb-8">What our customers say about us</p>
-          </AnimatedSection>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <AnimatedSection key={t.name} direction="up" delay={i * 120}>
-                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md transition h-full">
-                  <div className="flex mb-3">
-                    {[...Array(t.rating)].map((_, j) => (
-                      <span key={j} className="text-yellow-400 text-sm">★</span>
-                    ))}
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">"{t.text}"</p>
-                  <p className="font-bold text-gray-800 text-sm">{t.name}</p>
-                </div>
-              </AnimatedSection>
-            ))}
+<section className="bg-[#f5f0eb] py-16">
+  <div className="max-w-7xl mx-auto px-6">
+    <AnimatedSection direction="up">
+      <div className="mb-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c8102e] mb-3">
+          Testimonials
+        </p>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          Why customers choose us
+
+
+        </h2>
+        <p className="text-sm text-gray-500 mt-2">
+          Real feedback from people who shop with us.
+        </p>
+      </div>
+    </AnimatedSection>
+
+    <div className="grid gap-5 md:grid-cols-3">
+      {testimonials.map((t, i) => (
+        <AnimatedSection key={t.name} direction="up" delay={i * 100}>
+          <div className="h-full rounded-2xl bg-[#fafafa] p-6 ring-1 ring-gray-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="flex items-center gap-1 mb-4">
+              {[...Array(t.rating)].map((_, j) => (
+                <span key={j} className="text-[13px] text-amber-400">★</span>
+              ))}
+            </div>
+
+            <p className="text-sm leading-7 text-gray-600 mb-5">
+              “{t.text}”
+            </p>
+
+            <div className="border-t border-gray-200 pt-4">
+              <p className="text-sm font-semibold text-gray-900">{t.name}</p>
+              <p className="text-xs text-gray-400 mt-1">Verified customer</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </AnimatedSection>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
+
 
       {/* ── WHY BUY FROM US ── */}
-      <section className="py-14 bg-[#f5f0eb]">
-        <div className="max-w-7xl mx-auto px-6">
-          <AnimatedSection direction="up">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Why Buy from Us?</h2>
-            <p className="text-gray-400 text-sm mb-8">We make sure every shopping experience is worth it</p>
-          </AnimatedSection>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {whyUs.map((item, i) => (
-              <AnimatedSection key={item.title} direction="up" delay={i * 100}>
-                <div className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 h-full">
-                  <div className="text-4xl mb-3">{item.icon}</div>
-                  <p className="font-bold text-gray-800 text-sm mb-1">{item.title}</p>
-                  <p className="text-gray-400 text-xs">{item.desc}</p>
-                </div>
-              </AnimatedSection>
-            ))}
+{/* ── WHY BUY FROM US ── */}
+<section className="py-14 bg-[#f5f0eb]">
+  <div className="max-w-7xl mx-auto px-6">
+    <AnimatedSection direction="up">
+      <h2 className="text-3xl font-bold text-gray-800 mb-2">Why Buy from Us?</h2>
+      <p className="text-gray-400 text-sm mb-8">
+        We make sure every shopping experience is worth it
+      </p>
+    </AnimatedSection>
+
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {whyUs.map((item, i) => (
+        <AnimatedSection key={item.title} direction="up" delay={i * 100}>
+          <div className="bg-white rounded-[28px] px-5 py-7 text-center shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 h-full flex flex-col items-center">
+            
+            <img
+              src={item.image}
+              alt={item.title}
+              width={72}
+              height={72}
+              loading="lazy"
+              className="w-[72px] h-[72px] object-contain mb-5"
+            />
+
+            <p className="font-bold text-gray-800 text-sm leading-6 max-w-[140px]">
+              {item.title}
+            </p>
           </div>
-        </div>
-      </section>
+        </AnimatedSection>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
 
       {/* ── SUBSCRIBE ── */}
       <AnimatedSection direction="up">

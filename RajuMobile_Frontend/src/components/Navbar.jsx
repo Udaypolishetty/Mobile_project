@@ -611,12 +611,13 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart,
-  FaUserCircle, FaSignOutAlt, FaArrowLeft, FaHome,
-  FaMobileAlt, FaPhoneAlt, FaChevronRight
+   FaSignOutAlt, FaArrowLeft, FaHome,
+  FaMobileAlt, FaPhoneAlt, FaChevronRight,FaUserCircle
 } from "react-icons/fa";
 import { MdOutlinePerson } from "react-icons/md";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { User } from "lucide-react";
 
 function Navbar({ onSearchOpen }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -776,7 +777,9 @@ function Navbar({ onSearchOpen }) {
         }
       `}</style>
 
-      <nav className="navbar-root sticky top-0 z-50" style={{ background: '#0a0f1e' }}>
+      <nav className="navbar-root sticky top-0 z-50" style={{
+  background: "linear-gradient(90deg, #081120 0%, #0d2240 60%, #133b70 100%)"
+}}   >
 
         {/* ── Announcement bar ── */}
         <div style={{ background: 'linear-gradient(90deg,#0e7490,#1d4ed8,#0e7490)', overflow: 'hidden' }}
@@ -1060,24 +1063,24 @@ function Navbar({ onSearchOpen }) {
                 </Link>
 
                 {/* Account */}
-                <div className="relative">
-                  <button
-                    onClick={() => setAccountOpen(!accountOpen)}
-                    className="flex items-center gap-2 group"
-                  >
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ background: accountOpen ? 'rgba(6,182,212,0.2)' : 'rgba(255,255,255,0.07)', border: '1px solid rgba(6,182,212,0.3)', transition: 'all 0.15s' }}>
-                      <FaUserCircle className="text-base text-cyan-400" />
-                    </div>
-                    <div>
-                      <div className="text-[9px] text-gray-600 uppercase tracking-widest leading-none mb-0.5">
-                        {user ? "Hello" : "Account"}
-                      </div>
-                      <div className="text-xs font-semibold text-gray-300 group-hover:text-cyan-400 transition leading-none">
-                        {user ? user.name.split(" ")[0] : "Sign In"}
-                      </div>
-                    </div>
-                  </button>
+<div className="relative">
+  <button
+    onClick={() => setAccountOpen(!accountOpen)}
+    className="flex items-center gap-1.5 group"
+  >
+    <FaUserCircle className="cursor:pointer text-lg text-gray-400 group-hover:text-cyan-400 transition " />
+
+    <div className="leading-tight">
+      <div className="text-[9px] text-gray-500 uppercase tracking-wider">
+        {user ? "Hello" : "Account"}
+      </div>
+
+      <div className="text-xs font-medium text-gray-300 group-hover:text-cyan-400 transition ">
+        {user ? user.name.split(" ")[0] : "Sign In"}
+      </div>
+    </div>
+  </button>
+
 
                   {accountOpen && (
                     <div className="acct-dropdown absolute right-0 top-11 w-52 rounded-2xl overflow-hidden z-50"
