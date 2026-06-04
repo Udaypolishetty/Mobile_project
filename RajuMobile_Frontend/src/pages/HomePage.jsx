@@ -10,6 +10,7 @@ import buy from "/buy.png";
 import deliverytruck from "/deliverytruck.png";
 import star from "/star.png"
 import customerservice from "/customerservice.png"
+import OurService from "../components/OurService";
 
 const categories = [
   { label: "Mobiles", emoji: "📱", color: "from-blue-600 to-cyan-500" },
@@ -27,24 +28,24 @@ const testimonials = [
   { name: "Riya, Delhi", text: "I was hesitant to buy from a new website, but the customer service manager helped me through it!", rating: 5 },
 ];
 
-const whyUs = [
-  {
-    image: "/star.png",
-    title: "Top rated & Lowest prices offered!",
-  },
-  {
-    image: "/deliverytruck.png",
-    title: "Enjoy Free & Fast Shipping!",
-  },
-  {
-    image: "/buy.png",
-    title: "Cash on Delivery Available",
-  },
-  {
-    image: "/customerservice.png",
-    title: "24/7 Customer Support Available",
-  },
-];
+// const whyUs = [
+//   {
+//     image: "/star.png",
+//     title: "Top rated & Lowest prices offered!",
+//   },
+//   {
+//     image: "/deliverytruck.png",
+//     title: "Enjoy Free & Fast Shipping!",
+//   },
+//   {
+//     image: "/buy.png",
+//     title: "Cash on Delivery Available",
+//   },
+//   {
+//     image: "/customerservice.png",
+//     title: "24/7 Customer Support Available",
+//   },
+// ];
 
 function CategoryProducts({ category }) {
   const filtered = products.filter((p) =>
@@ -174,85 +175,12 @@ function HomePage() {
 
 
 
-        {/* Trust strip */}
-{/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-  {[
-    {
-      icon: <FaTruck />,
-      title: "Free Shipping",
-      sub: "Across India",
-    },
-    {
-      icon: <MdPayments />,
-      title: "Cash on Delivery",
-      sub: "Pay at doorstep",
-    },
-    {
-      icon: <FaShieldAlt />,
-      title: "100% Genuine",
-      sub: "Trusted products",
-    },
-    {
-      icon: <FaHeadset />,
-      title: "24/7 Support",
-      sub: "Always available",
-    },
-  ].map((item) => (
-    <div
-      key={item.title}
-      className="group bg-white rounded-2xl p-4 border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-700 flex items-center justify-center text-white text-xl shadow-lg">
-          {item.icon}
-        </div>
-
-        <div>
-          <h4 className="font-bold text-gray-900 text-sm">
-            {item.title}
-          </h4>
-          <p className="text-xs text-gray-500">
-            {item.sub}
-          </p>
-        </div>
-      </div>
-    </div>
-  ))}
-</div> */}
 
 
 
       </section>
 
-      {/* ── CATEGORIES quick buttons ── */}
-      {/* <AnimatedSection direction="up" className="max-w-7xl mx-auto px-6 py-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Shop by Category</h2>
-        <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-          {categories.map((cat, i) => (
-            <AnimatedSection key={cat.label} direction="up" delay={i * 50}>
-              <button
-                onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.label)}`)}
-                className={`bg-gradient-to-br ${cat.color} rounded-2xl p-3 flex flex-col items-center gap-1 hover:scale-105 transition-transform duration-200 shadow-sm w-full`}
-              >
-                <span className="text-xl">{cat.emoji}</span>
-                <span className="text-white text-[9px] font-semibold text-center leading-tight">{cat.label}</span>
-              </button>
-            </AnimatedSection>
-          ))}
-        </div>
-      </AnimatedSection> */}
 
-      {/* ── PRODUCT SECTIONS (accordion style — click to reveal) ── */}
-      {/* <div className="mt-4">
-        <ProductSection title="🔥 Sale & Offers" filterKey="Sale" emoji="🔥" />
-        <ProductSection title="Mobiles" filterKey="Mobiles" emoji="📱" />
-        <ProductSection title="Earphones & Headphones" filterKey="Earphones" emoji="🎧" />
-        <ProductSection title="Chargers" filterKey="Chargers" emoji="⚡" />
-        <ProductSection title="Cases & Covers" filterKey="Cases & Covers" emoji="🛡️" />
-        <ProductSection title="Smart Watches" filterKey="Smart Watches" emoji="⌚" />
-        <ProductSection title="Power Banks" filterKey="Power Banks" emoji="🔋" />
-        <ProductSection title="Accessories" filterKey="Accessories" emoji="🎮" />
-      </div> */}
 
       {/* ── TESTIMONIALS ── */}
 <section className="bg-[#f5f0eb] py-16">
@@ -304,7 +232,7 @@ function HomePage() {
 
       {/* ── WHY BUY FROM US ── */}
 {/* ── WHY BUY FROM US ── */}
-<section className="py-14 bg-[#f5f0eb]">
+{/* <section className="py-14 bg-[#f5f0eb]">
   <div className="max-w-7xl mx-auto px-6">
     <AnimatedSection direction="up">
       <h2 className="text-3xl font-bold text-gray-800 mb-2">Why Buy from Us?</h2>
@@ -335,25 +263,25 @@ function HomePage() {
       ))}
     </div>
   </div>
-</section>
+</section> */}
 
 
 
 
       {/* ── SUBSCRIBE ── */}
-      <AnimatedSection direction="up">
-        <section className="bg-[#f5f0eb] py-12">
-          <div className="max-w-xl mx-auto px-6 text-center">
-            <h2 className="text-2xl font-bold text-black mb-1">Subscribe to Our Emails</h2>
-            <p className="text-gray-400 text-sm mb-6">Join our email list for exclusive offers and the latest news.</p>
-            <div className="flex max-w-md mx-auto">
-              <input type="email" placeholder="Email" className="flex-1 px-4 py-3 rounded-l-xl bg-white text-black-900 outline-none text-sm" />
-              <button className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-3 rounded-r-xl font-bold text-sm transition">→</button>
-            </div>
-          </div>
-        </section>
-      </AnimatedSection>
-
+      {/* // <AnimatedSection direction="up">
+      //   <section className="bg-[#f5f0eb] py-12">
+      //     <div className="max-w-xl mx-auto px-6 text-center">
+      //       <h2 className="text-2xl font-bold text-black mb-1">Subscribe to Our Emails</h2>
+      //       <p className="text-gray-400 text-sm mb-6">Join our email list for exclusive offers and the latest news.</p>
+      //       <div className="flex max-w-md mx-auto">
+      //         <input type="email" placeholder="Email" className="flex-1 px-4 py-3 rounded-l-xl bg-white text-black-900 outline-none text-sm" />
+      //         <button className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-3 rounded-r-xl font-bold text-sm transition">→</button>
+      //       </div>
+      //     </div>
+      //   </section>
+      // </AnimatedSection> */}
+<OurService />
     </div>
   );
 }

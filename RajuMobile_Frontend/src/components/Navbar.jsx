@@ -612,7 +612,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart,
    FaSignOutAlt, FaArrowLeft, FaHome,
-  FaMobileAlt, FaPhoneAlt, FaChevronRight,FaUserCircle
+  FaMobileAlt, FaPhoneAlt, FaChevronRight,FaUserCircle,FaInstagram, FaYoutube, FaFacebookF, FaEnvelope
 } from "react-icons/fa";
 import { MdOutlinePerson } from "react-icons/md";
 import { useCart } from "../context/CartContext";
@@ -628,6 +628,8 @@ function Navbar({ onSearchOpen }) {
   const [showCategories, setShowCategories] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const location = useLocation();
+  const isActive = (path) => location.pathname === path;
+
 
   const isProductPage =
     location.pathname === "/catalog" ||
@@ -858,36 +860,36 @@ function Navbar({ onSearchOpen }) {
         {/* ══════════════════════════════════════
             MOBILE FULL-SCREEN MENU
         ══════════════════════════════════════ */}
-        {menuOpen && (
+       {menuOpen && (
           <div className="md:hidden mobile-menu-overlay fixed inset-0 z-[999] flex flex-col"
             style={{ background: '#f5f0eb', fontFamily: "'DM Sans', sans-serif" }}>
-
+ 
             {/* Menu header */}
             <div className="flex items-center justify-between px-5 py-4"
               style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
-
+ 
               <button onClick={() => setMenuOpen(false)}
                 className="w-9 h-9 flex items-center justify-center rounded-full"
                 style={{ background: 'rgba(0,0,0,0.07)' }}>
                 <FaTimes className="text-gray-700 text-base" />
               </button>
-
+ 
               {/* Logo image in menu header */}
               <Link to="/" onClick={() => setMenuOpen(false)}>
                 <img
                   src="/mobile_logo.png"
                   alt="Raju's Mobile Accessories"
-                  className="h-17 w-auto object-contain"
+                  className="h-18 w-auto object-contain"
                 />
               </Link>
-
+ 
               <button onClick={() => { onSearchOpen(); setMenuOpen(false); }}
                 className="w-9 h-9 flex items-center justify-center rounded-full"
                 style={{ background: 'rgba(0,0,0,0.07)' }}>
                 <FaSearch className="text-gray-700 text-sm" />
               </button>
             </div>
-
+ 
             {/* Menu body */}
             <div className="flex-1 overflow-y-auto">
               {!mobileProductsOpen ? (
@@ -900,7 +902,7 @@ function Navbar({ onSearchOpen }) {
                   >
                     Home
                   </button>
-
+ 
                   {/* Products → */}
                   <button
                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center justify-between"
@@ -910,7 +912,7 @@ function Navbar({ onSearchOpen }) {
                     <span>Products</span>
                     <FaChevronRight className="text-xs" />
                   </button>
-
+ 
                   {/* Contact */}
                   <button
                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-slate-800 text-base font-medium border-b"
@@ -919,14 +921,15 @@ function Navbar({ onSearchOpen }) {
                   >
                     Contact
                   </button>
-
+ 
                   {/* Offers */}
                   <button
-                    className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium"
-                    style={{ color: '#d97706' }}
+                    className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center gap-2.5"
+                    style={{ borderColor: 'rgba(0,0,0,0.07)', color: '#d97706' }}
                     onClick={() => { navigate("/catalog?sale=true"); setMenuOpen(false); }}
                   >
-                    🔥 Offers
+                    <span className="text-lg leading-none">🏷️</span>
+                    <span>Offers</span>
                   </button>
                 </div>
               ) : (
@@ -939,11 +942,11 @@ function Navbar({ onSearchOpen }) {
                     <FaArrowLeft className="text-xs" />
                     Back to Menu
                   </button>
-
+ 
                   <div className="px-6 pb-2">
                     <p className="text-[10px] tracking-[3px] uppercase text-gray-400 font-semibold">Browse Categories</p>
                   </div>
-
+ 
                   {navLinks.map((link, i) => (
                     <button
                       key={link.cat}
@@ -961,22 +964,50 @@ function Navbar({ onSearchOpen }) {
                 </div>
               )}
             </div>
-
-            {/* Bottom: Login */}
-            <div className="px-5 py-4" style={{ borderTop: '1px solid rgba(0,0,0,0.08)', background: 'rgba(0,0,0,0.03)' }}>
+ 
+            {/* Bottom: Sign In + Social */}
+            <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               <button
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium"
-                style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}
+                className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium flex items-center justify-between"
+                style={{ color: '#c0392b', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
                 onClick={() => { setShowAuthModal(true); setMenuOpen(false); }}
               >
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: '#c0392b' }}>
-                  <MdOutlinePerson className="text-white text-lg" />
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-semibold text-slate-800">{user ? user.name : "Sign In / Register"}</div>
-                  {!user && <div className="text-[10px] text-gray-400">Access orders, wishlist & more</div>}
-                </div>
+                <span>{user ? user.name : "Sign In / Register"}</span>
+                <MdOutlinePerson className="text-lg" />
               </button>
+              <div className="px-6 pt-4 pb-5">
+                <p className="text-[9px] tracking-[3px] uppercase text-gray-400 font-semibold mb-3">Follow Us</p>
+                <div className="flex items-center gap-3">
+                  <a href="https://instagram.com" target="_blank" rel="noreferrer"
+                    className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+                    style={{ background: 'rgba(0,0,0,0.06)' }}
+                    onMouseEnter={e => e.currentTarget.style.background='linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'}
+                    onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+                    <FaInstagram className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noreferrer"
+                    className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+                    style={{ background: 'rgba(0,0,0,0.06)' }}
+                    onMouseEnter={e => e.currentTarget.style.background='#FF0000'}
+                    onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+                    <FaYoutube className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+                  </a>
+                  <a href="https://facebook.com" target="_blank" rel="noreferrer"
+                    className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+                    style={{ background: 'rgba(0,0,0,0.06)' }}
+                    onMouseEnter={e => e.currentTarget.style.background='#1877F2'}
+                    onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+                    <FaFacebookF className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+                  </a>
+                  <a href="mailto:rajusmobile@gmail.com"
+                    className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+                    style={{ background: 'rgba(0,0,0,0.06)' }}
+                    onMouseEnter={e => e.currentTarget.style.background='#0a0f1e'}
+                    onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+                    <FaEnvelope className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -1134,23 +1165,51 @@ function Navbar({ onSearchOpen }) {
               <ul className="flex justify-center items-center gap-12 py-3 text-xs font-semibold uppercase tracking-widest" style={{ scrollbarWidth: 'none' }}>
                 {!isProductPage ? (
                   <>
-                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/")}>
-                      Home
-                    </li>
-                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/catalog")}>
-                      Products
-                    </li>
-                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/contact")}>
-                      Contact
-                    </li>
-                    <li className="nav-item px-3 py-1.5 text-orange-400 rounded-lg">
-                      <button
-                        onClick={() => navigate("/catalog?sale=true")}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest transition"
-                        style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
-                        🔥 OFFERS
-                      </button>
-                    </li>
+<li>
+  <button
+    onClick={() => navigate("/")}
+    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+      ${isActive("/") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+  >
+    Home
+  </button>
+</li>
+
+<li>
+  <button
+    onClick={() => navigate("/catalog")}
+    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+      ${isActive("/catalog") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+  >
+    Products
+  </button>
+</li>
+
+<li>
+  <button
+    onClick={() => navigate("/contact")}
+    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+      ${isActive("/contact") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+  >
+    Contact
+  </button>
+</li>
+<li>
+  <button
+    onClick={() => navigate("/catalog?sale=true")}
+    className="flex items-center gap-1 px-2 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-amber-300 hover:text-amber-200 transition-colors"
+  >
+    <img
+      src="/offer.png"
+      alt="Offers"
+      className="w-4 h-4 object-contain"
+    />
+    <span>Offers</span>
+  </button>
+</li>
                   </>
                 ) : (
                   <>

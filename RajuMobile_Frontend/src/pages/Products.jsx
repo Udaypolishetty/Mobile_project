@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import OurService from "../components/OurService.jsx";
 
 function Products() {
   const navigate = useNavigate();
 
   const categories = [
-    "Mobiles",
+    "Mobiles111",
     "Cases & Covers",
     "Chargers",
     "Earphones",
@@ -29,8 +30,13 @@ function Products() {
             {cat}
           </div>
         ))}
+
       </div>
+      <div className="bg-red-500 text-white p-4">
+  Test Component
+</div>
     </div>
+    
   );
 }
 
