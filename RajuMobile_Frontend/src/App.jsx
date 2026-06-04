@@ -12,6 +12,7 @@ import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import WhatsappButton from "./components/WhatsappButton";
 import Products from "./pages/Products";
+
 import {
   WishlistPage,
   AccountPage,
@@ -23,11 +24,13 @@ import {
 
 function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+const [authMode, setAuthMode] = useState("login");
   return (
     <>
       <Navbar onSearchOpen={() => setSearchOpen(true)} />
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-      <AuthModal />
+      <AuthModal /> 
       <main>{children}</main>
       <Footer />
     </>

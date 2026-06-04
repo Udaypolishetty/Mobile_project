@@ -915,10 +915,10 @@ function Navbar({ onSearchOpen }) {
                             Sign In
                           </button>
                           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                            <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
+                            {/* <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
                               className="w-full text-left px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition">
                               Create Account
-                            </button>
+                            </button> */}
                           </div>
                         </>
                       )}

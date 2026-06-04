@@ -1,23 +1,54 @@
 import { useState } from "react";
 import { FaTimes, FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
+import { registerUser } from "../api/authApi";
 
 export default function AuthModal() {
-  const { showAuthModal, setShowAuthModal, login, runPendingAction } = useAuth();
-  const [mode, setMode] = useState("login"); // "login" | "register"
+
+  const { showAuthModal, setShowAuthModal, login, runPendingAction,authMode,setAuthMode } = useAuth();
+ 
+
+const mode = authMode;
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
 
   if (!showAuthModal) return null;
 
-  const handleSubmit = () => {
-    if (!form.email || !form.password) { setError("Please fill all fields"); return; }
-    if (mode === "register" && !form.name) { setError("Please enter your name"); return; }
-    if (form.password.length < 6) { setError("Password must be at least 6 characters"); return; }
-    login(form.email, form.name);
-    runPendingAction();
-    setError("");
-  };
+  const handleSubmit = async () => {
+
+  try {
+
+    if (mode === "register") {
+
+      await registerUser({
+        name: form.name,
+        email: form.email,
+        password: form.password
+      });
+
+      alert("Registration successful");
+
+      setAuthMode("login");
+
+      return;
+    }
+
+    await login(
+      form.email,
+      form.password
+    );
+
+  } catch (err) {
+  console.log("REGISTER ERROR:", err);
+  console.log("RESPONSE:", err.response?.data);
+
+  setError(
+    err.response?.data?.error ||
+    JSON.stringify(err.response?.data) ||
+    "Email already exists"
+  );
+  }
+};
 
   const close = () => { setShowAuthModal(false); setError(""); };
 
@@ -84,14 +115,20 @@ export default function AuthModal() {
             {mode === "login" ? "Don't have an account? " : "Already have an account? "}
             <span
               className="text-cyan-600 font-semibold cursor-pointer hover:underline"
-              onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
+              onClick={() => { setAuthMode(
+    mode === "login"
+      ? "register"
+      : "login"
+  );
+
+  setError(""); }}
             >
               {mode === "login" ? "Register" : "Sign In"}
             </span>
           </p>
         </div>
 
-        <p className="text-center text-[10px] text-gray-300 mt-3">Frontend demo — no real auth yet</p>
+        {/* <p className="text-center text-[10px] text-gray-300 mt-3">Frontend demo — no real auth yet</p> */}
       </div>
     </div>
   );
