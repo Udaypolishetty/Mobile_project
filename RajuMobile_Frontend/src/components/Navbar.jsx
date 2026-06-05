@@ -1124,7 +1124,7 @@ function Navbar({ onSearchOpen }) {
                           </div>
                           <Link to="/account" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
-                            My Orders
+                            My Profile
                           </Link>
                           <Link to="/wishlist" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">

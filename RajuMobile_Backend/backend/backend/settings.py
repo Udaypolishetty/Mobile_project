@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+# ── JWT Settings ────────────────────────────────────────────────
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,15 +34,18 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",   # ← needed for logout
     "corsheaders",
-    "products",
     "users",
+    "products",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
 ]
 
 MIDDLEWARE = [
@@ -71,14 +76,39 @@ TEMPLATES = [
     },
 ]
 
+# ── CORS (allows React dev server to call Django) ───────────────
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:5173",   # Vite default
+    "http://localhost:3000",   # CRA default
+    "http://127.0.0.1:5173",
 ]
+
+# ── REST Framework ──────────────────────────────────────────────
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.AllowAny",   # default open; restrict per view
     ),
 }
+
+
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME":  timedelta(days=1),    # 1 day access token
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),   # 30 day refresh
+    "ROTATE_REFRESH_TOKENS":  True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+
+
+CORS_ALLOW_CREDENTIALS = True
+
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 

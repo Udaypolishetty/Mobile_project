@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash, FaArrowLeft, FaShoppingCart } from "react-icons/fa";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 function CartPage() {
   const { cartItems, removeFromCart, updateQty, cartTotal, clearCart } = useCart();

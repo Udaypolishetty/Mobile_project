@@ -1,63 +1,84 @@
-import { createContext, useContext, useState } from "react";
-import { loginUser } from "../api/authApi";
-
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { loginUser, getMe, logoutUser } from "../api/authApi";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser]                   = useState(null);       // full user object
+  const [loadingUser, setLoadingUser]     = useState(true);       // checking token on load
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode]           = useState("login");    // "login" | "register"
   const [authRedirectAction, setAuthRedirectAction] = useState(null);
-  const [authMode, setAuthMode] = useState("login");
 
- const login = async (email, password) => {
-  const res = await loginUser({
-    email,
-    password,
-  });
+  // ── On mount: restore session from localStorage ──────────────
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      getMe()
+        .then((data) => setUser(data))
+        .catch(() => {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+        })
+        .finally(() => setLoadingUser(false));
+    } else {
+      setLoadingUser(false);
+    }
+  }, []);
 
-  localStorage.setItem("token", res.data.access);
+  // ── Login: call API, store tokens, set user ───────────────────
+  const login = useCallback(async (email, password) => {
+    const data = await loginUser(email, password);           // throws on error
+    localStorage.setItem("access_token",  data.access);
+    localStorage.setItem("refresh_token", data.refresh);
+    setUser(data.user);
+    setShowAuthModal(false);
+  }, []);
 
-  localStorage.setItem(
-    "user",
-    JSON.stringify(res.data.user)
-  );
+  // ── Logout: blacklist token, clear everything ─────────────────
+  const logout = useCallback(async () => {
+    const refresh = localStorage.getItem("refresh_token");
+    try { await logoutUser(refresh); } catch { /* ignore */ }
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    setUser(null);
+  }, []);
 
-  setUser(res.data.user);
+  // ── Update local user state after profile edit ────────────────
+  const updateUser = useCallback((updated) => {
+    setUser((prev) => ({ ...prev, ...updated }));
+  }, []);
 
-  setShowAuthModal(false);
-};
-
-  const logout = () => setUser(null);
-
-  const requireAuth = (action) => {
-    if (user) return true;
+  // ── Auth guard: show modal if not logged in ───────────────────
+  const requireAuth = useCallback((action) => {
+    if (user) { action(); return true; }
     setAuthRedirectAction(() => action);
+    setAuthMode("login");
     setShowAuthModal(true);
     return false;
-  };
+  }, [user]);
 
-  const runPendingAction = () => {
+  const runPendingAction = useCallback(() => {
     if (authRedirectAction) {
       authRedirectAction();
       setAuthRedirectAction(null);
     }
-  };
+  }, [authRedirectAction]);
 
   return (
-    <AuthContext.Provider 
-    value={{
-    user,
-    login,
-    logout,
-    showAuthModal,
-    setShowAuthModal,
-    authMode,
-    setAuthMode,
-    requireAuth,
-    runPendingAction,
-  }}
-    >
+    <AuthContext.Provider value={{
+      user,
+      loadingUser,
+      login,
+      logout,
+      updateUser,
+      showAuthModal,
+      setShowAuthModal,
+      authMode,
+      setAuthMode,
+      requireAuth,
+      runPendingAction,
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaYoutube, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-import AnimatedSection from "./AnimatedSection";
+import AnimatedSection from "../AnimatedSection";
 
 function Footer() {
   return (

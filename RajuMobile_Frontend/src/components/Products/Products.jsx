@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import OurService from "../components/OurService.jsx";
+import OurService from "../HomeFiles/OurService.jsx";
 
 function Products() {
   const navigate = useNavigate();
@@ -33,10 +33,10 @@ function Products() {
 
       </div>
       <div className="bg-red-500 text-white p-4">
-  Test Component
-</div>
+        Test Component
+      </div>
     </div>
-    
+
   );
 }
 

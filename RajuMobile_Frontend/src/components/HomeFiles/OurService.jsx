@@ -1,4 +1,4 @@
-import AnimatedSection from "./AnimatedSection";
+import AnimatedSection from "../AnimatedSection";
 
 const whyUs = [
   {
@@ -75,7 +75,7 @@ function OurService() {
               <input
                 type="email"
                 placeholder="Email"
-                className="flex-1 px-4 py-3 rounded-l-xl bg-white outline-none text-sm"
+                className="flex-1 px-4 py-3 rounded-l-xl bg-white border border-gray-300 outline-none text-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-200"
               />
 
               <button className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-3 rounded-r-xl font-bold text-sm transition">

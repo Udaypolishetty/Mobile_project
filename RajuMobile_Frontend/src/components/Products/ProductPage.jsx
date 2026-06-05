@@ -171,12 +171,12 @@ import {
   FaMapMarkerAlt, FaPhone, FaBoxOpen, FaAward, FaThumbsUp
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { products } from "../data/products";
-import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
-import ProductCard from "../components/ProductCard";
-import AnimatedSection from "../components/AnimatedSection";
-import OurService from "../components/OurService";
+import { products } from "../../data/products";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import ProductCard from "./ProductCard";
+import AnimatedSection from "../AnimatedSection";
+import OurService from "../HomeFiles/OurService";
 
 
 /* ─── helpers ─────────────────────────────────────────────── */
@@ -281,9 +281,8 @@ function ImageZoom({ src, alt, badge }) {
         )}
         <button
           onClick={() => setZoomed((z) => !z)}
-          className={`absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
-            zoomed ? "bg-cyan-600 text-white" : "bg-white text-gray-500 hover:bg-cyan-50 hover:text-cyan-600"
-          }`}
+          className={`absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${zoomed ? "bg-cyan-600 text-white" : "bg-white text-gray-500 hover:bg-cyan-50 hover:text-cyan-600"
+            }`}
           title={zoomed ? "Zoom Out" : "Zoom In"}
         >
           {zoomed ? <FaTimes className="text-xs" /> : <FaSearchPlus className="text-xs" />}
@@ -314,9 +313,8 @@ function FaqItem({ q, a }) {
         )}
       </button>
       <div
-        className={`px-5 text-sm text-gray-500 leading-relaxed transition-all duration-300 ${
-          open ? "max-h-40 pb-4 opacity-100" : "max-h-0 pb-0 opacity-0"
-        } overflow-hidden`}
+        className={`px-5 text-sm text-gray-500 leading-relaxed transition-all duration-300 ${open ? "max-h-40 pb-4 opacity-100" : "max-h-0 pb-0 opacity-0"
+          } overflow-hidden`}
       >
         {a}
       </div>
@@ -505,33 +503,31 @@ function ProductDetailPage() {
               <button
                 disabled={!product.inStock}
                 onClick={handleAddToCart}
-                className={`flex-1 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm transition-all duration-300 ${
-                  added
-                    ? "bg-emerald-500 text-white scale-95"
-                    : "bg-gray-900 hover:bg-cyan-600 text-white disabled:bg-gray-200 disabled:text-gray-400"
-                }`}
+                className={`flex-1 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm transition-all duration-300 ${added
+                  ? "bg-emerald-500 text-white scale-95"
+                  : "bg-gray-900 hover:bg-cyan-600 text-white disabled:bg-gray-200 disabled:text-gray-400"
+                  }`}
               >
                 <FaShoppingCart />
                 {added ? "Added to Cart ✓" : "Add to Cart"}
               </button>
               <button
                 onClick={handleWishlist}
-                className={`px-5 py-3.5 rounded-2xl border-2 transition-all duration-200 ${
-                  isWishlisted(product.id)
-                    ? "border-rose-400 text-rose-500 bg-rose-50 scale-95"
-                    : "border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400"
-                }`}
+                className={`px-5 py-3.5 rounded-2xl border-2 transition-all duration-200 ${isWishlisted(product.id)
+                  ? "border-rose-400 text-rose-500 bg-rose-50 scale-95"
+                  : "border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400"
+                  }`}
               >
                 <FaHeart />
               </button>
             </div>
 
             {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-2 pt-5 border-t border-gray-100">
+            <div className="grid grid-cols-2 gap-2 pt-5 border-t border-gray-100">
               {[
                 { icon: FaTruck, label: "Free Shipping", sub: "On orders ₹499+" },
-                { icon: FaShieldAlt, label: "Genuine", sub: "100% original" },
-                { icon: FaUndo, label: "Returns", sub: "7-day policy" },
+                { icon: FaShieldAlt, label: "Genuine", sub: "100% original" }
+                // { icon: FaUndo, label: "Returns", sub: "7-day policy" },
               ].map(({ icon: Icon, label, sub }) => (
                 <div key={label} className="flex flex-col items-center gap-1 text-center p-2 rounded-xl hover:bg-gray-50 transition">
                   <div className="w-9 h-9 bg-cyan-50 rounded-full flex items-center justify-center">
@@ -561,7 +557,7 @@ function ProductDetailPage() {
 
         {/* ── SECTION 4 — Customer Reviews ──────────────────── */}
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          {/* <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h2 className="text-xl font-extrabold text-gray-900 mb-1">Customer Reviews</h2>
               <div className="flex items-center gap-2">
@@ -570,10 +566,10 @@ function ProductDetailPage() {
                 <span className="text-gray-400 text-sm">({reviews.length} reviews)</span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Review list */}
-          <div className="space-y-4 mb-7">
+          {/* <div className="space-y-4 mb-7">
             {reviews.map((r, i) => (
               <div key={i} className="flex gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition">
                 <div className="w-9 h-9 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0 font-bold text-cyan-600 text-sm">
@@ -594,7 +590,7 @@ function ProductDetailPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {/* Write review */}
           <div className="border-t border-gray-100 pt-6">
@@ -636,7 +632,7 @@ function ProductDetailPage() {
             </div>
           </div>
         )}
-<OurService/>
+        <OurService />
 
       </div>
     </div>

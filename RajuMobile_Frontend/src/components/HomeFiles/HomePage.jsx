@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight, FaChevronDown } from "react-icons/fa";
-import ProductCard from "../components/ProductCard";
-import AnimatedSection from "../components/AnimatedSection";
-import { products } from "../data/products";
+import ProductCard from "../Products/ProductCard";
+import AnimatedSection from "../AnimatedSection";
+import { products } from "../../data/products";
 import { FaTruck, FaHeadset, FaShieldAlt } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 import buy from "/buy.png";
 import deliverytruck from "/deliverytruck.png";
 import star from "/star.png"
 import customerservice from "/customerservice.png"
-import OurService from "../components/OurService";
+import OurService from "./OurService";
 
 const categories = [
   { label: "Mobiles", emoji: "📱", color: "from-blue-600 to-cyan-500" },
@@ -131,8 +131,8 @@ function HomePage() {
             />
             {/* Accessories flat lay overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/20 to-[#8b0000]/10" />
-{/* Store Logo */}
-{/* <div className="absolute top-5 right-5 md:top-8 md:right-8">
+            {/* Store Logo */}
+            {/* <div className="absolute top-5 right-5 md:top-8 md:right-8">
   <img
     src="/mobile_logo.png"
     alt="Raju Mobile"
@@ -149,11 +149,11 @@ function HomePage() {
           <div className="w-full md:w-2/5 bg-white md:rounded-none rounded-b-3xl px-6 py-6 md:py-8 md:px-8 flex flex-col justify-center">
             <AnimatedSection direction="left" delay={100}>
               <p className="text-red-600 text-xs font-bold uppercase tracking-widest mb-1">🔥 Summer Sale Live</p>
-<h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-  Upgrade Your <span className="text-[#C70000]">Mobile</span><br />
-  Upgrade Your<br />
-  <span className="text-[#C70000]">Lifestyle</span>
-</h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
+                Upgrade Your <span className="text-[#C70000]">Mobile</span><br />
+                Upgrade Your<br />
+                <span className="text-[#C70000]">Lifestyle</span>
+              </h1>
               <p className="text-gray-500 text-sm mb-5">Best prices · Free shipping all over India</p>
               <div className="flex gap-3 flex-wrap">
                 <button
@@ -183,56 +183,56 @@ function HomePage() {
 
 
       {/* ── TESTIMONIALS ── */}
-<section className="bg-[#f5f0eb] py-16">
-  <div className="max-w-7xl mx-auto px-6">
-    <AnimatedSection direction="up">
-      <div className="mb-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c8102e] mb-3">
-          Testimonials
-        </p>
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Why customers choose us
+      <section className="bg-[#f5f0eb] py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection direction="up">
+            <div className="mb-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c8102e] mb-3">
+                Testimonials
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Why customers choose us
 
 
-        </h2>
-        <p className="text-sm text-gray-500 mt-2">
-          Real feedback from people who shop with us.
-        </p>
-      </div>
-    </AnimatedSection>
-
-    <div className="grid gap-5 md:grid-cols-3">
-      {testimonials.map((t, i) => (
-        <AnimatedSection key={t.name} direction="up" delay={i * 100}>
-          <div className="h-full rounded-2xl bg-[#fafafa] p-6 ring-1 ring-gray-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex items-center gap-1 mb-4">
-              {[...Array(t.rating)].map((_, j) => (
-                <span key={j} className="text-[13px] text-amber-400">★</span>
-              ))}
+              </h2>
+              <p className="text-sm text-gray-500 mt-2">
+                Real feedback from people who shop with us.
+              </p>
             </div>
+          </AnimatedSection>
 
-            <p className="text-sm leading-7 text-gray-600 mb-5">
-              “{t.text}”
-            </p>
+          <div className="grid gap-5 md:grid-cols-3">
+            {testimonials.map((t, i) => (
+              <AnimatedSection key={t.name} direction="up" delay={i * 100}>
+                <div className="h-full rounded-2xl bg-[#fafafa] p-6 ring-1 ring-gray-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(t.rating)].map((_, j) => (
+                      <span key={j} className="text-[13px] text-amber-400">★</span>
+                    ))}
+                  </div>
 
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-sm font-semibold text-gray-900">{t.name}</p>
-              <p className="text-xs text-gray-400 mt-1">Verified customer</p>
-            </div>
+                  <p className="text-sm leading-7 text-gray-600 mb-5">
+                    “{t.text}”
+                  </p>
+
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-sm font-semibold text-gray-900">{t.name}</p>
+                    <p className="text-xs text-gray-400 mt-1">Verified customer</p>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
           </div>
-        </AnimatedSection>
-      ))}
-    </div>
-  </div>
-</section>
+        </div>
+      </section>
 
 
 
 
 
       {/* ── WHY BUY FROM US ── */}
-{/* ── WHY BUY FROM US ── */}
-{/* <section className="py-14 bg-[#f5f0eb]">
+      {/* ── WHY BUY FROM US ── */}
+      {/* <section className="py-14 bg-[#f5f0eb]">
   <div className="max-w-7xl mx-auto px-6">
     <AnimatedSection direction="up">
       <h2 className="text-3xl font-bold text-gray-800 mb-2">Why Buy from Us?</h2>
@@ -281,7 +281,7 @@ function HomePage() {
       //     </div>
       //   </section>
       // </AnimatedSection> */}
-<OurService />
+      <OurService />
     </div>
   );
 }
