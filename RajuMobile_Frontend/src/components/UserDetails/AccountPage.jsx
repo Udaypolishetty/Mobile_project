@@ -138,49 +138,54 @@ export default function AccountPage() {
 
   return (
     <div className="min-h-screen bg-[#f5f0eb]">
-      <div className="max-w-3xl mx-auto px-4 py-8">
+  <div className="max-w-3xl mx-auto px-4 py-8">
+    <AnimatedSection direction="up">
+      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-5">
 
-        {/* ── Hero header card ────────────────────────────────── */}
-        <AnimatedSection direction="up">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-5">
+        {/* Gradient top strip */}
+        <div className="h-24 bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-900 relative">
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 30% 50%, #06b6d4 0%, transparent 60%)",
+            }}
+          />
+        </div>
 
-            {/* Gradient top strip */}
-            <div className="h-24 bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-900 relative">
-              <div className="relative inset-0 opacity-10"
-                style={{ backgroundImage: "radial-gradient(circle at 30% 50%, #06b6d4 0%, transparent 60%)" }} />
+        <div className="px-6 pb-6 relative">
+          {/* Avatar overlapping strip */}
+          <div className="flex items-end justify-between -mt-8 mb-4 relative z-10">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white text-2xl font-black shadow-lg border-4 border-white">
+              {initials}
             </div>
 
-            <div className="px-6 pb-6">
-              {/* Avatar overlapping strip */}
-              <div className="flex items-end justify-between -mt-10 mb-4">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white text-2xl font-black shadow-lg border-4 border-white">
-                  {initials}
-                </div>
-                <button
-                  onClick={openEdit}
-                  className="flex items-center gap-1.5 bg-black hover:bg-cyan-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
-                >
-                  <FaEdit className="text-[10px]" /> Edit Profile
-                </button>
-              </div>
+            <button
+              onClick={openEdit}
+              className="flex items-center gap-1.5 bg-black hover:bg-cyan-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
+            >
+              <FaEdit className="text-[10px]" /> Edit Profile
+            </button>
+          </div>
 
-              <div className="flex items-start justify-between flex-wrap gap-2">
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h1 className="text-xl font-extrabold text-gray-900">{user.name}</h1>
-                    <MdVerified className="text-cyan-500 text-base" />
-                  </div>
-                  <p className="text-gray-400 text-sm">{user.email}</p>
-                  {user.member_since && (
-                    <p className="text-[11px] text-gray-300 mt-0.5 flex items-center gap-1">
-                      <FaCalendarAlt className="text-[10px]" /> Member since {user.member_since}
-                    </p>
-                  )}
-                </div>
+          <div className="flex items-start justify-between flex-wrap gap-2">
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-xl font-extrabold text-gray-900">{user.name}</h1>
+                <MdVerified className="text-cyan-500 text-base" />
               </div>
+              <p className="text-gray-400 text-sm">{user.email}</p>
+              {user.member_since && (
+                <p className="text-[11px] text-gray-300 mt-0.5 flex items-center gap-1">
+                  <FaCalendarAlt className="text-[10px]" />
+                  Member since {user.member_since}
+                </p>
+              )}
             </div>
           </div>
-        </AnimatedSection>
+        </div>
+      </div>
+    </AnimatedSection>
 
         {/* ── Tabs ────────────────────────────────────────────── */}
         <AnimatedSection direction="up" delay={80}>

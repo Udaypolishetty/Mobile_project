@@ -386,15 +386,14 @@ function ProductDetailPage() {
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
-  const handleAddToCart = () => {
-    requireAuth(() => {
-      addToCart(product, qty);
-      setAdded(true);
-      setTimeout(() => setAdded(false), 2000);
-    });
-  };
+const handleAddToCart = () => {
+  addToCart(product, qty);
+  setAdded(true);
+  setTimeout(() => setAdded(false), 2000);
+};
+const handleWishlist = () => toggleWishlist(product);
 
-  const handleWishlist = () => requireAuth(() => toggleWishlist(product));
+
 
   const handleSubscribe = (e) => {
     e.preventDefault();

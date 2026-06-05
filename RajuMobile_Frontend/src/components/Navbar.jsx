@@ -1093,20 +1093,22 @@ function Navbar({ onSearchOpen }) {
                   </div>
                 </Link>
 
-                {/* Account */}
+{/* Account */}
 <div className="relative">
   <button
     onClick={() => setAccountOpen(!accountOpen)}
-    className="flex items-center gap-1.5 group"
+    className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 transition-all duration-300 hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-[0_8px_24px_rgba(34,211,238,0.10)]"
   >
-    <FaUserCircle className="cursor:pointer text-lg text-gray-400 group-hover:text-cyan-400 transition " />
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 transition-all duration-300 group-hover:scale-105 group-hover:border-cyan-400/30 group-hover:bg-cyan-400/10">
+      <FaUserCircle className="text-xl text-gray-300 transition-all duration-300 group-hover:text-cyan-400" />
+    </div>
 
-    <div className="leading-tight">
-      <div className="text-[9px] text-gray-500 uppercase tracking-wider">
-        {user ? "Hello" : "Account"}
+    <div className="text-left leading-tight">
+      <div className="text-[11px] font-medium text-gray-400 tracking-[0.18em] uppercase transition-colors duration-300 group-hover:text-cyan-300">
+        {user ? "Welcome back" : "My Account"}
       </div>
 
-      <div className="text-xs font-medium text-gray-300 group-hover:text-cyan-400 transition ">
+      <div className="mt-0.5 text-sm font-semibold text-white transition-all duration-300 group-hover:text-cyan-200">
         {user ? user.name.split(" ")[0] : "Sign In"}
       </div>
     </div>
