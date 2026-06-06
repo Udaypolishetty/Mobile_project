@@ -1,14 +1,24 @@
 
+
+
+
+
+
+
+
+
+
 // import { useState } from "react";
 // import { Link, useNavigate, useLocation } from "react-router-dom";
 // import {
 //   FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart,
-//   FaUserCircle, FaSignOutAlt, FaArrowLeft, FaHome,
-//   FaMobileAlt, FaPhoneAlt, FaChevronRight
+//    FaSignOutAlt, FaArrowLeft, FaHome,
+//   FaMobileAlt, FaPhoneAlt, FaChevronRight,FaUserCircle,FaInstagram, FaYoutube, FaFacebookF, FaEnvelope
 // } from "react-icons/fa";
 // import { MdOutlinePerson } from "react-icons/md";
 // import { useCart } from "../context/CartContext";
 // import { useAuth } from "../context/AuthContext";
+// import { User } from "lucide-react";
 
 // function Navbar({ onSearchOpen }) {
 //   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,6 +29,8 @@
 //   const [showCategories, setShowCategories] = useState(false);
 //   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
 //   const location = useLocation();
+//   const isActive = (path) => location.pathname === path;
+
 
 //   const isProductPage =
 //     location.pathname === "/catalog" ||
@@ -162,32 +174,15 @@
 //           padding-left: 30px;
 //         }
 
-//         /* Logo card shimmer */
-//         @keyframes shimmer {
-//           0% { background-position: -200% center; }
-//           100% { background-position: 200% center; }
-//         }
-//         .logo-card {
-//           background: linear-gradient(135deg, #c0392b 0%, #e74c3c 40%, #c0392b 100%);
-//           border-radius: 16px;
-//           padding: 10px 18px;
-//           text-align: center;
-//           box-shadow: 0 4px 20px rgba(192,57,43,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
-//           position: relative;
-//           overflow: hidden;
-//         }
-//         .logo-card::before {
-//           content: '';
-//           position: absolute;
-//           top: 0; left: -100%;
-//           width: 60%;
-//           height: 100%;
-//           background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-//           animation: shimmer 3s ease-in-out infinite;
+//         /* Logo image – remove white bg on dark navbar */
+//         .logo-img-dark {
+//           mix-blend-mode: lighten;
 //         }
 //       `}</style>
 
-//       <nav className="navbar-root sticky top-0 z-50" style={{ background: '#0a0f1e' }}>
+//       <nav className="navbar-root sticky top-0 z-50" style={{
+//   background: "linear-gradient(90deg, #081120 0%, #0d2240 60%, #133b70 100%)"
+// }}   >
 
 //         {/* ── Announcement bar ── */}
 //         <div style={{ background: 'linear-gradient(90deg,#0e7490,#1d4ed8,#0e7490)', overflow: 'hidden' }}
@@ -226,13 +221,13 @@
 //             </button>
 //           </div>
 
-//           {/* Center: brand */}
-//           <Link to="/" className="text-center">
-//             <div className="leading-none">
-//               <span className="text-cyan-400 text-[15px] font-extrabold tracking-tight">Raju</span>
-//               <span className="text-white text-[15px] font-extrabold tracking-tight"> Mobile</span>
-//             </div>
-//             <div className="text-[8px] tracking-[3px] text-gray-500 uppercase mt-0.5">Accessories</div>
+//           {/* Center: logo image */}
+//           <Link to="/" className="absolute left-1/2 -translate-x-1/2">
+//             <img
+//               src="/mobile_logo.png"
+//               alt="Raju's Mobile Accessories"
+//               className="h-10 bg-[#f5f0eb] w-auto object-contain logo-img-dark"
+//             />
 //           </Link>
 
 //           {/* Right: wishlist, cart, user */}
@@ -266,42 +261,36 @@
 //         {/* ══════════════════════════════════════
 //             MOBILE FULL-SCREEN MENU
 //         ══════════════════════════════════════ */}
-//         {menuOpen && (
+//        {menuOpen && (
 //           <div className="md:hidden mobile-menu-overlay fixed inset-0 z-[999] flex flex-col"
 //             style={{ background: '#f5f0eb', fontFamily: "'DM Sans', sans-serif" }}>
-
+ 
 //             {/* Menu header */}
 //             <div className="flex items-center justify-between px-5 py-4"
 //               style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
-
+ 
 //               <button onClick={() => setMenuOpen(false)}
 //                 className="w-9 h-9 flex items-center justify-center rounded-full"
 //                 style={{ background: 'rgba(0,0,0,0.07)' }}>
 //                 <FaTimes className="text-gray-700 text-base" />
 //               </button>
-
-//               {/* Elegant red logo card */}
+ 
+//               {/* Logo image in menu header */}
 //               <Link to="/" onClick={() => setMenuOpen(false)}>
-//                 <div className="logo-card">
-//                   <p className="brand-font text-white/80 text-[8px] font-semibold tracking-[3px] uppercase leading-none mb-1">
-//                     Raju's
-//                   </p>
-//                   <p className="brand-font text-white text-[18px] font-extrabold leading-none tracking-tight">
-//                     MOBILE
-//                   </p>
-//                   <p className="brand-font text-white/75 text-[7px] tracking-[2.5px] uppercase mt-1 leading-none">
-//                     Accessories
-//                   </p>
-//                 </div>
+//                 <img
+//                   src="/mobile_logo.png"
+//                   alt="Raju's Mobile Accessories"
+//                   className="h-18 w-auto object-contain"
+//                 />
 //               </Link>
-
+ 
 //               <button onClick={() => { onSearchOpen(); setMenuOpen(false); }}
 //                 className="w-9 h-9 flex items-center justify-center rounded-full"
 //                 style={{ background: 'rgba(0,0,0,0.07)' }}>
 //                 <FaSearch className="text-gray-700 text-sm" />
 //               </button>
 //             </div>
-
+ 
 //             {/* Menu body */}
 //             <div className="flex-1 overflow-y-auto">
 //               {!mobileProductsOpen ? (
@@ -314,7 +303,7 @@
 //                   >
 //                     Home
 //                   </button>
-
+ 
 //                   {/* Products → */}
 //                   <button
 //                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center justify-between"
@@ -324,7 +313,7 @@
 //                     <span>Products</span>
 //                     <FaChevronRight className="text-xs" />
 //                   </button>
-
+ 
 //                   {/* Contact */}
 //                   <button
 //                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-slate-800 text-base font-medium border-b"
@@ -333,14 +322,15 @@
 //                   >
 //                     Contact
 //                   </button>
-
+ 
 //                   {/* Offers */}
 //                   <button
-//                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium"
-//                     style={{ color: '#d97706' }}
+//                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center gap-2.5"
+//                     style={{ borderColor: 'rgba(0,0,0,0.07)', color: '#d97706' }}
 //                     onClick={() => { navigate("/catalog?sale=true"); setMenuOpen(false); }}
 //                   >
-//                     🔥 Offers
+//                     <span className="text-lg leading-none">🏷️</span>
+//                     <span>Offers</span>
 //                   </button>
 //                 </div>
 //               ) : (
@@ -353,11 +343,11 @@
 //                     <FaArrowLeft className="text-xs" />
 //                     Back to Menu
 //                   </button>
-
+ 
 //                   <div className="px-6 pb-2">
 //                     <p className="text-[10px] tracking-[3px] uppercase text-gray-400 font-semibold">Browse Categories</p>
 //                   </div>
-
+ 
 //                   {navLinks.map((link, i) => (
 //                     <button
 //                       key={link.cat}
@@ -375,22 +365,50 @@
 //                 </div>
 //               )}
 //             </div>
-
-//             {/* Bottom: Login */}
-//             <div className="px-5 py-4" style={{ borderTop: '1px solid rgba(0,0,0,0.08)', background: 'rgba(0,0,0,0.03)' }}>
+ 
+//             {/* Bottom: Sign In + Social */}
+//             <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
 //               <button
-//                 className="flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium"
-//                 style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}
+//                 className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium flex items-center justify-between"
+//                 style={{ color: '#c0392b', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
 //                 onClick={() => { setShowAuthModal(true); setMenuOpen(false); }}
 //               >
-//                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: '#c0392b' }}>
-//                   <MdOutlinePerson className="text-white text-lg" />
-//                 </div>
-//                 <div className="text-left">
-//                   <div className="text-sm font-semibold text-slate-800">{user ? user.name : "Sign In / Register"}</div>
-//                   {!user && <div className="text-[10px] text-gray-400">Access orders, wishlist & more</div>}
-//                 </div>
+//                 <span>{user ? user.name : "Sign In / Register"}</span>
+//                 <MdOutlinePerson className="text-lg" />
 //               </button>
+//               <div className="px-6 pt-4 pb-5">
+//                 <p className="text-[9px] tracking-[3px] uppercase text-gray-400 font-semibold mb-3">Follow Us</p>
+//                 <div className="flex items-center gap-3">
+//                   <a href="https://instagram.com" target="_blank" rel="noreferrer"
+//                     className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+//                     style={{ background: 'rgba(0,0,0,0.06)' }}
+//                     onMouseEnter={e => e.currentTarget.style.background='linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'}
+//                     onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+//                     <FaInstagram className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+//                   </a>
+//                   <a href="https://youtube.com" target="_blank" rel="noreferrer"
+//                     className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+//                     style={{ background: 'rgba(0,0,0,0.06)' }}
+//                     onMouseEnter={e => e.currentTarget.style.background='#FF0000'}
+//                     onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+//                     <FaYoutube className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+//                   </a>
+//                   <a href="https://facebook.com" target="_blank" rel="noreferrer"
+//                     className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+//                     style={{ background: 'rgba(0,0,0,0.06)' }}
+//                     onMouseEnter={e => e.currentTarget.style.background='#1877F2'}
+//                     onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+//                     <FaFacebookF className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+//                   </a>
+//                   <a href="mailto:rajusmobile@gmail.com"
+//                     className="group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200"
+//                     style={{ background: 'rgba(0,0,0,0.06)' }}
+//                     onMouseEnter={e => e.currentTarget.style.background='#0a0f1e'}
+//                     onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.06)'}>
+//                     <FaEnvelope className="text-sm text-slate-500 group-hover:text-white transition-colors duration-200" />
+//                   </a>
+//                 </div>
+//               </div>
 //             </div>
 //           </div>
 //         )}
@@ -404,48 +422,46 @@
 //           <div className="max-w-7xl mx-auto px-6 py-4">
 //             <div className="grid grid-cols-3 items-center gap-6">
 
-
-
-
 //               {/* Brand */}
-// <Link to="/" className="group inline-flex items-center gap-3">
-//   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400 text-slate-950 shadow-md transition-transform duration-300 group-hover:scale-105">
-//     <span className="text-base font-extrabold">RM</span>
-//   </div>
-
-//   <div className="leading-none">
-//     <h1 className="text-xl font-black uppercase tracking-[0.12em] text-white">
-//       RAJU <span className="text-cyan-400">MOBILE</span>
-//     </h1>
-//     <p className="mt-1 text-[11px] font-medium tracking-[0.16em] uppercase text-slate-400 group-hover:text-slate-300 transition">
-//       Fast Delivery • Genuine Products
-//     </p>
-//   </div>
-// </Link>
-
-
-
-
-
-
-//               {/* Search */}
-//               <div className="search-bar flex rounded-xl overflow-hidden transition-all"
-//                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-//                 <input
-//                   type="text"
-//                   placeholder="Search mobiles, cases, chargers..."
-//                   className="flex-1 px-4 py-2.5 bg-transparent text-white placeholder-gray-500 text-sm outline-none"
-//                   onFocus={onSearchOpen}
-//                   readOnly
+//               <Link to="/" className="group">
+//                 <img
+//                   src="/mobile_logo.png"
+//                   alt="Raju's Mobile Accessories"
+//                   className="h-18 bg-[#f5f0eb] w-auto object-contain logo-img-dark transition-transform duration-300 group-hover:scale-105"
 //                 />
-//                 <button
-//                   onClick={onSearchOpen}
-//                   className="px-4 flex items-center justify-center transition"
-//                   style={{ background: 'rgba(6,182,212,0.85)' }}
-//                 >
-//                   <FaSearch className="text-white text-sm" />
-//                 </button>
-//               </div>
+//               </Link>
+
+// {/* Search */}
+// <div className="relative w-full max-w-xl">
+//   <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+
+//   <input
+//     type="text"
+//     placeholder="Search for products, brands and more"
+//     className="
+//       w-full
+//       bg-white
+//       border
+//       border-gray-200
+//       rounded-xl
+//       py-3
+//       pl-11
+//       pr-4
+//       text-gray-700
+//       placeholder-gray-400
+//       text-sm
+//       outline-none
+//       shadow-sm
+//       hover:shadow-md
+//       focus:ring-2
+//       focus:ring-cyan-400
+//       transition-all
+//       cursor-pointer
+//     "
+//     onFocus={onSearchOpen}
+//     readOnly
+//   />
+// </div>
 
 //               {/* Actions */}
 //               <div className="flex justify-end items-center gap-5">
@@ -478,25 +494,27 @@
 //                   </div>
 //                 </Link>
 
-//                 {/* Account */}
-//                 <div className="relative">
-//                   <button
-//                     onClick={() => setAccountOpen(!accountOpen)}
-//                     className="flex items-center gap-2 group"
-//                   >
-//                     <div className="w-8 h-8 rounded-full flex items-center justify-center"
-//                       style={{ background: accountOpen ? 'rgba(6,182,212,0.2)' : 'rgba(255,255,255,0.07)', border: '1px solid rgba(6,182,212,0.3)', transition: 'all 0.15s' }}>
-//                       <FaUserCircle className="text-base text-cyan-400" />
-//                     </div>
-//                     <div>
-//                       <div className="text-[9px] text-gray-600 uppercase tracking-widest leading-none mb-0.5">
-//                         {user ? "Hello" : "Account"}
-//                       </div>
-//                       <div className="text-xs font-semibold text-gray-300 group-hover:text-cyan-400 transition leading-none">
-//                         {user ? user.name.split(" ")[0] : "Sign In"}
-//                       </div>
-//                     </div>
-//                   </button>
+// {/* Account */}
+// <div className="relative">
+//   <button
+//     onClick={() => setAccountOpen(!accountOpen)}
+//     className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 transition-all duration-300 hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-[0_8px_24px_rgba(34,211,238,0.10)]"
+//   >
+//     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 transition-all duration-300 group-hover:scale-105 group-hover:border-cyan-400/30 group-hover:bg-cyan-400/10">
+//       <FaUserCircle className="text-xl text-gray-300 transition-all duration-300 group-hover:text-cyan-400" />
+//     </div>
+
+//     <div className="text-left leading-tight">
+//       <div className="text-[11px] font-medium text-gray-400 tracking-[0.18em] uppercase transition-colors duration-300 group-hover:text-cyan-300">
+//         {user ? "Welcome back" : "My Account"}
+//       </div>
+
+//       <div className="mt-0.5 text-sm font-semibold text-white transition-all duration-300 group-hover:text-cyan-200">
+//         {user ? user.name.split(" ")[0] : "Sign In"}
+//       </div>
+//     </div>
+//   </button>
+
 
 //                   {accountOpen && (
 //                     <div className="acct-dropdown absolute right-0 top-11 w-52 rounded-2xl overflow-hidden z-50"
@@ -509,7 +527,7 @@
 //                           </div>
 //                           <Link to="/account" onClick={() => setAccountOpen(false)}
 //                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
-//                             My Orders
+//                             My Profile
 //                           </Link>
 //                           <Link to="/wishlist" onClick={() => setAccountOpen(false)}
 //                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
@@ -530,10 +548,10 @@
 //                             Sign In
 //                           </button>
 //                           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-//                             <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
+//                             {/* <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
 //                               className="w-full text-left px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition">
 //                               Create Account
-//                             </button>
+//                             </button> */}
 //                           </div>
 //                         </>
 //                       )}
@@ -546,27 +564,55 @@
 
 //           {/* Category / page nav strip */}
 //           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
-// <div className="max-w-7xl mx-auto px-6">
-//   <ul className="flex justify-center items-center gap-12 py-3 text-xs font-semibold uppercase tracking-widest" style={{ scrollbarWidth: 'none' }}>
+//             <div className="max-w-7xl mx-auto px-6">
+//               <ul className="flex justify-center items-center gap-12 py-3 text-xs font-semibold uppercase tracking-widest" style={{ scrollbarWidth: 'none' }}>
 //                 {!isProductPage ? (
 //                   <>
-//                     <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/")}>
-//                       Home
-//                     </li>
-//                     <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/catalog")}>
-//                       Products
-//                     </li>
-//                     <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/contact")}>
-//                       Contact
-//                     </li>
-//                     <li className="nav-item px-3 py-1.5 text-orange-400 rounded-lg">
-//                       <button
-//                         onClick={() => navigate("/catalog?sale=true")}
-//                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest transition"
-//                         style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
-//                         🔥 OFFERS
-//                       </button>
-//                     </li>
+// <li>
+//   <button
+//     onClick={() => navigate("/")}
+//     className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+//       ${isActive("/") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+//       after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+//   >
+//     Home
+//   </button>
+// </li>
+
+// <li>
+//   <button
+//     onClick={() => navigate("/catalog")}
+//     className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+//       ${isActive("/catalog") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+//       after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+//   >
+//     Products
+//   </button>
+// </li>
+
+// <li>
+//   <button
+//     onClick={() => navigate("/contact")}
+//     className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
+//       ${isActive("/contact") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
+//       after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
+//   >
+//     Contact
+//   </button>
+// </li>
+// <li>
+//   <button
+//     onClick={() => navigate("/catalog?sale=true")}
+//     className="flex items-center gap-1 px-2 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-amber-300 hover:text-amber-200 transition-colors"
+//   >
+//     <img
+//       src="/offer.png"
+//       alt="Offers"
+//       className="w-4 h-4 object-contain"
+//     />
+//     <span>Offers</span>
+//   </button>
+// </li>
 //                   </>
 //                 ) : (
 //                   <>
@@ -599,37 +645,28 @@
 
 
 
-
-
-
-
-
-
-
-
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaBars, FaShoppingCart, FaSearch, FaTimes, FaHeart,
-   FaSignOutAlt, FaArrowLeft, FaHome,
-  FaMobileAlt, FaPhoneAlt, FaChevronRight,FaUserCircle,FaInstagram, FaYoutube, FaFacebookF, FaEnvelope
+  FaUserCircle, FaSignOutAlt, FaArrowLeft, FaHome,
+  FaMobileAlt, FaPhoneAlt, FaChevronRight,
+  FaInstagram, FaYoutube, FaFacebookF, FaEnvelope
 } from "react-icons/fa";
 import { MdOutlinePerson } from "react-icons/md";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { User } from "lucide-react";
 
 function Navbar({ onSearchOpen }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [logoutConfirm, setLogoutConfirm] = useState(false);
   const { cartCount, wishlist } = useCart();
   const { user, logout, setShowAuthModal } = useAuth();
   const navigate = useNavigate();
   const [showCategories, setShowCategories] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const location = useLocation();
-  const isActive = (path) => location.pathname === path;
-
 
   const isProductPage =
     location.pathname === "/catalog" ||
@@ -779,9 +816,7 @@ function Navbar({ onSearchOpen }) {
         }
       `}</style>
 
-      <nav className="navbar-root sticky top-0 z-50" style={{
-  background: "linear-gradient(90deg, #081120 0%, #0d2240 60%, #133b70 100%)"
-}}   >
+      <nav className="navbar-root sticky top-0 z-50" style={{ background: '#0a0f1e' }}>
 
         {/* ── Announcement bar ── */}
         <div style={{ background: 'linear-gradient(90deg,#0e7490,#1d4ed8,#0e7490)', overflow: 'hidden' }}
@@ -825,7 +860,7 @@ function Navbar({ onSearchOpen }) {
             <img
               src="/mobile_logo.png"
               alt="Raju's Mobile Accessories"
-              className="h-10 bg-[#f5f0eb] w-auto object-contain logo-img-dark"
+              className="h-9 w-auto object-contain logo-img-dark"
             />
           </Link>
 
@@ -843,53 +878,49 @@ function Navbar({ onSearchOpen }) {
                 <span className="badge bg-cyan-400 text-black">{cartCount}</span>
               )}
             </Link>
-            {user ? (
-              <button onClick={logout}
-                className="text-gray-300 hover:text-red-400 transition">
-                <FaSignOutAlt className="text-lg" />
-              </button>
-            ) : (
-              <button onClick={() => setShowAuthModal(true)}
-                className="text-gray-300 hover:text-cyan-400 transition">
-                <MdOutlinePerson className="text-xl" />
-              </button>
-            )}
+            {/* Always show account icon — logout is in hamburger menu */}
+            <button
+              onClick={() => user ? navigate("/account") : setShowAuthModal(true)}
+              className="text-gray-300 hover:text-cyan-400 transition"
+            >
+              <FaUserCircle className="text-xl" />
+            </button>
           </div>
         </div>
 
         {/* ══════════════════════════════════════
             MOBILE FULL-SCREEN MENU
         ══════════════════════════════════════ */}
-       {menuOpen && (
+        {menuOpen && (
           <div className="md:hidden mobile-menu-overlay fixed inset-0 z-[999] flex flex-col"
             style={{ background: '#f5f0eb', fontFamily: "'DM Sans', sans-serif" }}>
- 
+
             {/* Menu header */}
             <div className="flex items-center justify-between px-5 py-4"
               style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
- 
+
               <button onClick={() => setMenuOpen(false)}
                 className="w-9 h-9 flex items-center justify-center rounded-full"
                 style={{ background: 'rgba(0,0,0,0.07)' }}>
                 <FaTimes className="text-gray-700 text-base" />
               </button>
- 
+
               {/* Logo image in menu header */}
               <Link to="/" onClick={() => setMenuOpen(false)}>
                 <img
                   src="/mobile_logo.png"
                   alt="Raju's Mobile Accessories"
-                  className="h-18 w-auto object-contain"
+                  className="h-12 w-auto object-contain"
                 />
               </Link>
- 
+
               <button onClick={() => { onSearchOpen(); setMenuOpen(false); }}
                 className="w-9 h-9 flex items-center justify-center rounded-full"
                 style={{ background: 'rgba(0,0,0,0.07)' }}>
                 <FaSearch className="text-gray-700 text-sm" />
               </button>
             </div>
- 
+
             {/* Menu body */}
             <div className="flex-1 overflow-y-auto">
               {!mobileProductsOpen ? (
@@ -902,7 +933,7 @@ function Navbar({ onSearchOpen }) {
                   >
                     Home
                   </button>
- 
+
                   {/* Products → */}
                   <button
                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center justify-between"
@@ -912,7 +943,7 @@ function Navbar({ onSearchOpen }) {
                     <span>Products</span>
                     <FaChevronRight className="text-xs" />
                   </button>
- 
+
                   {/* Contact */}
                   <button
                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-slate-800 text-base font-medium border-b"
@@ -921,7 +952,7 @@ function Navbar({ onSearchOpen }) {
                   >
                     Contact
                   </button>
- 
+
                   {/* Offers */}
                   <button
                     className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium border-b flex items-center gap-2.5"
@@ -942,11 +973,11 @@ function Navbar({ onSearchOpen }) {
                     <FaArrowLeft className="text-xs" />
                     Back to Menu
                   </button>
- 
+
                   <div className="px-6 pb-2">
                     <p className="text-[10px] tracking-[3px] uppercase text-gray-400 font-semibold">Browse Categories</p>
                   </div>
- 
+
                   {navLinks.map((link, i) => (
                     <button
                       key={link.cat}
@@ -964,17 +995,58 @@ function Navbar({ onSearchOpen }) {
                 </div>
               )}
             </div>
- 
+
             {/* Bottom: Sign In + Social */}
             <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-              <button
-                className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium flex items-center justify-between"
-                style={{ color: '#c0392b', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
-                onClick={() => { setShowAuthModal(true); setMenuOpen(false); }}
-              >
-                <span>{user ? user.name : "Sign In / Register"}</span>
-                <MdOutlinePerson className="text-lg" />
-              </button>
+              {!user ? (
+                <button
+                  className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium flex items-center justify-between"
+                  style={{ color: '#c0392b', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
+                  onClick={() => { setShowAuthModal(true); setMenuOpen(false); }}
+                >
+                  <span>Sign In / Register</span>
+                  <MdOutlinePerson className="text-lg" />
+                </button>
+              ) : !logoutConfirm ? (
+                <>
+                  <button
+                    className="mobile-menu-item w-full text-left px-6 py-3.5 text-base font-medium flex items-center justify-between"
+                    style={{ color: '#1e293b', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
+                    onClick={() => navigate("/account")}
+                  >
+                    <span>{user.name}</span>
+                    <FaUserCircle className="text-gray-400 text-lg" />
+                  </button>
+                  <button
+                    className="mobile-menu-item w-full text-left px-6 py-3.5 text-sm font-medium flex items-center justify-between"
+                    style={{ color: '#ef4444', borderBottom: '1px solid rgba(0,0,0,0.07)' }}
+                    onClick={() => setLogoutConfirm(true)}
+                  >
+                    <span>Sign Out</span>
+                    <FaSignOutAlt className="text-sm" />
+                  </button>
+                </>
+              ) : (
+                <div className="px-6 py-4" style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', background: 'rgba(239,68,68,0.04)' }}>
+                  <p className="text-sm font-semibold text-slate-800 mb-3">Sign out of your account?</p>
+                  <div className="flex gap-2">
+                    <button
+                      className="flex-1 py-2 rounded-xl text-sm font-semibold text-white"
+                      style={{ background: '#ef4444' }}
+                      onClick={() => { logout(); setLogoutConfirm(false); setMenuOpen(false); }}
+                    >
+                      Yes, Sign Out
+                    </button>
+                    <button
+                      className="flex-1 py-2 rounded-xl text-sm font-semibold text-slate-700"
+                      style={{ border: '1.5px solid #e2e8f0', background: 'white' }}
+                      onClick={() => setLogoutConfirm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="px-6 pt-4 pb-5">
                 <p className="text-[9px] tracking-[3px] uppercase text-gray-400 font-semibold mb-3">Follow Us</p>
                 <div className="flex items-center gap-3">
@@ -1026,41 +1098,28 @@ function Navbar({ onSearchOpen }) {
                 <img
                   src="/mobile_logo.png"
                   alt="Raju's Mobile Accessories"
-                  className="h-18 bg-[#f5f0eb] w-auto object-contain logo-img-dark transition-transform duration-300 group-hover:scale-105"
+                  className="h-14 bg-white w-auto object-contain logo-img-dark transition-transform duration-300 group-hover:scale-105"
                 />
               </Link>
 
-{/* Search */}
-<div className="relative w-full max-w-xl">
-  <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-
-  <input
-    type="text"
-    placeholder="Search for products, brands and more"
-    className="
-      w-full
-      bg-white
-      border
-      border-gray-200
-      rounded-xl
-      py-3
-      pl-11
-      pr-4
-      text-gray-700
-      placeholder-gray-400
-      text-sm
-      outline-none
-      shadow-sm
-      hover:shadow-md
-      focus:ring-2
-      focus:ring-cyan-400
-      transition-all
-      cursor-pointer
-    "
-    onFocus={onSearchOpen}
-    readOnly
-  />
-</div>
+              {/* Search */}
+              <div className="search-bar flex rounded-xl overflow-hidden transition-all"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <input
+                  type="text"
+                  placeholder="Search mobiles, cases, chargers..."
+                  className="flex-1 px-4 py-2.5 bg-transparent text-white placeholder-gray-500 text-sm outline-none"
+                  onFocus={onSearchOpen}
+                  readOnly
+                />
+                <button
+                  onClick={onSearchOpen}
+                  className="px-4 flex items-center justify-center transition"
+                  style={{ background: 'rgba(6,182,212,0.85)' }}
+                >
+                  <FaSearch className="text-white text-sm" />
+                </button>
+              </div>
 
               {/* Actions */}
               <div className="flex justify-end items-center gap-5">
@@ -1093,27 +1152,25 @@ function Navbar({ onSearchOpen }) {
                   </div>
                 </Link>
 
-{/* Account */}
-<div className="relative">
-  <button
-    onClick={() => setAccountOpen(!accountOpen)}
-    className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 transition-all duration-300 hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-[0_8px_24px_rgba(34,211,238,0.10)]"
-  >
-    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 transition-all duration-300 group-hover:scale-105 group-hover:border-cyan-400/30 group-hover:bg-cyan-400/10">
-      <FaUserCircle className="text-xl text-gray-300 transition-all duration-300 group-hover:text-cyan-400" />
-    </div>
-
-    <div className="text-left leading-tight">
-      <div className="text-[11px] font-medium text-gray-400 tracking-[0.18em] uppercase transition-colors duration-300 group-hover:text-cyan-300">
-        {user ? "Welcome back" : "My Account"}
-      </div>
-
-      <div className="mt-0.5 text-sm font-semibold text-white transition-all duration-300 group-hover:text-cyan-200">
-        {user ? user.name.split(" ")[0] : "Sign In"}
-      </div>
-    </div>
-  </button>
-
+                {/* Account */}
+                <div className="relative">
+                  <button
+                    onClick={() => setAccountOpen(!accountOpen)}
+                    className="flex items-center gap-2 group"
+                  >
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ background: accountOpen ? 'rgba(6,182,212,0.2)' : 'rgba(255,255,255,0.07)', border: '1px solid rgba(6,182,212,0.3)', transition: 'all 0.15s' }}>
+                      <FaUserCircle className="text-base text-cyan-400" />
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-gray-600 uppercase tracking-widest leading-none mb-0.5">
+                        {user ? "Hello" : "Account"}
+                      </div>
+                      <div className="text-xs font-semibold text-gray-300 group-hover:text-cyan-400 transition leading-none">
+                        {user ? user.name.split(" ")[0] : "Sign In"}
+                      </div>
+                    </div>
+                  </button>
 
                   {accountOpen && (
                     <div className="acct-dropdown absolute right-0 top-11 w-52 rounded-2xl overflow-hidden z-50"
@@ -1126,18 +1183,36 @@ function Navbar({ onSearchOpen }) {
                           </div>
                           <Link to="/account" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
-                            My Profile
+                            My Orders
                           </Link>
                           <Link to="/wishlist" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
                             Wishlist
                           </Link>
                           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                            <button onClick={() => { logout(); setAccountOpen(false); }}
-                              className="flex items-center gap-2 w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition">
-                              <FaSignOutAlt className="text-xs" />
-                              Sign Out
-                            </button>
+                            {!logoutConfirm ? (
+                              <button onClick={() => setLogoutConfirm(true)}
+                                className="flex items-center gap-2 w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition">
+                                <FaSignOutAlt className="text-xs" />
+                                Sign Out
+                              </button>
+                            ) : (
+                              <div className="px-4 py-3">
+                                <p className="text-xs text-gray-400 mb-2">Confirm sign out?</p>
+                                <div className="flex gap-2">
+                                  <button onClick={() => { logout(); setAccountOpen(false); setLogoutConfirm(false); }}
+                                    className="flex-1 py-1.5 rounded-lg text-xs font-bold text-white"
+                                    style={{ background: '#ef4444' }}>
+                                    Yes
+                                  </button>
+                                  <button onClick={() => setLogoutConfirm(false)}
+                                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold text-gray-400"
+                                    style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </>
                       ) : (
@@ -1147,10 +1222,10 @@ function Navbar({ onSearchOpen }) {
                             Sign In
                           </button>
                           <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                            {/* <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
+                            <button onClick={() => { setShowAuthModal(true); setAccountOpen(false); }}
                               className="w-full text-left px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition">
                               Create Account
-                            </button> */}
+                            </button>
                           </div>
                         </>
                       )}
@@ -1167,51 +1242,23 @@ function Navbar({ onSearchOpen }) {
               <ul className="flex justify-center items-center gap-12 py-3 text-xs font-semibold uppercase tracking-widest" style={{ scrollbarWidth: 'none' }}>
                 {!isProductPage ? (
                   <>
-<li>
-  <button
-    onClick={() => navigate("/")}
-    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
-      ${isActive("/") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
-      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
-  >
-    Home
-  </button>
-</li>
-
-<li>
-  <button
-    onClick={() => navigate("/catalog")}
-    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
-      ${isActive("/catalog") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
-      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
-  >
-    Products
-  </button>
-</li>
-
-<li>
-  <button
-    onClick={() => navigate("/contact")}
-    className={`relative w-[120px] h-8 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200
-      ${isActive("/contact") ? "text-white after:scale-x-100" : "text-gray-300 hover:text-white after:scale-x-0 hover:after:scale-x-100"}
-      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:origin-left after:bg-cyan-400 after:transition-transform after:duration-300`}
-  >
-    Contact
-  </button>
-</li>
-<li>
-  <button
-    onClick={() => navigate("/catalog?sale=true")}
-    className="flex items-center gap-1 px-2 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-amber-300 hover:text-amber-200 transition-colors"
-  >
-    <img
-      src="/offer.png"
-      alt="Offers"
-      className="w-4 h-4 object-contain"
-    />
-    <span>Offers</span>
-  </button>
-</li>
+                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/")}>
+                      Home
+                    </li>
+                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/catalog")}>
+                      Products
+                    </li>
+                    <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/contact")}>
+                      Contact
+                    </li>
+                    <li className="nav-item px-3 py-1.5 text-orange-400 rounded-lg">
+                      <button
+                        onClick={() => navigate("/catalog?sale=true")}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest transition"
+                        style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                        🔥 OFFERS
+                      </button>
+                    </li>
                   </>
                 ) : (
                   <>

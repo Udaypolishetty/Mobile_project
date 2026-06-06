@@ -19,7 +19,7 @@ import CheckoutPage from "./components/UserDetails/CheckOutPage";
 import OrderSuccessPage from "./components/UserDetails/OrderSuccessPage";
 import ContactPage from "./components/UserDetails/ContactPage";
 import NotFoundPage from "./components/UserDetails/NotFoundPage";
-
+import OrderDetailsPage from "./components/UserDetails/OrderDetailsPage";
 function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -54,6 +54,10 @@ function App() {
             <Route path="/order-success" element={<OrderSuccessPage />} />
             <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
             <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
+            <Route
+  path="/order/:id"
+  element={<OrderDetailsPage />}
+/>
           </Routes>
         </CartProvider>
       </AuthProvider>
