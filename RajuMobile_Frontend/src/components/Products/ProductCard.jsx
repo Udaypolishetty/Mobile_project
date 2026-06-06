@@ -309,7 +309,7 @@ function ProductCard({ product }) {
           position: relative;
           overflow: hidden;
           background: #f8f9fb;
-          aspect-ratio: 1 / 1;
+          aspect-ratio: 1 / 0.6;
         }
         .pc-img {
           width: 100%;
@@ -407,11 +407,11 @@ function ProductCard({ product }) {
 
         /* Info section */
         .pc-info {
-          padding: 12px 14px 14px;
+          padding: 10px 12px 12px;
           display: flex;
           flex-direction: column;
           flex: 1;
-          gap: 4px;
+          gap: 3px;
         }
 
         .pc-cat {
@@ -423,10 +423,10 @@ function ProductCard({ product }) {
         }
 
         .pc-name {
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 600;
           color: #1e293b;
-          line-height: 1.4;
+          line-height: 1.35;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;

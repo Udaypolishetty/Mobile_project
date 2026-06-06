@@ -335,10 +335,7 @@ const FAQS = [
     q: "How can I track my order?",
     a: "Once your order ships, you'll receive a tracking link via SMS and email. You can also track it live from your account dashboard.",
   },
-  {
-    q: "What is the return & exchange policy?",
-    a: "We offer hassle-free 7-day returns. Items must be unused and in original packaging. Initiate a return from your orders page.",
-  },
+,
 ];
 
 
@@ -418,7 +415,7 @@ const handleWishlist = () => toggleWishlist(product);
       {/* Google Font */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');`}</style>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-6">
 
         {/* Back */}
         <button
@@ -429,7 +426,7 @@ const handleWishlist = () => toggleWishlist(product);
         </button>
 
         {/* ── SECTION 1 — Product Hero ───────────────────────── */}
-        <div className="grid md:grid-cols-2 gap-8 bg-white rounded-3xl shadow-sm p-6 md:p-8 mb-6 border border-gray-100">
+        <div className="grid md:grid-cols-2 gap-4 bg-white rounded-2xl shadow-sm p-3 md:p-4 mb-4 border border-gray-100">
           {/* Image */}
           <div>
             <ImageZoom src={product.image} alt={product.name} badge={product.badge} />
@@ -440,7 +437,7 @@ const handleWishlist = () => toggleWishlist(product);
             <span className="text-cyan-600 text-[10px] font-bold uppercase tracking-widest mb-1">
               {product.category}
             </span>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3 leading-tight">
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-2 leading-tight">
               {product.name}
             </h1>
 
@@ -457,7 +454,7 @@ const handleWishlist = () => toggleWishlist(product);
               </span>
               {product.originalPrice && (
                 <>
-                  <span className="text-gray-400 line-through text-lg mb-1">
+                  <span className="text-gray-400 line-through text-base mb-1">
                     ₹{product.originalPrice.toLocaleString()}
                   </span>
                   <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full mb-1">

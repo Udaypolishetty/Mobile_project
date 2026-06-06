@@ -6,9 +6,9 @@ import { FaFilter, FaSortAmountDown, FaTimes, FaChevronDown, FaChevronUp, FaChec
 import { MdTune, MdClose } from "react-icons/md";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "../AnimatedSection";
-import { products, categories } from "../../data/products";
+// import { products, categories } from "../../data/products";
 import OurService from "../HomeFiles/OurService";
-
+import axios from "axios";
 
 const SORT_OPTIONS = [
   { label: "Relevance", value: "relevance" },
@@ -57,6 +57,8 @@ function FilterSection({ title, children, defaultOpen = true }) {
 }
 
 function CatalogPage() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCat, setSelectedCat] = useState("All");
   const [sort, setSort] = useState("relevance");
@@ -66,12 +68,37 @@ function CatalogPage() {
   const [activeSortOpen, setActiveSortOpen] = useState(false);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const sortRef = useRef(null);
+  const categories = [
+    "All",
+    ...new Set(products.map((p) => p.category))
+  ];
+
+
+
 
   useEffect(() => {
     const cat = searchParams.get("category");
     if (cat) setSelectedCat(cat);
     else setSelectedCat("All");
   }, [searchParams]);
+
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/products/")
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+
+
+
 
   // Count active filters
   useEffect(() => {
@@ -91,6 +118,17 @@ function CatalogPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+
+
+    if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <h2 className="text-xl font-semibold">
+          Loading Products...
+        </h2>
+      </div>
+    );
+  }
   const filtered = products
     .filter((p) => selectedCat === "All" || p.category === selectedCat)
     .filter((p) => !saleOnly || p.badge === "Sale" || p.badge === "40% Off")
