@@ -53,3 +53,28 @@ def add_product(request):
         )
 
     return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def update_product(request, pk):
+    try:
+        product = Product.objects.get(id=pk)
+    except Product.DoesNotExist:
+        return Response(
+            {"error": "Product not found"},
+            status=404
+        )
+
+    serializer = ProductSerializer(
+        product,
+        data=request.data,
+        partial=True
+    )
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "message": "Product updated successfully",
+            "product": serializer.data
+        })
+
+    return Response(serializer.errors, status=400)
