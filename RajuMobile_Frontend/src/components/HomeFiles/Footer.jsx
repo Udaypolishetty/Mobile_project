@@ -60,7 +60,13 @@ function Footer() {
 
         <div className="border-t border-gray-800 pt-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-gray-600 text-xs">© 2026 Raju Mobile Accessories. All rights reserved.</p>
-          <p className="text-gray-700 text-xs">Privacy Policy · Terms of Service</p>
+          {/* <p className="text-gray-700 text-xs">Privacy Policy · Terms of Service</p> */}
+          <Link
+            to="/policies"
+            className="hover:text-cyan-500 transition text-gray-700 text-xs"
+          >
+            Policies & Terms
+          </Link>
         </div>
       </div>
     </footer>

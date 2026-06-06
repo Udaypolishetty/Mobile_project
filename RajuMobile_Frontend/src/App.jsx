@@ -12,7 +12,7 @@ import ProductPage from "./components/Products/ProductPage";
 import CartPage from "./components/UserDetails/CartPage";
 import WhatsappButton from "./components/HomeFiles/WhatsappButton";
 import Products from "./components/Products/Products";
-
+import PoliciesPage from "./components/Legal/PoliciesPage";
 import WishlistPage from "./components/UserDetails/WishlistPage";
 import AccountPage from "./components/UserDetails/AccountPage";
 import CheckoutPage from "./components/UserDetails/CheckOutPage";
@@ -55,10 +55,8 @@ function App() {
             <Route path="/order-success" element={<OrderSuccessPage />} />
             <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
             <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
-            <Route
-  path="/order/:id"
-  element={<OrderDetailsPage />}
-/>
+            <Route path="/order/:id" element={<OrderDetailsPage />} />
+            <Route path="/policies" element={<Layout><PoliciesPage /></Layout>} />
           </Routes>
         </CartProvider>
       </AuthProvider>
