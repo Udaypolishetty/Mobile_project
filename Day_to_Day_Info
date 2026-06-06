@@ -6,6 +6,7 @@
 
              from products.models import Product
                 Product.objects.create(
+                    id = 1,                    
                     name="iPhone 15",
                     brand="Apple",
                     price=69999,
