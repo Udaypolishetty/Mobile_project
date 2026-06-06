@@ -824,7 +824,7 @@ function Navbar({ onSearchOpen }) {
           <div className="marquee-text px-4">
             🎉 HOT SUMMER SUPER SALE IS LIVE &nbsp;•&nbsp; Free Shipping All Over India &nbsp;•&nbsp;
             Cash on Delivery Available &nbsp;•&nbsp; 🎉 HOT SUMMER SUPER SALE IS LIVE &nbsp;•&nbsp; Free Shipping All Over India &nbsp;•&nbsp;
-            Easy Returns &nbsp;•&nbsp; Genuine Products Only
+             &nbsp;•&nbsp; Genuine Products Only
           </div>
         </div>
 

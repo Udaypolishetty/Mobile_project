@@ -1,4 +1,5 @@
 
+
 // import { useState } from "react";
 // import { Link } from "react-router-dom";
 // import { FaHeart, FaStar, FaShoppingCart, FaCheck } from "react-icons/fa";
@@ -6,6 +7,7 @@
 // import { useAuth } from "../../context/AuthContext";
 
 // function ProductCard({ product }) {
+//    console.log("ProductCard Render:", product);
 //   const { addToCart, toggleWishlist, isWishlisted } = useCart();
 //   const [added, setAdded] = useState(false);
 //   const [wishAnim, setWishAnim] = useState(false);
@@ -179,7 +181,7 @@
 
 //           {!product.inStock && (
 //             <div className="pc-oos">
-//               <span className="pc-oos-label">Out of Stock</span>
+//               <span className="pc-oos-label">Out of Stockdd</span>
 //             </div>
 //           )}
 
@@ -208,7 +210,7 @@
 //           <div className="pc-stars-row">
 //             <span className="pc-stars-pill">
 //               <FaStar style={{ fontSize: "9px" }} />
-//               {product.rating?.toFixed(1)}
+//               {product.rating ? Number(product.rating).toFixed(1) : '0.0'}
 //             </span>
 //           </div>
 
@@ -309,7 +311,7 @@ function ProductCard({ product }) {
           position: relative;
           overflow: hidden;
           background: #f8f9fb;
-          aspect-ratio: 1 / 0.6;
+          aspect-ratio: 1 / 0.7;
         }
         .pc-img {
           width: 100%;
@@ -407,11 +409,11 @@ function ProductCard({ product }) {
 
         /* Info section */
         .pc-info {
-          padding: 10px 12px 12px;
+          padding: 12px 14px 14px;
           display: flex;
           flex-direction: column;
           flex: 1;
-          gap: 3px;
+          gap: 4px;
         }
 
         .pc-cat {
@@ -423,10 +425,10 @@ function ProductCard({ product }) {
         }
 
         .pc-name {
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 600;
           color: #1e293b;
-          line-height: 1.35;
+          line-height: 1.4;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
@@ -555,7 +557,16 @@ function ProductCard({ product }) {
         {/* ── Image ── */}
         <div className="pc-img-wrap">
           <Link to={`/product/${product.id}`}>
-            <img src={product.image} alt={product.name} className="pc-img" loading="lazy" />
+            <img
+              src={product.image}
+              alt={product.name}
+              className="pc-img"
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = `https://placehold.co/400x400/f1f5f9/94a3b8?text=${encodeURIComponent((product.name || "Product").split(" ").slice(0, 2).join(" "))}`;
+              }}
+            />
           </Link>
 
           {/* Badge */}
@@ -611,9 +622,9 @@ function ProductCard({ product }) {
           <div className="pc-stars-row">
             <span className="pc-stars-pill">
               <FaStar style={{ fontSize: "9px" }} />
-              {product.rating?.toFixed(1)}
+              {product.rating ? Number(product.rating).toFixed(1) : '0.0'}
             </span>
-            <span className="pc-reviews">{product.reviews} reviews</span>
+            {/* <span className="pc-reviews">{product.reviews} reviews</span> */}
           </div>
 
           {/* Price */}

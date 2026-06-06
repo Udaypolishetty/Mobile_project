@@ -20,6 +20,8 @@ import OrderSuccessPage from "./components/UserDetails/OrderSuccessPage";
 import ContactPage from "./components/UserDetails/ContactPage";
 import NotFoundPage from "./components/UserDetails/NotFoundPage";
 import OrderDetailsPage from "./components/UserDetails/OrderDetailsPage";
+import FooterInfo from "./pages/FooterInfo";
+import ScrollToTop from "./components/ScrollToTop";
 function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -38,12 +40,14 @@ function Layout({ children }) {
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <Routes>
             <Route path="/" element={<Layout><HomePage /></Layout>} />
 
             <Route path="/products" element={<Layout><Products /></Layout>} />
+            
 
             <Route path="/catalog" element={<Layout><CatalogPage /></Layout>} />
             <Route path="/product/:id" element={<Layout><ProductPage /></Layout>} />
@@ -57,6 +61,15 @@ function App() {
             <Route
   path="/order/:id"
   element={<OrderDetailsPage />}
+/>
+
+<Route
+  path="/info/:type"
+  element={
+    <Layout>
+      <FooterInfo />
+    </Layout>
+  }
 />
           </Routes>
         </CartProvider>

@@ -171,7 +171,6 @@ import {
   FaMapMarkerAlt, FaPhone, FaBoxOpen, FaAward, FaThumbsUp
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { products } from "../../data/products";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import ProductCard from "./ProductCard";
@@ -181,6 +180,7 @@ import OurService from "../HomeFiles/OurService";
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function StarRow({ rating, size = "text-sm" }) {
+  
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
@@ -349,8 +349,9 @@ const MOCK_REVIEWS = [
 /* ─── main component ─────────────────────────────────────── */
 function ProductDetailPage() {
   const { id } = useParams();
+  const [product, setProduct] = useState(null);
+const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const product = products.find((p) => p.id === Number(id));
   const { addToCart, toggleWishlist, isWishlisted } = useCart();
   const { requireAuth } = useAuth();
   const [qty, setQty] = useState(1);
@@ -360,6 +361,33 @@ function ProductDetailPage() {
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviews, setReviews] = useState(MOCK_REVIEWS);
+  const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(() => {
+  fetch("http://127.0.0.1:8000/api/products/")
+    .then((res) => res.json())
+    .then((data) => {
+      const found = data.find(
+        (p) => p.id === Number(id)
+      );
+
+      setProduct(found);
+      setLoading(false);
+      setAllProducts(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
+}, [id]);
+
+if (loading) {
+  return (
+    <div className="p-10 text-center">
+      Loading...
+    </div>
+  );
+}
 
   if (!product) {
     return (
@@ -379,9 +407,13 @@ function ProductDetailPage() {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
 
-  const related = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+const related = allProducts
+  .filter(
+    (p) =>
+      p.category === product.category &&
+      p.id !== product.id
+  )
+  .slice(0, 4);
 
 const handleAddToCart = () => {
   addToCart(product, qty);

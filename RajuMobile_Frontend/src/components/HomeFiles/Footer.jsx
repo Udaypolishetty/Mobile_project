@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaYoutube, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import AnimatedSection from "../AnimatedSection";
 
 function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="bg-[#f5f0eb]-950 text-gray-300 pt-10 pb-6">
       <div className="max-w-7xl mx-auto px-6">
@@ -58,11 +59,36 @@ function Footer() {
           </div>
         </AnimatedSection>
 
-        <div className="border-t border-gray-800 pt-5 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-gray-600 text-xs">© 2026 Raju Mobile Accessories. All rights reserved.</p>
-          <p className="text-gray-700 text-xs">Privacy Policy · Terms of Service</p>
-        </div>
-      </div>
+<div className="border-t border-gray-800 pt-4 mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+  <div className="flex items-center gap-4 text-xs flex-wrap">
+    <button
+      onClick={() => navigate("/info/privacy")}
+      className="text-gray-500 hover:text-cyan-400 transition"
+    >
+      Privacy Policy
+    </button>
+
+    <button
+      onClick={() => navigate("/info/terms")}
+      className="text-gray-500 hover:text-cyan-400 transition"
+    >
+      Terms
+    </button>
+
+    <button
+      onClick={() => navigate("/info/shipping")}
+      className="text-gray-500 hover:text-cyan-400 transition"
+    >
+      Shipping
+    </button>
+  </div>
+
+  <div className="text-xs text-gray-500 md:text-right">
+    © 2026 Raju Mobile. All Rights Reserved.
+  </div>
+</div>
+</div>
+
     </footer>
   );
 }
