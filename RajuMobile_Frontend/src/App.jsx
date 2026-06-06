@@ -12,7 +12,7 @@ import ProductPage from "./components/Products/ProductPage";
 import CartPage from "./components/UserDetails/CartPage";
 import WhatsappButton from "./components/HomeFiles/WhatsappButton";
 import Products from "./components/Products/Products";
-
+import PoliciesPage from "./components/Legal/PoliciesPage";
 import WishlistPage from "./components/UserDetails/WishlistPage";
 import AccountPage from "./components/UserDetails/AccountPage";
 import CheckoutPage from "./components/UserDetails/CheckOutPage";

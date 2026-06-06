@@ -301,6 +301,7 @@ export default function AuthModal() {
   const [toast, setToast] = useState(null); // { message, type }
   const [locLoading, setLocLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [acceptedPolicy, setAcceptedPolicy] = useState(false);
 
   const [form, setForm] = useState({
     name: "", email: "", password: "", confirmPassword: "",
@@ -863,9 +864,51 @@ export default function AuthModal() {
                     </button>
                   }
                 />
-                <button className="auth-submit auth-submit-primary" onClick={nextStep}>
-                  Continue <FaArrowRight style={{ fontSize: "12px" }} />
-                </button>
+                <div className="flex items-start gap-3 mb-5">
+  <input
+    type="checkbox"
+    id="policy"
+    checked={acceptedPolicy}
+    onChange={(e) => setAcceptedPolicy(e.target.checked)}
+    className="mt-1 h-4 w-4 accent-cyan-500 cursor-pointer"
+  />
+
+  <label
+    htmlFor="policy"
+    className="text-sm text-gray-600 leading-relaxed"
+  >
+    I agree to the{" "}
+    <a
+      href="/policies"
+      target="_blank"
+      className="text-cyan-600 font-semibold hover:underline"
+    >
+      Privacy Policy
+    </a>
+    {" "}and{" "}
+    <a
+      href="/policies"
+      target="_blank"
+      className="text-cyan-600 font-semibold hover:underline"
+    >
+      Terms & Conditions
+    </a>
+  </label>
+</div>
+                <button
+  type="button"
+  onClick={nextStep}
+  disabled={!acceptedPolicy}
+  className={`w-full py-4 rounded-2xl font-semibold transition-all duration-300
+    ${
+      acceptedPolicy
+        ? "bg-[#0f1b3d] text-white hover:shadow-lg cursor-pointer"
+        : "bg-[#0f1b3d]/40 text-white/60 cursor-not-allowed"
+    }
+  `}
+>
+  Continue →
+</button>
               </>
             )}
 
