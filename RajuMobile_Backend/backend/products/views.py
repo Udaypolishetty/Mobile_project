@@ -37,3 +37,19 @@ def delete_all_products(request):
     return Response({
         "message": f"{count} products deleted successfully"
     })
+
+@api_view(['POST'])
+def add_product(request):
+    serializer = ProductSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {
+                "message": "Product added successfully",
+                "product": serializer.data
+            },
+            status=201
+        )
+
+    return Response(serializer.errors, status=400)

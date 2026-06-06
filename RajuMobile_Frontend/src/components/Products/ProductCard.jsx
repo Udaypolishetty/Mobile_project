@@ -603,7 +603,7 @@ function ProductCard({ product }) {
           <div className="pc-stars-row">
             <span className="pc-stars-pill">
               <FaStar style={{ fontSize: "9px" }} />
-              {product.rating?.toFixed(1)}
+              {Number(product.rating).toFixed(1)}
             </span>
           </div>
 
