@@ -860,7 +860,7 @@ function Navbar({ onSearchOpen }) {
             <img
               src="/mobile_logo.png"
               alt="Raju's Mobile Accessories"
-              className="h-9 w-auto object-contain logo-img-dark"
+              className="h-12 bg-white w-auto object-contain logo-img-dark"
             />
           </Link>
 
@@ -910,7 +910,7 @@ function Navbar({ onSearchOpen }) {
                 <img
                   src="/mobile_logo.png"
                   alt="Raju's Mobile Accessories"
-                  className="h-12 w-auto object-contain"
+                  className="h-18 w-auto object-contain"
                 />
               </Link>
 
@@ -1183,7 +1183,7 @@ function Navbar({ onSearchOpen }) {
                           </div>
                           <Link to="/account" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
-                            My Orders
+                            My Profile
                           </Link>
                           <Link to="/wishlist" onClick={() => setAccountOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">
@@ -1251,14 +1251,15 @@ function Navbar({ onSearchOpen }) {
                     <li className="nav-item px-3 py-1.5 text-gray-400 rounded-lg" onClick={() => navigate("/contact")}>
                       Contact
                     </li>
-                    <li className="nav-item px-3 py-1.5 text-orange-400 rounded-lg">
-                      <button
-                        onClick={() => navigate("/catalog?sale=true")}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest transition"
-                        style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }}>
-                        🔥 OFFERS
-                      </button>
-                    </li>
+<li className="nav-item">
+  <button
+    onClick={() => navigate("/catalog?sale=true")}
+    className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-orange-500 hover:text-orange-600 transition"
+  >
+    <span>🏷️</span>
+    <span>OFFERS</span>
+  </button>
+</li>
                   </>
                 ) : (
                   <>
