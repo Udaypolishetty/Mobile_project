@@ -400,6 +400,7 @@ import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
 function ProductCard({ product }) {
+   console.log("ProductCard Render:", product);
   const { addToCart, toggleWishlist, isWishlisted } = useCart();
   const [added, setAdded] = useState(false);
   const [wishAnim, setWishAnim] = useState(false);

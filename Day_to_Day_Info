@@ -1,0 +1,33 @@
+06/06/2026
+    add products from the Django shell
+        1. go to this -->  (venv) D:\Mobile_project\RajuMobile_Backend\backend>
+        2. run -->  python manage.py shell 
+        3. it will show ">>>>"  
+
+             from products.models import Product
+                Product.objects.create(
+                    name="iPhone 15",
+                    brand="Apple",
+                    price=69999,
+                    description="128GB Storage, A16 Bionic Chip",
+                    image="https://example.com/iphone15.jpg",
+                    rating=4.8,
+                    reviews=2450,
+                    stock=20
+                )
+        4. paste in Django shell
+        5. run --> exit()
+        6. Get http://127.0.0.1:8000/api/products/ in postman
+
+
+
+Product.objects.create(
+    name="Spigen Case",
+    brand="Spigen",
+    category="Cases & Covers",
+    price=999,
+    rating=4.7,
+    reviews=1200,
+    stock=50,
+    image="https://www.amazon.in/MOBILOOK-Printed-Personalized-Messages-Digital/dp/B0GJZJ896S"
+)

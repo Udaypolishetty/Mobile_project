@@ -6,7 +6,6 @@ import { FaFilter, FaSortAmountDown, FaTimes, FaChevronDown, FaChevronUp, FaChec
 import { MdTune, MdClose } from "react-icons/md";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "../AnimatedSection";
-import { products, categories } from "../../data/products";
 import OurService from "../HomeFiles/OurService";
 
 
@@ -56,7 +55,9 @@ function FilterSection({ title, children, defaultOpen = true }) {
   );
 }
 
+
 function CatalogPage() {
+  const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCat, setSelectedCat] = useState("All");
   const [sort, setSort] = useState("relevance");
@@ -66,6 +67,36 @@ function CatalogPage() {
   const [activeSortOpen, setActiveSortOpen] = useState(false);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const sortRef = useRef(null);
+
+{/*  used to fetch api from backend(Django) */}
+useEffect(() => {
+  const fetchProducts = async () => {
+    
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/products/"
+      );
+
+      const data = await response.json();
+
+      const formattedProducts = data.map((item) => ({
+        ...item,
+        category: item.category,
+        inStock: item.stock > 0,
+        price: Number(item.price),
+        rating: Number(item.rating),
+      }));
+
+      setProducts(formattedProducts);
+      console.log("Products from API:", formattedProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  fetchProducts();
+}, []);
+
 
   useEffect(() => {
     const cat = searchParams.get("category");
@@ -91,18 +122,25 @@ function CatalogPage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const filtered = products
-    .filter((p) => selectedCat === "All" || p.category === selectedCat)
-    .filter((p) => !saleOnly || p.badge === "Sale" || p.badge === "40% Off")
-    .filter((p) => p.price >= priceRange.min && p.price <= priceRange.max)
-    .sort((a, b) => {
-      if (sort === "az") return a.name.localeCompare(b.name);
-      if (sort === "za") return b.name.localeCompare(a.name);
-      if (sort === "price_asc") return a.price - b.price;
-      if (sort === "price_desc") return b.price - a.price;
-      if (sort === "rating") return b.rating - a.rating;
-      return 0;
-    });
+  
+
+  const filtered = products.filter(
+  (p) => selectedCat === "All" || p.category === selectedCat
+);
+
+  
+    
+
+const categories = [
+  "All",
+  "Mobiles",
+  "Earphones",
+  "Chargers",
+  "Cases & Covers",
+  "Smart Watches",
+  "Power Banks",
+  "Accessories",
+]; 
 
   const setCategory = (cat) => {
     setSelectedCat(cat);
@@ -495,14 +533,14 @@ function CatalogPage() {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-4">
                   {filtered.map((p, i) => (
-                    <div
-                      key={p.id}
-                      className="grid-item"
-                      style={{ animationDelay: `${Math.min(i * 40, 300)}ms` }}
-                    >
-                      <ProductCard product={p} />
-                    </div>
-                  ))}
+  <div
+    key={p.id}
+    className="grid-item"
+    style={{ animationDelay: `${Math.min(i * 40, 300)}ms` }}
+  >
+    <ProductCard product={p} />
+  </div>
+))}
                 </div>
               )}
             </div>
@@ -616,6 +654,7 @@ function CatalogPage() {
                       {cat}
                     </button>
                   ))}
+                  
                 </div>
               </div>
 
