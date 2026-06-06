@@ -9,6 +9,7 @@ import { MdVerified, MdLocationCity } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import { updateProfile } from "../../api/authApi";
 import AnimatedSection from "../AnimatedSection";
+import { useCart } from "../../context/CartContext";
 
 /* ─── tiny reusable info row ─────────────────────────────────── */
 function InfoRow({ icon: Icon, label, value, iconColor = "text-cyan-500" }) {
@@ -60,7 +61,8 @@ const MOCK_ORDERS = [];   // empty = shows "no orders yet" state
    MAIN ACCOUNT PAGE
 ═══════════════════════════════════════════════════════════════ */
 export default function AccountPage() {
-  const { user, logout, updateUser, setShowAuthModal, setAuthMode } = useAuth();
+const { user, logout, updateUser, setShowAuthModal, setAuthMode } = useAuth();
+const { orders } = useCart();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "orders" | "settings"
@@ -299,39 +301,90 @@ export default function AccountPage() {
         {/* ════════════════════════════════════════════════════════
             TAB: ORDERS
         ════════════════════════════════════════════════════════ */}
-        {activeTab === "orders" && (
-          <AnimatedSection direction="up" delay={100}>
-            {MOCK_ORDERS.length === 0 ? (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 text-center">
-                <FaBoxOpen className="text-5xl text-gray-200 mx-auto mb-4" />
-                <h3 className="font-bold text-gray-700 mb-1">No orders yet</h3>
-                <p className="text-gray-400 text-sm mb-6">Your order history will appear here once you place an order.</p>
-                <button
-                  onClick={() => navigate("/catalog")}
-                  className="bg-black hover:bg-cyan-600 text-white font-bold px-6 py-3 rounded-2xl transition text-sm"
-                >
-                  Start Shopping
-                </button>
+{activeTab === "orders" && (
+  <AnimatedSection direction="up" delay={100}>
+    {orders.length === 0 ? (
+      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 text-center">
+        <FaBoxOpen className="text-5xl text-gray-200 mx-auto mb-4" />
+        <h3 className="font-bold text-gray-700 mb-1">No orders yet</h3>
+        <p className="text-gray-400 text-sm mb-6">
+          Your order history will appear here once you place an order.
+        </p>
+        <button
+          onClick={() => navigate("/catalog")}
+          className="bg-black hover:bg-cyan-600 text-white font-bold px-6 py-3 rounded-2xl transition text-sm"
+        >
+          Start Shopping
+        </button>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4"
+          >
+            <div className="flex justify-between mb-3">
+              <div>
+                <p className="font-bold text-gray-800">
+                  Order #{order.id}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {new Date(order.date).toLocaleString()}
+                </p>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {MOCK_ORDERS.map((order) => (
-                  <div key={order.id} className="bg-white rounded-2xl border border-gray-100 p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="font-bold text-gray-800 text-sm">Order #{order.id}</p>
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${
-                        order.status === "Delivered" ? "bg-green-100 text-green-700" :
-                        order.status === "Processing" ? "bg-orange-100 text-orange-700" :
-                        "bg-gray-100 text-gray-600"
-                      }`}>{order.status}</span>
-                    </div>
-                    <p className="text-gray-400 text-xs">{order.date} · ₹{order.total.toLocaleString()}</p>
-                  </div>
-                ))}
+
+              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold uppercase">
+                {order.status}
+              </span>
+            </div>
+
+            {order.items.map((item) => (
+              <div
+                key={item.id}
+                className="flex gap-3 py-2 border-t border-gray-100"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover rounded-xl"
+                />
+
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-gray-800">
+                    {item.name}
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Qty: {item.qty}
+                  </p>
+                  <p className="font-bold text-cyan-600">
+                    ₹{item.price}
+                  </p>
+                </div>
               </div>
-            )}
-          </AnimatedSection>
-        )}
+            ))}
+
+            <div className="border-t border-gray-100 pt-3 mt-3 flex justify-between">
+              <span className="font-semibold text-gray-700">
+                Total
+              </span>
+              <span className="font-bold text-gray-900">
+                ₹{order.total}
+              </span>
+            </div>
+
+            <button
+              onClick={() => navigate(`/order/${order.id}`)}
+              className="w-full mt-4 bg-black hover:bg-cyan-600 text-white py-2 rounded-xl font-medium transition"
+            >
+              Track Order
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+  </AnimatedSection>
+)}
 
         {/* ════════════════════════════════════════════════════════
             TAB: SETTINGS
