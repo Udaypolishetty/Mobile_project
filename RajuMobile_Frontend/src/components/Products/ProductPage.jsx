@@ -362,20 +362,42 @@ const { addToCart, toggleWishlist, isWishlisted, getQty, updateQty, removeFromCa
   const [reviewRating, setReviewRating] = useState(0);
   const [reviews, setReviews] = useState(MOCK_REVIEWS);
   const [allProducts, setAllProducts] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(0);
+
+useEffect(() => {
+  if (!product?.images?.length) return;
+
+  const interval = setInterval(() => {
+    setSelectedImage((prev) =>
+      (prev + 1) % product.images.length
+    );
+  }, 3000);
+
+  return () => clearInterval(interval);
+}, [product]);
 
   useEffect(() => {
   fetch("http://127.0.0.1:8000/api/products/")
     .then((res) => res.json())
-
-
 .then((data) => {
   // map stock → inStock and normalize types, same as CatalogPage
   const formatted = data.map((item) => ({
-    ...item,
-    inStock: item.stock > 0,
-    price:   Number(item.price),
-    rating:  Number(item.rating),
-  }));
+  ...item,
+  inStock: item.stock > 0,
+  price: Number(item.price),
+  rating: Number(item.rating),
+
+  originalPrice: item.original_price
+    ? Number(item.original_price)
+    : null,
+
+  badge: item.badge || "",
+}));
+
+
+ 
+
+
 
   const found = formatted.find((p) => p.id === Number(id));
   setProduct(found);
@@ -470,8 +492,28 @@ const handleWishlist = () => toggleWishlist(product);
         <div className="grid md:grid-cols-2 gap-4 bg-white rounded-2xl shadow-sm p-3 md:p-4 mb-4 border border-gray-100">
           {/* Image */}
           <div>
-            <ImageZoom src={product.image} alt={product.name} badge={product.badge} />
+           <ImageZoom
+  src={`http://127.0.0.1:8000${product.images[selectedImage].image}`}
+  alt={product.name}
+/>
+
+ <div className="flex gap-2 mt-3">
+  {product.images?.map((img, index) => (
+    <img
+      key={img.id}
+      src={`http://127.0.0.1:8000${img.image}`}
+      alt=""
+      onClick={() => setSelectedImage(index)}
+      className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${
+        selectedImage === index
+          ? "border-cyan-500"
+          : "border-gray-200"
+      }`}
+    />
+  ))}
+</div>
           </div>
+         
 
           {/* Details */}
           <div className="flex flex-col">

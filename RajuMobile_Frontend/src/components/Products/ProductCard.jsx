@@ -264,21 +264,27 @@ function ProductCard({ product }) {
   const qty = getQty(product.id);
   const [added, setAdded] = useState(false);
   const [wishAnim, setWishAnim] = useState(false);
+  const { requireAuth } = useAuth();
+  
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
 
 const handleAddToCart = () => {
-  addToCart(product);
-  setAdded(true);
-  setTimeout(() => setAdded(false), 1800);
+  requireAuth(() => {
+    addToCart(product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  });
 };
 
 const handleWishlist = () => {
-  toggleWishlist(product);
-  setWishAnim(true);
-  setTimeout(() => setWishAnim(false), 400);
+  requireAuth(() => {
+    toggleWishlist(product);
+    setWishAnim(true);
+    setTimeout(() => setWishAnim(false), 400);
+  });
 };
 
   const wishlisted = isWishlisted(product.id);
@@ -554,15 +560,15 @@ const handleWishlist = () => {
         <div className="pc-img-wrap">
           <Link to={`/product/${product.id}`}>
             <img
-              src={product.image}
-              alt={product.name}
-              className="pc-img"
-              loading="lazy"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = `https://placehold.co/400x400/f1f5f9/94a3b8?text=${encodeURIComponent((product.name || "Product").split(" ").slice(0, 2).join(" "))}`;
-              }}
-            />
+  src={
+    product.images?.[0]?.image
+      ? `http://127.0.0.1:8000${product.images[0].image}`
+      : "https://placehold.co/400x400?text=No+Image"
+  }
+  alt={product.name}
+  className="pc-img"
+  loading="lazy"
+/>
           </Link>
 
           {/* Badge */}
@@ -642,7 +648,16 @@ const handleWishlist = () => {
     <div className="pc-qty-row">
       <button className="pc-qty-btn" onClick={() => updateQty(product.id, qty - 1)}>−</button>
       <span className="pc-qty-num">{qty}</span>
-      <button className="pc-qty-btn pc-qty-plus" onClick={() => addToCart(product)}>+</button>
+      <button
+  className="pc-qty-btn pc-qty-plus"
+  onClick={() =>
+    requireAuth(() => {
+      addToCart(product);
+    })
+  }
+>
+  +
+</button>
     </div>
   ) : (
     <button

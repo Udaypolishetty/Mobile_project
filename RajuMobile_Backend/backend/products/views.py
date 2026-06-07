@@ -4,6 +4,15 @@ from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
 
+from rest_framework.permissions import (
+    AllowAny,
+    IsAdminUser
+)
+from rest_framework.decorators import (
+    api_view,
+    permission_classes
+)
+
 
 @api_view(['GET'])
 def get_products(request):
@@ -13,6 +22,7 @@ def get_products(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def delete_product(request, pk):
     try:
         product = Product.objects.get(id=pk)
@@ -28,6 +38,7 @@ def delete_product(request, pk):
         }, status=404)
     
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def delete_all_products(request):
 
     count = Product.objects.count()
@@ -39,6 +50,7 @@ def delete_all_products(request):
     })
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def add_product(request):
     serializer = ProductSerializer(data=request.data)
 
@@ -55,6 +67,7 @@ def add_product(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def update_product(request, pk):
     try:
         product = Product.objects.get(id=pk)

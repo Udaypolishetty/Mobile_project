@@ -33,3 +33,8 @@ Product.objects.create(
     stock=50,
     image="https://www.amazon.in/MOBILOOK-Printed-Personalized-Messages-Digital/dp/B0GJZJ896S"
 )
+
+7/7/2026
+
+   in backend path
+    1. pip install pillow

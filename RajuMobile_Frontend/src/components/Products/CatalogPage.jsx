@@ -845,11 +845,20 @@ function CatalogPage() {
         const response = await fetch("http://127.0.0.1:8000/api/products/");
         const data = await response.json();
         setProducts(data.map((item) => ({
-          ...item,
-          inStock: item.stock > 0,
-          price: Number(item.price),
-          rating: Number(item.rating),
-        })));
+  ...item,
+
+  inStock: item.stock > 0,
+
+  price: Number(item.price),
+
+  rating: Number(item.rating),
+
+  originalPrice: item.original_price
+    ? Number(item.original_price)
+    : null,
+
+  badge: item.badge || "",
+})))
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -887,7 +896,7 @@ function CatalogPage() {
 
   const filtered = products
     .filter((p) => selectedCat === "All" || p.category === selectedCat)
-    .filter((p) => !saleOnly || p.badge === "Sale" || p.badge === "40% Off" || p.discount > 0)
+    .filter((p) => !saleOnly || p.badge === "Sale" || p.badge === "40% Off" || p.originalPrice && p.originalPrice > p.price)
     .filter((p) => Number(p.price) >= priceRange.min && Number(p.price) <= priceRange.max)
     .sort((a, b) => {
       if (sort === "az")         return a.name.localeCompare(b.name);
