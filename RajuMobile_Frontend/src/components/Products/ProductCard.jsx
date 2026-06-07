@@ -260,7 +260,7 @@ import { useAuth } from "../../context/AuthContext";
 
 function ProductCard({ product }) {
   const { addToCart, toggleWishlist, isWishlisted, getQty, updateQty } = useCart();
-  const { requireAuth } = useAuth();
+  // const { requireAuth } = useAuth();
   const qty = getQty(product.id);
   const [added, setAdded] = useState(false);
   const [wishAnim, setWishAnim] = useState(false);
@@ -269,21 +269,17 @@ function ProductCard({ product }) {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;
 
-  const handleAddToCart = () => {
-    requireAuth(() => {
-      addToCart(product);
-      setAdded(true);
-      setTimeout(() => setAdded(false), 1800);
-    });
-  };
+const handleAddToCart = () => {
+  addToCart(product);
+  setAdded(true);
+  setTimeout(() => setAdded(false), 1800);
+};
 
-  const handleWishlist = () => {
-    requireAuth(() => {
-      toggleWishlist(product);
-      setWishAnim(true);
-      setTimeout(() => setWishAnim(false), 400);
-    });
-  };
+const handleWishlist = () => {
+  toggleWishlist(product);
+  setWishAnim(true);
+  setTimeout(() => setWishAnim(false), 400);
+};
 
   const wishlisted = isWishlisted(product.id);
 
@@ -638,29 +634,29 @@ function ProductCard({ product }) {
             )}
           </div>
 
-          {/* Add to Cart / Qty control */}
-          <div className="pc-btn">
-            {!product.inStock ? (
-              <button className="pc-atc pc-atc-disabled" disabled>Out of Stock</button>
-            ) : qty > 0 ? (
-              <div className="pc-qty-row">
-                <button className="pc-qty-btn" onClick={() => { requireAuth(() => updateQty(product.id, qty - 1)); }}>−</button>
-                <span className="pc-qty-num">{qty}</span>
-                <button className="pc-qty-btn pc-qty-plus" onClick={() => { requireAuth(() => addToCart(product)); }}>+</button>
-              </div>
-            ) : (
-              <button
-                onClick={handleAddToCart}
-                className={`pc-atc ${added ? "pc-atc-added" : "pc-atc-default"}`}
-              >
-                {added ? (
-                  <><FaCheck className="check-anim" style={{ fontSize: "11px" }} />Added!</>
-                ) : (
-                  <><FaShoppingCart style={{ fontSize: "11px" }} />Add to Cart</>
-                )}
-              </button>
-            )}
-          </div>
+{/* Add to Cart / Qty control */}
+<div className="pc-btn">
+  {!product.inStock ? (
+    <button className="pc-atc pc-atc-disabled" disabled>Out of Stock</button>
+  ) : qty > 0 ? (
+    <div className="pc-qty-row">
+      <button className="pc-qty-btn" onClick={() => updateQty(product.id, qty - 1)}>−</button>
+      <span className="pc-qty-num">{qty}</span>
+      <button className="pc-qty-btn pc-qty-plus" onClick={() => addToCart(product)}>+</button>
+    </div>
+  ) : (
+    <button
+      onClick={handleAddToCart}
+      className={`pc-atc ${added ? "pc-atc-added" : "pc-atc-default"}`}
+    >
+      {added ? (
+        <><FaCheck className="check-anim" style={{ fontSize: "11px" }} />Added!</>
+      ) : (
+        <><FaShoppingCart style={{ fontSize: "11px" }} />Add to Cart</>
+      )}
+    </button>
+  )}
+</div>
         </div>
       </div>
     </>

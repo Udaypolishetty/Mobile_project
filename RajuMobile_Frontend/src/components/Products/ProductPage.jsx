@@ -352,7 +352,7 @@ function ProductDetailPage() {
   const [product, setProduct] = useState(null);
 const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { addToCart, toggleWishlist, isWishlisted } = useCart();
+const { addToCart, toggleWishlist, isWishlisted, getQty, updateQty, removeFromCart } = useCart();
   const { requireAuth } = useAuth();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
@@ -366,15 +366,24 @@ const [loading, setLoading] = useState(true);
   useEffect(() => {
   fetch("http://127.0.0.1:8000/api/products/")
     .then((res) => res.json())
-    .then((data) => {
-      const found = data.find(
-        (p) => p.id === Number(id)
-      );
 
-      setProduct(found);
-      setLoading(false);
-      setAllProducts(data);
-    })
+
+.then((data) => {
+  // map stock → inStock and normalize types, same as CatalogPage
+  const formatted = data.map((item) => ({
+    ...item,
+    inStock: item.stock > 0,
+    price:   Number(item.price),
+    rating:  Number(item.rating),
+  }));
+
+  const found = formatted.find((p) => p.id === Number(id));
+  setProduct(found);
+  setLoading(false);
+  setAllProducts(formatted);
+})
+
+
     .catch((err) => {
       console.error(err);
       setLoading(false);
@@ -511,7 +520,7 @@ const handleWishlist = () => toggleWishlist(product);
             <DeliveryTimer />
 
             {/* Qty */}
-            <div className="flex items-center gap-3 mb-5">
+            {/* <div className="flex items-center gap-3 mb-5">
               <span className="text-sm text-gray-600 font-medium">Quantity</span>
               <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
                 <button
@@ -524,31 +533,58 @@ const handleWishlist = () => toggleWishlist(product);
                   className="w-9 h-9 flex items-center justify-center hover:bg-gray-200 font-bold text-gray-600 transition text-lg"
                 >+</button>
               </div>
-            </div>
+            </div> */}
 
             {/* CTA Buttons */}
-            <div className="flex gap-3 mb-6">
-              <button
-                disabled={!product.inStock}
-                onClick={handleAddToCart}
-                className={`flex-1 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm transition-all duration-300 ${added
-                  ? "bg-emerald-500 text-white scale-95"
-                  : "bg-gray-900 hover:bg-cyan-600 text-white disabled:bg-gray-200 disabled:text-gray-400"
-                  }`}
-              >
-                <FaShoppingCart />
-                {added ? "Added to Cart ✓" : "Add to Cart"}
-              </button>
-              <button
-                onClick={handleWishlist}
-                className={`px-5 py-3.5 rounded-2xl border-2 transition-all duration-200 ${isWishlisted(product.id)
-                  ? "border-rose-400 text-rose-500 bg-rose-50 scale-95"
-                  : "border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400"
-                  }`}
-              >
-                <FaHeart />
-              </button>
-            </div>
+<div className="flex gap-3 mb-6">
+  {!product.inStock ? (
+    <button disabled className="flex-1 font-bold py-3.5 rounded-2xl bg-gray-200 text-gray-400 text-sm cursor-not-allowed">
+      Out of Stock
+    </button>
+  ) : getQty(product.id) === 0 ? (
+    // ── Not in cart yet — show Add to Cart
+    <button
+      onClick={() => addToCart(product)}
+      className="flex-1 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm bg-gray-900 hover:bg-cyan-600 text-white transition-all duration-300"
+    >
+      <FaShoppingCart /> Add to Cart
+    </button>
+  ) : (
+    // ── Already in cart — show stepper + go to cart
+    <div className="flex-1 flex items-center gap-3">
+      <div className="flex items-center border-2 border-cyan-500 rounded-2xl overflow-hidden bg-white flex-1">
+        <button
+          onClick={() => updateQty(product.id, getQty(product.id) - 1)}
+          className="w-11 h-11 flex items-center justify-center hover:bg-cyan-50 font-bold text-cyan-600 transition text-xl"
+        >−</button>
+        <span className="flex-1 text-center text-sm font-extrabold text-gray-900">
+          {getQty(product.id)}
+        </span>
+        <button
+          onClick={() => updateQty(product.id, getQty(product.id) + 1)}
+          className="w-11 h-11 flex items-center justify-center hover:bg-cyan-50 font-bold text-cyan-600 transition text-xl"
+        >+</button>
+      </div>
+      <button
+        onClick={() => navigate("/cart")}
+        className="px-5 py-3.5 rounded-2xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-sm transition whitespace-nowrap"
+      >
+        Go to Cart →
+      </button>
+    </div>
+  )}
+
+  <button
+    onClick={handleWishlist}
+    className={`px-5 py-3.5 rounded-2xl border-2 transition-all duration-200 ${
+      isWishlisted(product.id)
+        ? "border-rose-400 text-rose-500 bg-rose-50"
+        : "border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400"
+    }`}
+  >
+    <FaHeart />
+  </button>
+</div>
 
             {/* Trust badges */}
             <div className="grid grid-cols-2 gap-2 pt-5 border-t border-gray-100">

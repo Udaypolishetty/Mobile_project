@@ -78,3 +78,40 @@ def update_product(request, pk):
         })
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def validate_stock(request):
+    items = request.data.get('items', [])  # [{ id, qty, name }, ...]
+    errors = []
+
+    for item in items:
+        try:
+            product = Product.objects.get(id=item['id'])
+            if product.stock <= 0:
+                errors.append({
+                    "id": item['id'],
+                    "name": item['name'],
+                    "issue": "out_of_stock",
+                    "message": f"{item['name']} is now out of stock."
+                })
+            elif product.stock < item['qty']:
+                errors.append({
+                    "id": item['id'],
+                    "name": item['name'],
+                    "issue": "insufficient_stock",
+                    "available": product.stock,
+                    "message": f"Only {product.stock} unit(s) of {item['name']} available."
+                })
+        except Product.DoesNotExist:
+            errors.append({
+                "id": item['id'],
+                "name": item['name'],
+                "issue": "not_found",
+                "message": f"{item['name']} is no longer available."
+            })
+
+    return Response({
+        "valid": len(errors) == 0,
+        "errors": errors
+    })

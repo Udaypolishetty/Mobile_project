@@ -114,7 +114,7 @@ export default function CheckoutPage() {
   const { user, setShowAuthModal } = useAuth();
   const navigate = useNavigate();
 
-  const [addressMode, setAddressMode] = useState("saved"); // "saved" | "new"
+  const [addressMode, setAddressMode] = useState( user?.address ? "saved" : "new"); // "saved" | "new"
   const [isGift, setIsGift] = useState(false);
   const [payment, setPayment] = useState("cod");
   const [placing, setPlacing] = useState(false);
@@ -151,7 +151,41 @@ export default function CheckoutPage() {
   };
 
 const handlePlaceOrder = async () => {
-  setPlacing(true);
+  if (!user) {          // ← auth wall only here
+    setShowAuthModal(true);
+    return;
+  }
+    // validate
+  if (addressMode === "new") {
+    if (!newAddr.name || !newAddr.phone || !newAddr.address || !newAddr.pincode) {
+      alert("Please fill in all address fields.");
+      return;
+    }
+      try {
+    const res = await fetch("http://127.0.0.1:8000/api/products/validate-stock/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cartItems.map((i) => ({ id: i.id, qty: i.qty, name: i.name })),
+      }),
+    });
+    const data = await res.json();
+    if (!data.valid) {
+      const messages = data.errors.map((e) => `• ${e.message}`).join("\n");
+      alert(`Stock issue:\n\n${messages}\n\nPlease update your cart.`);
+      navigate("/cart");
+      return;
+    }
+  } catch (err) {
+    alert("Could not verify stock. Check your connection and try again.");
+    return;
+  }
+  }
+  if (addressMode === "saved" && !user.address) {
+    alert("Please add a delivery address.");
+    return;
+  }
+  setPlacing(true)
 
   await new Promise((r) => setTimeout(r, 1200));
 
@@ -186,16 +220,11 @@ console.log("Navigating with order:", order);
       </div>
     </div>
   );
-
 useEffect(() => {
-  if (!placing && cartItems.length === 0) {
-    const timer = setTimeout(() => {
-      navigate("/cart");
-    }, 100);
-
-    return () => clearTimeout(timer);
+  if (cartItems.length === 0 && !placing) {
+    navigate("/cart");  // remove the setTimeout wrapper entirely
   }
-}, [cartItems, placing, navigate]);
+}, []);  // ← run only on mount, not on every cartItems change
 
   return (
     <>

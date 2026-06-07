@@ -233,6 +233,7 @@
 
 
 
+import { Link } from "react-router-dom";
 
 import { useState, useCallback } from "react";
 import {
@@ -245,6 +246,7 @@ import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../api/authApi";
 import AuthInput from "./AuthInput";
 import AuthToast from "./AuthToast";
+import { policyContent } from "../../pages/FooterInfo";
 
 /* ─── Validation helpers ─── */
 const validators = {
@@ -302,6 +304,7 @@ export default function AuthModal() {
   const [locLoading, setLocLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(null);
 
   const [form, setForm] = useState({
     name: "", email: "", password: "", confirmPassword: "",
@@ -864,51 +867,180 @@ export default function AuthModal() {
                     </button>
                   }
                 />
-                <div className="flex items-start gap-3 mb-5">
+                
+<div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "16px" }}>
   <input
     type="checkbox"
     id="policy"
     checked={acceptedPolicy}
     onChange={(e) => setAcceptedPolicy(e.target.checked)}
-    className="mt-1 h-4 w-4 accent-cyan-500 cursor-pointer"
+    style={{
+      marginTop: "3px", width: "16px", height: "16px",
+      accentColor: "#06b6d4", cursor: "pointer", flexShrink: 0,
+    }}
   />
-
-  <label
-    htmlFor="policy"
-    className="text-sm text-gray-600 leading-relaxed"
-  >
+  <label htmlFor="policy" style={{ fontSize: "13px", color: "#64748b", lineHeight: "1.6", cursor: "pointer" }}>
     I agree to the{" "}
-    <a
-      href="/policies"
-      target="_blank"
-      className="text-cyan-600 font-semibold hover:underline"
+    <span
+      onClick={() => setPolicyOpen("privacy")}
+      style={{ color: "#0891b2", fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}
     >
       Privacy Policy
-    </a>
+    </span>
     {" "}and{" "}
-    <a
-      href="/policies"
-      target="_blank"
-      className="text-cyan-600 font-semibold hover:underline"
+    <span
+      onClick={() => setPolicyOpen("terms")}
+      style={{ color: "#0891b2", fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}
     >
-      Terms & Conditions
-    </a>
+      Terms of Service
+    </span>
   </label>
 </div>
-                <button
-  type="button"
+
+<button
+  className="auth-submit auth-submit-primary"
   onClick={nextStep}
   disabled={!acceptedPolicy}
-  className={`w-full py-4 rounded-2xl font-semibold transition-all duration-300
-    ${
-      acceptedPolicy
-        ? "bg-[#0f1b3d] text-white hover:shadow-lg cursor-pointer"
-        : "bg-[#0f1b3d]/40 text-white/60 cursor-not-allowed"
-    }
-  `}
+  style={{
+    opacity: acceptedPolicy ? 1 : 0.4,
+    cursor: acceptedPolicy ? "pointer" : "not-allowed",
+  }}
 >
-  Continue →
+  Continue <FaArrowRight style={{ fontSize: "12px" }} />
 </button>
+
+
+
+{policyOpen && (() => {
+  const pg = policyContent[policyOpen];
+  const Icon = pg.icon;
+  return (
+    <div
+      onClick={() => setPolicyOpen(null)}
+      style={{
+        position: "fixed", inset: 0, zIndex: 999999,
+        background: "rgba(0,0,0,0.55)",
+        backdropFilter: "blur(5px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "16px",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "white", borderRadius: "24px",
+          width: "100%", maxWidth: "460px",
+          maxHeight: "85vh", display: "flex", flexDirection: "column",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.25)",
+          overflow: "hidden",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          padding: "18px 22px", borderBottom: "1px solid #f1f5f9",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          flexShrink: 0,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{
+              width: "36px", height: "36px", borderRadius: "12px",
+              background: "#e0f9ff", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <Icon style={{ color: "#0891b2", fontSize: "14px" }} />
+            </div>
+            <div>
+              <p style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: "1.5px", color: "#06b6d4", margin: 0 }}>
+                {pg.eyebrow}
+              </p>
+              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#0f172a", margin: 0 }}>
+                {pg.title}
+              </h3>
+            </div>
+          </div>
+          <button
+            onClick={() => setPolicyOpen(null)}
+            style={{
+              width: "32px", height: "32px", borderRadius: "50%",
+              background: "#f8fafc", border: "none", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "13px", color: "#64748b", flexShrink: 0,
+            }}
+          >✕</button>
+        </div>
+ 
+        {/* Subtitle */}
+        <div style={{ padding: "12px 22px 0", flexShrink: 0 }}>
+          <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.6", margin: 0 }}>
+            {pg.subtitle}
+          </p>
+        </div>
+ 
+        {/* Scrollable sections */}
+        <div style={{ overflowY: "auto", padding: "14px 22px 8px", flex: 1 }}>
+          {pg.sections.map((section, i) => (
+            <div key={i} style={{
+              background: "#f8fafc", borderRadius: "16px",
+              padding: "14px 16px", marginBottom: "10px",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+                <div style={{
+                  width: "24px", height: "24px", borderRadius: "8px",
+                  background: "#e0f9ff", display: "flex", alignItems: "center",
+                  justifyContent: "center", flexShrink: 0,
+                }}>
+                  <span style={{ fontSize: "11px", fontWeight: 800, color: "#0891b2" }}>{i + 1}</span>
+                </div>
+                <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#1e293b", margin: 0 }}>
+                  {section.heading}
+                </h4>
+              </div>
+              {section.points.map((point, j) => (
+                <div key={j} style={{ display: "flex", gap: "8px", marginBottom: "7px" }}>
+                  <span style={{
+                    width: "5px", height: "5px", borderRadius: "50%",
+                    background: "#06b6d4", marginTop: "7px", flexShrink: 0,
+                  }} />
+                  <p style={{ fontSize: "12px", color: "#64748b", lineHeight: "1.7", margin: 0 }}>
+                    {point}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+ 
+        {/* Footer */}
+        <div style={{
+          padding: "14px 22px", borderTop: "1px solid #f1f5f9",
+          flexShrink: 0, display: "flex", gap: "10px",
+        }}>
+          <button
+            onClick={() => setPolicyOpen(null)}
+            style={{
+              flex: 1, background: "#f8fafc", color: "#64748b",
+              border: "1.5px solid #e2e8f0", borderRadius: "12px",
+              padding: "10px", fontSize: "13px", fontWeight: 600, cursor: "pointer",
+            }}
+          >
+            Close
+          </button>
+          <button
+            onClick={() => { setAcceptedPolicy(true); setPolicyOpen(null); }}
+            style={{
+              flex: 1, background: "#0f172a", color: "white",
+              border: "none", borderRadius: "12px",
+              padding: "10px", fontSize: "13px", fontWeight: 700, cursor: "pointer",
+            }}
+          >
+            I Agree ✓
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+})()}
               </>
             )}
 
@@ -1022,7 +1154,7 @@ export default function AuthModal() {
 
           {/* Benefits bar */}
           <div className="auth-benefits">
-            {["Free Shipping", "Easy Returns", "Secure Payments"].map((b) => (
+            {["Free Shipping",  "Secure Payments"].map((b) => (
               <div key={b} className="auth-benefit-item">
                 <span className="benefit-dot" />
                 {b}
