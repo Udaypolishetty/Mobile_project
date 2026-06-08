@@ -104,11 +104,8 @@ import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { getProductImage } from "../../utils/imageHelper";
 
-const PAYMENT_METHODS = [
-  { id: "cod",   label: "Cash on Delivery",       sub: "Pay when your order arrives",     icon: "💵" },
-  { id: "upi",   label: "UPI / PhonePe / GPay",   sub: "Instant & secure UPI payment",    icon: "📲" },
-  { id: "card",  label: "Credit / Debit Card",     sub: "Visa, Mastercard, RuPay accepted",icon: "💳" },
-];
+
+const SHOP_WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER;
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, placeOrder } = useCart();
@@ -119,6 +116,7 @@ export default function CheckoutPage() {
   const [isGift, setIsGift] = useState(false);
   const [payment, setPayment] = useState("cod");
   const [placing, setPlacing] = useState(false);
+  const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false);
 
   const [newAddr, setNewAddr] = useState({
     name: "", phone: "", address: "", city: "", state: "", pincode: "",
@@ -151,7 +149,90 @@ export default function CheckoutPage() {
     }, () => setLocLoading(false));
   };
 
+const handleWhatsAppOrder = () => {
+  const useSavedAddress =
+  user?.address &&
+  !newAddr.name &&
+  !newAddr.phone &&
+  !newAddr.address;
+
+const customerName = useSavedAddress
+  ? user?.name || ""
+  : newAddr?.name || "";
+
+const customerPhone = useSavedAddress
+  ? user?.phone || ""
+  : newAddr?.phone || "";
+
+const customerAddress = useSavedAddress
+  ? user?.address || ""
+  : newAddr?.address || "";
+
+const customerCity = useSavedAddress
+  ? user?.city || ""
+  : newAddr?.city || "";
+
+const customerState = useSavedAddress
+  ? user?.state || ""
+  : newAddr?.state || "";
+
+const customerPincode = useSavedAddress
+  ? user?.pincode || ""
+  : newAddr?.pincode || "";
+  const products = cartItems
+    .map(
+      (item) =>
+        `• ${item.name}
+Qty: ${item.qty}
+Price: ₹${item.price}`
+    )
+    .join("\n\n");
+
+const locationLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${customerAddress} ${customerCity} ${customerState} ${customerPincode}`
+)}`;
+
+
+
+const message = `
+🛒 *NEW ORDER REQUEST*
+
+👤 Customer Details
+
+Name: ${customerName}
+Phone: ${customerPhone}
+
+📍 Delivery Address
+
+${customerAddress}
+
+City: ${customerCity}
+State: ${customerState}
+Pincode: ${customerPincode}
+🗺️ Map Location:
+${locationLink}
+
+📦 Products
+
+${products}
+
+💰 Total Amount: ₹${total}
+`;
+
+
+
+  const whatsappUrl = `https://wa.me/${SHOP_WHATSAPP}?text=${encodeURIComponent(
+    message
+  )}`;
+
+  window.open(whatsappUrl, "_blank");
+
+  
+};
+
 const handlePlaceOrder = async () => {
+
+
   if (!user) {          // ← auth wall only here
     setShowAuthModal(true);
     return;
@@ -211,6 +292,12 @@ console.log("Navigating with order:", order);
   navigate("/order-success", { state: { order } });
 };
 
+useEffect(() => {
+  if (cartItems.length === 0 && !placing) {
+    navigate("/cart");  // remove the setTimeout wrapper entirely
+  }
+}, []);
+
   if (!user) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center px-4">
@@ -221,11 +308,6 @@ console.log("Navigating with order:", order);
       </div>
     </div>
   );
-useEffect(() => {
-  if (cartItems.length === 0 && !placing) {
-    navigate("/cart");  // remove the setTimeout wrapper entirely
-  }
-}, []);  // ← run only on mount, not on every cartItems change
 
   return (
     <>
@@ -393,7 +475,7 @@ useEffect(() => {
                 </div>
               </AnimatedSection>
 
-              {/* PAYMENT */}
+              {/* PAYMENT
               <AnimatedSection direction="left" delay={160}>
                 <div className="co-card">
                   <p className="co-section-title"><FaLock className="text-cyan-500" /> Payment Method</p>
@@ -408,7 +490,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </div>
-              </AnimatedSection>
+              </AnimatedSection> */}
             </div>
 
             {/* ── RIGHT: Order Summary ── */}
@@ -452,8 +534,12 @@ useEffect(() => {
                     </div>
                   </div>
 
-                  <button className="place-btn" style={{ marginTop: "16px" }} onClick={handlePlaceOrder} disabled={placing}>
-                    {placing ? <><span className="spinner-w" /> Processing…</> : <><FaCheckCircle style={{ fontSize: "14px" }} /> Place Order · ₹{total.toLocaleString()}</>}
+                  <button 
+                  className="place-btn" 
+                  style={{ marginTop: "16px" }} 
+                  onClick={handleWhatsAppOrder}
+                  disabled={placing}>
+                    {placing ? <><span className="spinner-w" /> Processing…</> : <><FaCheckCircle style={{ fontSize: "14px" }} /> Continue on WhatsApp · ₹{total.toLocaleString()}</>}
                   </button>
 
                   <p style={{ fontSize: "11px", color: "#94a3b8", textAlign: "center", marginTop: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
@@ -465,6 +551,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
+     
     </>
   );
 }

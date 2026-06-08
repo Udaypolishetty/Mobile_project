@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Phone, MapPin, MessageCircle, Smartphone, Wrench,
   Headphones, ChevronRight, Mail, Clock, Send,
   CheckCircle, Store, ShieldCheck, Truck, Star,
 } from "lucide-react";
 import AnimatedSection from "../AnimatedSection";
+
 
 const quickOptions = [
   { icon: Smartphone, title: "New Mobile",     text: "Looking for a new smartphone? We'll help you find the best deal." },
@@ -19,14 +20,73 @@ const trustBadges = [
   { icon: Store,       label: "Physical Store" },
 ];
 
+const SHOP_WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER;
+
 export default function ContactPage() {
+  const [location, setLocation] = useState(null);
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", requirement: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", requirement: "", message: "", });
+
+useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.log("Location denied:", error);
+      }
+    );
+  }
+}, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.name && form.phone) setSent(true);
-  };
+  e.preventDefault();
+
+  if (!form.name.trim()) {
+    alert("Please enter your name");
+    return;
+  }
+
+  if (!form.phone.trim()) {
+    alert("Please enter your phone number");
+    return;
+  }
+const locationLink = location
+  ? `https://maps.google.com/?q=${location.lat},${location.lng}`
+  : "Location not shared";
+
+const message = `
+📩 *NEW ENQUIRY*
+
+👤 Name: ${form.name}
+
+📱 Phone: ${form.phone}
+
+📧 Email: ${form.email}
+
+📦 Requirement:
+${form.requirement}
+
+💬 Message:
+${form.message}
+
+📍 Customer Location:
+${locationLink}
+
+🕒 Time:
+${new Date().toLocaleString()}
+`;
+
+  const whatsappUrl =
+    `https://wa.me/${SHOP_WHATSAPP}?text=` +
+    encodeURIComponent(message);
+
+  window.location.href = whatsappUrl;
+};
 
   return (
     <div className="min-h-screen bg-[#f6f6f4]">
@@ -176,16 +236,7 @@ export default function ContactPage() {
                   <p className="text-sm font-bold text-zinc-900">Send Us a Message</p>
                 </div>
 
-                {sent ? (
-                  <div className="px-6 py-14 text-center">
-                    <CheckCircle className="w-14 h-14 text-emerald-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-zinc-900 mb-1">Message Sent!</h3>
-                    <p className="text-sm text-gray-500">We'll get back to you within a few hours.</p>
-                    <button onClick={() => setSent(false)} className="mt-5 text-cyan-600 text-sm font-semibold hover:underline">
-                      Send another message
-                    </button>
-                  </div>
-                ) : (
+                 
                   <form onSubmit={handleSubmit} className="p-6">
                     <div className="grid md:grid-cols-2 gap-4 mb-4">
                       {[
@@ -210,10 +261,17 @@ export default function ContactPage() {
                     <div className="mb-5">
                       <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-1.5">Additional Message/Comment</label>
                       <textarea
-                        rows={4}
-                        placeholder="Describe your requirement in detail..."
-                        className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3 text-sm text-zinc-800 placeholder:text-gray-400 outline-none focus:border-cyan-400 focus:bg-white transition-all resize-none"
-                      />
+  rows={4}
+  placeholder="Describe your requirement in detail..."
+  value={form.message}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      message: e.target.value,
+    })
+  }
+  className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3 text-sm text-zinc-800 placeholder:text-gray-400 outline-none focus:border-cyan-400 focus:bg-white transition-all resize-none"
+/>
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -229,7 +287,7 @@ export default function ContactPage() {
                       </p>
                     </div>
                   </form>
-                )}
+                
               </div>
 
             </AnimatedSection>
