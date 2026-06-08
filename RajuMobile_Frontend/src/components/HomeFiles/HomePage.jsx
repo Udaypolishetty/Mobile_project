@@ -121,14 +121,14 @@ function HomePage() {
 
       {/* ── HERO (matches the image: red bg card + text below) ── */}
       <section className="max-w-7xl mx-auto px-4 py-6">
-        <div className="relative rounded-3xl overflow-hidden  shadow-xl min-h-[320px] md:min-h-[380px] flex flex-col md:flex-row items-end md:items-stretch">
+        <div className="relative rounded-3xl overflow-hidden  shadow-xl min-h-[380px] md:min-h-[440px] flex flex-col md:flex-row items-end md:items-stretch">
           {/* Red bg image side */}
           <div className="w-full md:w-3/5 relative flex-shrink-0 min-h-[200px] md:min-h-0">
-            <img
-              src="./background_img3.png"
-              alt="Mobile Accessories"
-              className="absolute inset-0 w-full h-full object-cover "
-            />
+<img
+  src="./homepageimg.png"
+  alt="Mobile Accessories"
+  className="absolute inset-0 w-full h-full object-cover object-top"
+/>
             {/* Accessories flat lay overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/20 to-[#8b0000]/10" />
             {/* Store Logo */}
@@ -148,13 +148,19 @@ function HomePage() {
           {/* Bottom / Right text panel */}
           <div className="w-full md:w-2/5 bg-white md:rounded-none rounded-b-3xl px-6 py-6 md:py-8 md:px-8 flex flex-col justify-center">
             <AnimatedSection direction="left" delay={100}>
-              <p className="text-red-600 text-xs font-bold uppercase tracking-widest mb-1">🔥 Summer Sale Live</p>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-                Upgrade Your <span className="text-[#C70000]">Mobile</span><br />
-                Upgrade Your<br />
-                <span className="text-[#C70000]">Lifestyle</span>
-              </h1>
-              <p className="text-gray-500 text-sm mb-5">Best prices · Free shipping all over India</p>
+<p className="text-gray-600 text-xs font-bold uppercase tracking-widest mb-1">
+   SALES • REPAIRS • ACCESSORIES
+</p>
+
+<h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
+  We Care.<br />
+  We <span className="text-[#C70000]">Repair.</span><br />
+  We Upgrade.
+</h1>
+
+<p className="text-gray-500 text-sm mb-5">
+  Mobile Accessories, Repairs & SIM Services at Best Prices
+</p>
               <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => navigate("/catalog")}
@@ -180,10 +186,11 @@ function HomePage() {
 
       </section>
 
+      <OurService />
 
 
       {/* ── TESTIMONIALS ── */}
-      <section className="bg-[#f5f0eb] py-16">
+      {/* <section className="bg-[#f5f0eb] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection direction="up">
             <div className="mb-10">
@@ -224,7 +231,7 @@ function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
 
 
@@ -281,7 +288,6 @@ function HomePage() {
       //     </div>
       //   </section>
       // </AnimatedSection> */}
-      <OurService />
     </div>
   );
 }

@@ -102,6 +102,7 @@ import { MdLocationOn } from "react-icons/md";
 import AnimatedSection from "../AnimatedSection";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { getProductImage } from "../../utils/imageHelper";
 
 const PAYMENT_METHODS = [
   { id: "cod",   label: "Cash on Delivery",       sub: "Pay when your order arrives",     icon: "💵" },
@@ -423,7 +424,8 @@ useEffect(() => {
                   <div style={{ maxHeight: "200px", overflowY: "auto", marginBottom: "16px" }}>
                     {cartItems.map((item) => (
                       <div key={item.id} className="order-item">
-                        <img src={item.image} alt={item.name} style={{ width: "44px", height: "44px", objectFit: "cover", borderRadius: "10px", background: "#f8fafc", flexShrink: 0 }} />
+                        <img src={getProductImage(item)} alt={item.name}
+ style={{ width: "44px", height: "44px", objectFit: "cover", borderRadius: "10px", background: "#f8fafc", flexShrink: 0 }} />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <p style={{ fontSize: "12px", fontWeight: 600, color: "#1e293b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</p>
                           <p style={{ fontSize: "11px", color: "#94a3b8" }}>Qty: {item.qty}</p>

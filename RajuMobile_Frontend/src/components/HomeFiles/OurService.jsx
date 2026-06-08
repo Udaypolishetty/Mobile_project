@@ -1,22 +1,34 @@
 import AnimatedSection from "../AnimatedSection";
-
 const whyUs = [
   {
     image: "/star.png",
-    title: "Top rated & Lowest prices offered!",
+    title: "Top Rated Products",
   },
   {
     image: "/deliverytruck.png",
-    title: "Enjoy Free & Fast Shipping!",
+    title: "Free & Fast Delivery",
   },
   {
     image: "/buy.png",
-    title: "Cash on Delivery Available",
+    title: "Cash On Delivery",
   },
   {
     image: "/customerservice.png",
-    title: "24/7 Customer Support Available",
+    title: "24/7 Customer Support",
   },
+  {
+    image: "/verified.png",
+    title: "100% Genuine Products",
+  },
+  {
+    image: "/repair.png",
+    title: "All Types Repair Available",
+  },
+];
+const testimonials = [
+  { name: "Shreya, Vizag", text: "Every purchase has been top quality. The buying experience is smooth and hassle-free", rating: 5 },
+  { name: "Samir, Hyderabad", text: "I've been shopping here for 6 months and the products are great. Customer support is excellent too", rating: 5 },
+  { name: "Riya, Delhi", text: "I was hesitant to buy from a new website, but the customer service manager helped me through it!", rating: 5 },
 ];
 
 function OurService() {
@@ -34,7 +46,7 @@ function OurService() {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             {whyUs.map((item, i) => (
               <AnimatedSection
                 key={item.title}
@@ -52,6 +64,52 @@ function OurService() {
                   <p className="font-bold text-gray-800 text-sm leading-6 max-w-[140px]">
                     {item.title}
                   </p>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+
+            {/* ── TESTIMONIALS ── */}
+      <section className="bg-[#f5f0eb] py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection direction="up">
+            <div className="mb-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c8102e] mb-3">
+                Testimonials
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Why customers choose us
+
+
+              </h2>
+              <p className="text-sm text-gray-500 mt-2">
+                Real feedback from people who shop with us.
+              </p>
+            </div>
+          </AnimatedSection>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {testimonials.map((t, i) => (
+              <AnimatedSection key={t.name} direction="up" delay={i * 100}>
+                <div className="h-full rounded-2xl bg-[#fafafa] p-6 ring-1 ring-gray-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(t.rating)].map((_, j) => (
+                      <span key={j} className="text-[13px] text-amber-400">★</span>
+                    ))}
+                  </div>
+
+                  <p className="text-sm leading-7 text-gray-600 mb-5">
+                    “{t.text}”
+                  </p>
+
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-sm font-semibold text-gray-900">{t.name}</p>
+                    <p className="text-xs text-gray-400 mt-1">Verified customer</p>
+                  </div>
                 </div>
               </AnimatedSection>
             ))}

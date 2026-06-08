@@ -22,6 +22,7 @@ import NotFoundPage from "./components/UserDetails/NotFoundPage";
 import OrderDetailsPage from "./components/UserDetails/OrderDetailsPage";
 import FooterInfo from "./pages/FooterInfo";
 import ScrollToTop from "./components/ScrollToTop";
+import ServicesPage from "./pages/ServicesPage";
 function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -71,6 +72,8 @@ function App() {
     </Layout>
   }
 />
+<Route path="/services" element={<Layout><ServicesPage /></Layout>} />
+
           </Routes>
         </CartProvider>
       </AuthProvider>

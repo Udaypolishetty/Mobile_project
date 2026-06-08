@@ -10,6 +10,8 @@ import { useAuth } from "../../context/AuthContext";
 import { updateProfile } from "../../api/authApi";
 import AnimatedSection from "../AnimatedSection";
 import { useCart } from "../../context/CartContext";
+import { getProductImage } from "../../utils/imageHelper";
+
 
 /* ─── tiny reusable info row ─────────────────────────────────── */
 function InfoRow({ icon: Icon, label, value, iconColor = "text-cyan-500" }) {
@@ -344,11 +346,8 @@ const { orders } = useCart();
                 key={item.id}
                 className="flex gap-3 py-2 border-t border-gray-100"
               >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded-xl"
-                />
+<img src={getProductImage(item)} alt={item.name} className="w-20 h-20 object-cover rounded-xl" />
+
 
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-gray-800">
