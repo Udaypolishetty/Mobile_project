@@ -661,7 +661,7 @@ function Navbar({ onSearchOpen }) {
         <div style={{ background: "linear-gradient(90deg,#0e7490,#1d4ed8,#0e7490)", overflow: "hidden" }}
           className="py-1.5 text-white text-xs font-medium tracking-wide">
           <div className="marquee-text px-4">
-            🎉 HOT SUMMER SUPER SALE IS LIVE &nbsp;•&nbsp; Free Shipping All Over India &nbsp;•&nbsp;
+            🎉 HOT SUMMER SUPER SALE IS LIVE &nbsp;•&nbsp; Free Shipping &nbsp;•&nbsp;
             Cash on Delivery Available &nbsp;•&nbsp; Genuine Products Only &nbsp;•&nbsp; iPhone Fix Available &nbsp;•&nbsp; Free Pickup Upto 12 KM
           </div>
         </div>
