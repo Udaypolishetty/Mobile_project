@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "users",
     "products",
+    "orders",
+        'adminpanel',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

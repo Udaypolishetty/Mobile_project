@@ -590,7 +590,7 @@ function Navbar({ onSearchOpen }) {
     setMenuOpen(false);
     setMobileProductsOpen(false);
   };
-
+console.log(user);
   return (
     <>
       <style>{`
@@ -958,6 +958,14 @@ function Navbar({ onSearchOpen }) {
                           </div>
                           <Link to="/account" onClick={() => setAccountOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">My Profile</Link>
                           <Link to="/wishlist" onClick={() => setAccountOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition">Wishlist</Link>
+                          {user?.is_staff && (
+  <button
+    onClick={() => navigate("/admin-dashboard")}
+    className="bg-cyan-500 text-black px-4 py-2 rounded-lg font-semibold"
+  >
+    Admin Dashboard
+  </button>
+)}
                           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                             {!logoutConfirm ? (
                               <button onClick={() => setLogoutConfirm(true)}

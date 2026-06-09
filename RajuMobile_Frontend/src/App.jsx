@@ -23,6 +23,15 @@ import OrderDetailsPage from "./components/UserDetails/OrderDetailsPage";
 import FooterInfo from "./pages/FooterInfo";
 import ScrollToTop from "./components/ScrollToTop";
 import ServicesPage from "./pages/ServicesPage";
+
+
+
+import AdminLayout from "./admin/AdminLayout";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import AdminProducts from "./admin/pages/AdminProducts";
+import AdminOrders from "./admin/pages/AdminOrders";
+import AdminCustomers from "./admin/pages/AdminCustomers";
+
 function Layout({ children }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -74,6 +83,14 @@ function App() {
 />
 <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
 
+
+<Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+
+<Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
+
+<Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
+
+<Route path="/admin/customers" element={<AdminLayout><AdminCustomers /></AdminLayout>} />
           </Routes>
         </CartProvider>
       </AuthProvider>

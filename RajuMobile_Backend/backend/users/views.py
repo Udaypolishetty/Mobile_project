@@ -36,11 +36,19 @@ class RegisterView(generics.CreateAPIView):
             "message": "Account created successfully.",
             "access": str(refresh.access_token),
             "refresh": str(refresh),
-            "user": {
-                "id": user.id,
-                "name": user.first_name,
-                "email": user.email,
-            }
+"user": {
+    "id": user.id,
+    "name": user.first_name or user.username,
+    "email": user.email,
+
+    "is_staff": user.is_staff,
+
+    "phone": profile.phone or "",
+    "address": profile.address or "",
+    "pincode": profile.pincode or "",
+    "city": profile.city or "",
+    "state": profile.state or "",
+}
         }, status=status.HTTP_201_CREATED)
 
 
@@ -75,6 +83,7 @@ def login_view(request):
             "id":      user.id,
             "name":    user.first_name or user.username,
             "email":   user.email,
+            "is_staff": user.is_staff,
             "phone":   profile.phone   or "",
             "address": profile.address or "",
             "pincode": profile.pincode or "",
@@ -96,6 +105,7 @@ def me_view(request):
         "id":      user.id,
         "name":    user.first_name or user.username,
         "email":   user.email,
+        "is_staff": user.is_staff,
         "phone":   profile.phone   or "",
         "address": profile.address or "",
         "pincode": profile.pincode or "",

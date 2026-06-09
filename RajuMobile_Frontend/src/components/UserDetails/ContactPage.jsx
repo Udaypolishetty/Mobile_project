@@ -1,95 +1,188 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Phone, MapPin, MessageCircle, Smartphone, Wrench,
-  Headphones, ChevronRight, Mail, Clock, Send,
-  CheckCircle, Store, ShieldCheck, Truck, Star,
+  Phone,
+  MapPin,
+  MessageCircle,
+  ChevronRight,
+  Send,
+  CheckCircle,
+  X,
+  ChevronLeft,
+  ChevronRight as ChevronRightIcon,
 } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
 import AnimatedSection from "../AnimatedSection";
 
-const quickOptions = [
-  { icon: Smartphone, title: "New Mobile",     text: "Looking for a new smartphone? We'll help you find the best deal." },
-  { icon: Wrench,     title: "Repair Service", text: "Display, battery, charging port or software issues — we fix it all." },
-  { icon: Headphones, title: "Accessories",    text: "Chargers, cases, earphones, screen guards and much more." },
-];
-
-const trustBadges = [
-  { icon: ShieldCheck, label: "Genuine Products" },
-  { icon: Truck,       label: "Fast Shipping" },
-  { icon: Star,        label: "Top Rated Store" },
-  { icon: Store,       label: "Physical Store" },
+const STORE_IMAGES = [
+  { src: "/store1.jpeg", alt: "Raju Mobiles store front view" },
+  { src: "/store2.jpeg", alt: "Inside Raju Mobiles showroom" },
+  { src: "/store3.jpeg", alt: "Mobile accessories display section" },
+  { src: "/store4.jpeg", alt: "Display Section" },
+  { src: "/store5.jpeg", alt: "Phone repair and service counter" },
 ];
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", requirement: "" });
+  const [form, setForm] = useState({ name: "", phone: "", requirement: "" });
+
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (form.name && form.phone) setSent(true);
+    if (!form.name || !form.phone) return;
+
+    // Build WhatsApp message
+    const name = form.name.trim();
+    const phone = form.phone.trim();
+    const requirement = form.requirement.trim();
+
+    let whatsappMessage = `Hello Raju Mobiles,\n\n`;
+    whatsappMessage += `Name: ${name}\n`;
+    whatsappMessage += `Phone: ${phone}\n`;
+    if (requirement) {
+      whatsappMessage += `Requirement: ${requirement}\n`;
+    }
+    whatsappMessage += `\nPlease assist me.`;
+
+    // WhatsApp number: +91 90001 12262 → 919000112262
+    const whatsappNumber = "9190001 12262";
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      whatsappMessage
+    )}`;
+
+    // Open WhatsApp
+    window.open(url, "_blank");
+
+    // Show success message
+    setSent(true);
   };
+
+  const openGallery = (index) => {
+    setActiveImage(index);
+    setGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+  };
+
+  const showPrev = () => {
+    setActiveImage((prev) =>
+      prev === 0 ? STORE_IMAGES.length - 1 : prev - 1
+    );
+  };
+
+  const showNext = () => {
+    setActiveImage((prev) =>
+      prev === STORE_IMAGES.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!galleryOpen) return;
+      if (e.key === "Escape") closeGallery();
+      if (e.key === "ArrowLeft") showPrev();
+      if (e.key === "ArrowRight") showNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [galleryOpen]);
 
   return (
     <div className="min-h-screen bg-[#f6f6f4]">
-
-      {/* ── HERO BANNER ── */}
+      {/* HERO */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-10 md:py-14">
           <AnimatedSection direction="up">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-600 font-bold mb-2">Get In Touch</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-600 font-bold mb-2">
+              Get In Touch
+            </p>
             <h1 className="text-3xl md:text-4xl font-extrabold text-zinc-900 mb-3 leading-tight">
-              We're here to help you
+              Raju Mobiles
             </h1>
             <p className="text-gray-500 text-sm md:text-base max-w-xl">
-              Visit our store, give us a call, or drop a message — our team is ready to assist you with mobiles, repairs, and accessories.
+              We Care, We Repair! Visit our store, give us a call, or drop a
+              message — our team is ready to assist you with all brands and
+              models.
             </p>
-            <div className="flex flex-wrap gap-4 mt-6">
-              {trustBadges.map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-1.5 text-xs font-semibold text-gray-600">
-                  <Icon className="w-3.5 h-3.5 text-cyan-600" />
-                  {label}
-                </div>
-              ))}
-            </div>
           </AnimatedSection>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid lg:grid-cols-3 gap-6">
-
-          {/* ── LEFT COLUMN ── */}
+          {/* LEFT COLUMN */}
           <div className="lg:col-span-1 space-y-4">
             <AnimatedSection direction="left">
-
-              {/* Contact Info Card */}
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden mb-4">
+              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100">
-                  <p className="text-sm font-bold text-zinc-900">Contact Information</p>
+                  <p className="text-sm font-bold text-zinc-900">
+                    Contact Information
+                  </p>
                 </div>
+
                 <div className="divide-y divide-gray-100">
-                  <a href="tel:+919876543210"
-                    className="group flex items-center justify-between px-5 py-4 hover:bg-cyan-50 transition-all duration-200">
+                  <a
+                    href="tel:+919000112262"
+                    className="group flex items-center justify-between px-5 py-4 hover:bg-cyan-50 transition-all duration-200"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center group-hover:bg-cyan-100 transition">
                         <Phone className="w-4 h-4 text-cyan-600" />
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Call Us</p>
-                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">+91 98765 43210</p>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
+                          Call / WhatsApp
+                        </p>
+                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">
+                          +91 90001 12262
+                        </p>
                       </div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-cyan-600 group-hover:translate-x-0.5 transition-all" />
                   </a>
 
-                  <a href="mailto:raju.mobile@gmail.com"
-                    className="group flex items-center justify-between px-5 py-4 hover:bg-cyan-50 transition-all duration-200">
+                  <a
+                    href="tel:+919652407756"
+                    className="group flex items-center justify-between px-5 py-4 hover:bg-cyan-50 transition-all duration-200"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center group-hover:bg-cyan-100 transition">
-                        <Mail className="w-4 h-4 text-cyan-600" />
+                        <Phone className="w-4 h-4 text-cyan-600" />
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Email Us</p>
-                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">raju.mobile@gmail.com</p>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
+                          Alternative Call
+                        </p>
+                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">
+                          +91 96524 07756
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-cyan-600 group-hover:translate-x-0.5 transition-all" />
+                  </a>
+
+                  <a
+                    href="https://instagram.com/Raju_mobiles_Knr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between px-5 py-4 hover:bg-cyan-50 transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center group-hover:bg-cyan-100 transition">
+                        <FaInstagram className="w-4 h-4 text-cyan-600" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
+                          Instagram
+                        </p>
+                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">
+                          @Raju_mobiles_Knr
+                        </p>
                       </div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-cyan-600 group-hover:translate-x-0.5 transition-all" />
@@ -101,61 +194,58 @@ export default function ContactPage() {
                         <MapPin className="w-4 h-4 text-cyan-600" />
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Store Address</p>
-                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">Hyderabad, Telangana</p>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
+                          Store Location
+                        </p>
+                        <p className="text-sm font-semibold text-zinc-800 mt-0.5">
+                          Market road, Near Raju Tea Stall & Opposite Viswavanth Complex, Karimnagar-505001
+                        </p>
                       </div>
                     </div>
                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
-
-                  <div className="flex items-center gap-3 px-5 py-4">
-                    <div className="w-9 h-9 bg-cyan-50 rounded-xl flex items-center justify-center">
-                      <Clock className="w-4 h-4 text-cyan-600" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Store Hours</p>
-                      <p className="text-sm font-semibold text-zinc-800 mt-0.5">Mon – Sat · 10am – 8pm</p>
-                    </div>
-                  </div>
                 </div>
               </div>
+            </AnimatedSection>
 
-              {/* What are you looking for */}
+            {/* STORE GALLERY */}
+            <AnimatedSection direction="left">
               <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-100">
-                  <p className="text-sm font-bold text-zinc-900">What are you looking for?</p>
+                <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                  <p className="text-sm font-bold text-zinc-900">Store Gallery</p>
+                  <span className="text-xs text-gray-400">
+                    {STORE_IMAGES.length} Photos
+                  </span>
                 </div>
-                <div className="divide-y divide-gray-100">
-                  {quickOptions.map(({ icon: Icon, title, text }) => (
-                    <button key={title}
-                      className="group w-full px-5 py-4 flex items-start justify-between text-left hover:bg-gray-50 transition-all duration-200">
-                      <div className="flex items-start gap-3">
-                        <div className="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-50 transition">
-                          <Icon className="w-4 h-4 text-zinc-500 group-hover:text-cyan-600 transition-colors" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-zinc-900">{title}</p>
-                          <p className="text-xs text-zinc-500 mt-0.5 leading-5">{text}</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-cyan-600 group-hover:translate-x-0.5 mt-1 flex-shrink-0 transition-all" />
+
+                <div className="p-4 grid grid-cols-2 gap-3">
+                  {STORE_IMAGES.map((img, index) => (
+                    <button
+                      key={img.src}
+                      type="button"
+                      onClick={() => openGallery(index)}
+                      className="group relative overflow-hidden rounded-2xl aspect-square focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
                     </button>
                   ))}
                 </div>
               </div>
-
             </AnimatedSection>
           </div>
 
-          {/* ── RIGHT COLUMN ── */}
+          {/* RIGHT COLUMN */}
           <div className="lg:col-span-2 space-y-4">
             <AnimatedSection direction="right">
-
-              {/* Map embed */}
               <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden mb-4">
                 <iframe
                   title="Store Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243647.3176262541!2d78.24323083!3d17.41260211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae93b78392bafbc2!2sHyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1700000000000"
+                  src="https://maps.google.com/maps?q=Raju%20Mobiles%20Karimnagar&t=&z=13&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="220"
                   style={{ border: 0, display: "block" }}
@@ -165,23 +255,33 @@ export default function ContactPage() {
                 />
                 <div className="px-5 py-3 flex items-center gap-2 border-t border-gray-100">
                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <p className="text-xs text-gray-500 font-medium">Raju Mobile Store · Hyderabad, Telangana, India</p>
+                  <p className="text-xs text-gray-500 font-medium">
+                    Raju Mobiles Store Location
+                  </p>
                 </div>
               </div>
 
-              {/* Contact Form */}
               <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-cyan-600" />
-                  <p className="text-sm font-bold text-zinc-900">Send Us a Message</p>
+                  <p className="text-sm font-bold text-zinc-900">
+                    Send Us a Message
+                  </p>
                 </div>
 
                 {sent ? (
                   <div className="px-6 py-14 text-center">
                     <CheckCircle className="w-14 h-14 text-emerald-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-zinc-900 mb-1">Message Sent!</h3>
-                    <p className="text-sm text-gray-500">We'll get back to you within a few hours.</p>
-                    <button onClick={() => setSent(false)} className="mt-5 text-cyan-600 text-sm font-semibold hover:underline">
+                    <h3 className="text-lg font-bold text-zinc-900 mb-1">
+                      Message Sent to WhatsApp!
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      The message has been opened in WhatsApp. Please tap send in the WhatsApp chat.
+                    </p>
+                    <button
+                      onClick={() => setSent(false)}
+                      className="mt-5 text-cyan-600 text-sm font-semibold hover:underline"
+                    >
                       Send another message
                     </button>
                   </div>
@@ -189,29 +289,48 @@ export default function ContactPage() {
                   <form onSubmit={handleSubmit} className="p-6">
                     <div className="grid md:grid-cols-2 gap-4 mb-4">
                       {[
-                        { key: "name",  label: "Full Name",    type: "text", placeholder: "Your name" },
-                        { key: "phone", label: "Phone Number", type: "tel",  placeholder: "+91 XXXXX XXXXX" },
-                        { key: "email", label: "Email Address", type: "email", placeholder: "you@email.com" },
-                        { key: "requirement", label: "What do you need?", type: "text", placeholder: "Model / repair / accessories" },
+                        {
+                          key: "name",
+                          label: "Full Name",
+                          type: "text",
+                          placeholder: "Your name",
+                        },
+                        {
+                          key: "phone",
+                          label: "Phone Number",
+                          type: "tel",
+                          placeholder: "+91 XXXXX XXXXX",
+                        },
                       ].map((f) => (
                         <div key={f.key} className="group">
-                          <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-1.5">{f.label}</label>
+                          <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-1.5">
+                            {f.label}
+                          </label>
                           <input
                             type={f.type}
                             placeholder={f.placeholder}
                             value={form[f.key]}
-                            onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                            onChange={(e) =>
+                              setForm({ ...form, [f.key]: e.target.value })
+                            }
                             className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3 text-sm text-zinc-800 placeholder:text-gray-400 outline-none focus:border-cyan-400 focus:bg-white transition-all"
+                            required
                           />
                         </div>
                       ))}
                     </div>
 
                     <div className="mb-5">
-                      <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-1.5">Additional Message/Comment</label>
+                      <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-1.5">
+                        Describe Mobile Problem / Requirement
+                      </label>
                       <textarea
                         rows={4}
-                        placeholder="Describe your requirement in detail..."
+                        placeholder="Enter your mobile model and required repairs (e.g., iPhone 13 Screen Replacement)..."
+                        value={form.requirement}
+                        onChange={(e) =>
+                          setForm({ ...form, requirement: e.target.value })
+                        }
                         className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3 text-sm text-zinc-800 placeholder:text-gray-400 outline-none focus:border-cyan-400 focus:bg-white transition-all resize-none"
                       />
                     </div>
@@ -222,47 +341,92 @@ export default function ContactPage() {
                         className="w-full sm:w-auto flex items-center justify-center gap-2 bg-zinc-950 hover:bg-cyan-600 text-white font-bold px-8 py-3.5 rounded-2xl text-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                       >
                         <Send className="w-4 h-4" />
-                        Send Enquiry
+                        Send Enquiry to WhatsApp
                       </button>
+
                       <p className="text-xs text-gray-400 text-center sm:text-left">
-                        We typically respond within 2–4 hours during store hours.
+                        Opens WhatsApp with your message pre-filled.
                       </p>
                     </div>
                   </form>
                 )}
               </div>
-
             </AnimatedSection>
           </div>
         </div>
       </div>
-      
-            {/* SUBSCRIBE */}
-            <AnimatedSection direction="up">
-              <section className="bg-[#f5f0eb] py-12">
-                <div className="max-w-xl mx-auto px-6 text-center">
-                  <h2 className="text-2xl font-bold text-black mb-1">
-                    Subscribe to Our Emails
-                  </h2>
-      
-                  <p className="text-gray-400 text-sm mb-6">
-                    Join our email list for exclusive offers and the latest news.
-                  </p>
-      
-                  <div className="flex max-w-md mx-auto">
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      className="flex-1 px-4 py-3 rounded-l-xl bg-white border border-gray-300 outline-none text-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-200"
+
+      {/* GALLERY MODAL */}
+      {galleryOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4"
+          onClick={closeGallery}
+        >
+          <div
+            className="relative w-full max-w-5xl bg-white rounded-3xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={closeGallery}
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow"
+            >
+              <X className="w-5 h-5 text-zinc-900" />
+            </button>
+
+            <div className="relative bg-black">
+              <img
+                src={STORE_IMAGES[activeImage].src}
+                alt={STORE_IMAGES[activeImage].alt}
+                className="w-full h-[260px] sm:h-[380px] md:h-[500px] object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={showPrev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow"
+              >
+                <ChevronLeft className="w-5 h-5 text-zinc-900" />
+              </button>
+
+              <button
+                type="button"
+                onClick={showNext}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow"
+              >
+                <ChevronRightIcon className="w-5 h-5 text-zinc-900" />
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-5 border-t border-gray-100 bg-white">
+              <p className="text-sm font-semibold text-zinc-800 mb-3">
+                {STORE_IMAGES[activeImage].alt}
+              </p>
+
+              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-1">
+                {STORE_IMAGES.map((img, index) => (
+                  <button
+                    key={img.src}
+                    type="button"
+                    onClick={() => setActiveImage(index)}
+                    className={`snap-start flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 transition ${
+                      activeImage === index
+                        ? "border-cyan-500"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-full object-cover"
                     />
-      
-                    <button className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 py-3 rounded-r-xl font-bold text-sm transition">
-                      →
-                    </button>
-                  </div>
-                </div>
-              </section>
-            </AnimatedSection>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

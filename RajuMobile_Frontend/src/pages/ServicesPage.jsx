@@ -78,7 +78,7 @@ const SERVICES = [
     tag:   "Instant",
     tagBg: "#fdf4ff",
     tagText: "#7e22ce",
-    points: ["Jio", "Airtel", "Vi (Vodafone)", "BSNL"],
+    points: ["Jio", "Airtel", "Vi (Vodafone)", "BSNL","RECHARGE","DTH"],
     networks: [
       { name: "Jio",    color: "#0047ab" },
       { name: "Airtel", color: "#e00"    },
@@ -204,7 +204,7 @@ export default function ServicesPage() {
       </div>
 
       {/* ── Contact strip ─────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-5 pb-12">
+      {/* <div className="max-w-5xl mx-auto px-5 pb-12">
         <Reveal delay={0}>
           <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
             <p className="text-xs font-bold uppercase tracking-[3px] text-cyan-600 mb-1">Get in Touch</p>
@@ -247,7 +247,7 @@ export default function ServicesPage() {
             </div>
           </div>
         </Reveal>
-      </div>
+      </div> */}
 
     </div>
   );

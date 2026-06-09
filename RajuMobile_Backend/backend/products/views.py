@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Product
+from .models import Product,ProductImage
 from .serializers import ProductSerializer
 
 from rest_framework.permissions import (
@@ -48,29 +48,37 @@ def delete_all_products(request):
     return Response({
         "message": f"{count} products deleted successfully"
     })
-
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def add_product(request):
+
     serializer = ProductSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {
-                "message": "Product added successfully",
-                "product": serializer.data
-            },
-            status=201
-        )
+
+        product = serializer.save()
+
+        images = request.FILES.getlist("images")
+
+        for img in images:
+            ProductImage.objects.create(
+                product=product,
+                image=img
+            )
+
+        return Response({
+            "message": "Product added successfully"
+        })
 
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def update_product(request, pk):
+
     try:
         product = Product.objects.get(id=pk)
+
     except Product.DoesNotExist:
         return Response(
             {"error": "Product not found"},
@@ -84,10 +92,19 @@ def update_product(request, pk):
     )
 
     if serializer.is_valid():
+
         serializer.save()
+
+        images = request.FILES.getlist("images")
+
+        for img in images:
+            ProductImage.objects.create(
+                product=product,
+                image=img
+            )
+
         return Response({
-            "message": "Product updated successfully",
-            "product": serializer.data
+            "message": "Updated successfully"
         })
 
     return Response(serializer.errors, status=400)

@@ -27,13 +27,21 @@ export function AuthProvider({ children }) {
   }, []);
 
   // ── Login: call API, store tokens, set user ───────────────────
-  const login = useCallback(async (email, password) => {
-    const data = await loginUser(email, password);           // throws on error
-    localStorage.setItem("access_token",  data.access);
-    localStorage.setItem("refresh_token", data.refresh);
-    setUser(data.user);
-    setShowAuthModal(false);
-  }, []);
+const login = useCallback(async (email, password) => {
+  const data = await loginUser(email, password);
+
+  localStorage.setItem("access_token", data.access);
+  localStorage.setItem("refresh_token", data.refresh);
+
+  setUser(data.user);
+  setShowAuthModal(false);
+
+  if (data.user.is_staff) {
+    window.location.href = "/admin-dashboard";
+  } else {
+    window.location.href = "/";
+  }
+}, []);
 
   // ── Logout: blacklist token, clear everything ─────────────────
   const logout = useCallback(async () => {
