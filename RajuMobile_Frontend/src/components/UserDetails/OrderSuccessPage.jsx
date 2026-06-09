@@ -22,18 +22,41 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaCheckCircle, FaBoxOpen, FaTruck, FaHome, FaStar, FaArrowRight, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { MdInventory } from "react-icons/md";
+import { getOrder } from "../../api/orderApi";
 
 const TRACKING_STEPS = [
-  { id: "confirmed",  label: "Order Confirmed",    icon: FaCheckCircle, desc: "We've received your order" },
-  { id: "processing", label: "Being Prepared",      icon: MdInventory,   desc: "Your items are being packed" },
-  { id: "shipped",    label: "Out for Delivery",    icon: FaTruck,       desc: "On the way to you" },
-  { id: "delivered",  label: "Delivered",           icon: FaHome,        desc: "Enjoy your purchase!" },
+  {
+    id: "confirmed",
+    label: "Order Confirmed",
+    icon: FaCheckCircle,
+    desc: "We've received your order",
+  },
+  {
+    id: "packed",
+    label: "Being Prepared",
+    icon: MdInventory,
+    desc: "Your items are being packed",
+  },
+  {
+    id: "out_for_delivery",
+    label: "Out For Delivery",
+    icon: FaTruck,
+    desc: "On the way to you",
+  },
+  {
+    id: "delivered",
+    label: "Delivered",
+    icon: FaHome,
+    desc: "Enjoy your purchase!",
+  },
 ];
 
 export default function OrderSuccessPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const order = location.state?.order;
+  const initialOrder = location.state?.order;
+
+const [order, setOrder] = useState(initialOrder);
 
   const [animStep, setAnimStep] = useState(0);
 
@@ -45,6 +68,26 @@ export default function OrderSuccessPage() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
+useEffect(() => {
+  if (!initialOrder?.id) return;
+
+  getOrder(initialOrder.id)
+    .then(setOrder)
+    .catch(console.error);
+}, [initialOrder?.id]);
+
+useEffect(() => {
+  if (!initialOrder?.id) return;
+
+  const interval = setInterval(() => {
+    getOrder(initialOrder.id)
+      .then(setOrder)
+      .catch(console.error);
+  }, 15000);
+
+  return () => clearInterval(interval);
+}, [initialOrder?.id]);
+
   const estimatedDate = () => {
     const d = new Date();
     d.setDate(d.getDate() + 4);
@@ -53,6 +96,23 @@ export default function OrderSuccessPage() {
 
   const orderId = order?.id || `ORD${Date.now()}`;
   const orderDate = order?.date ? new Date(order.date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : new Date().toLocaleDateString("en-IN");
+
+  const statusIndex = {
+  pending: 0,
+  confirmed: 1,
+  packed: 2,
+  shipped: 2,
+  out_for_delivery: 3,
+  delivered: 4,
+  cancelled: -1,
+};
+
+const currentStep =
+  statusIndex[order?.status] || 0;
+
+  console.log("ORDER DATA:", order);
+console.log("ORDER STATUS:", order?.status);
+console.log("CURRENT STEP:", currentStep);
 
   return (
     <>
@@ -150,6 +210,20 @@ export default function OrderSuccessPage() {
               <FaCheckCircle />
               Order ID: {orderId}
             </div>
+            <div
+  style={{
+    marginTop: "10px",
+    display: "inline-block",
+    background: "#ecfeff",
+    color: "#0891b2",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontWeight: 700,
+    fontSize: "12px",
+  }}
+>
+  Status: {order?.status}
+</div>
             <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "8px" }}>
               Placed on {orderDate} • {order?.paymentMethod === "cod" ? "Cash on Delivery" : order?.paymentMethod?.toUpperCase() || "COD"}
             </p>
@@ -172,8 +246,8 @@ export default function OrderSuccessPage() {
             <div className="timeline">
               {TRACKING_STEPS.map((step, i) => {
                 const Icon = step.icon;
-                const isDone = i < animStep;
-                const isActive = i === 0; // first step always active on success
+              const isDone = i < currentStep;
+const isActive = i === currentStep - 1;
                 return (
                   <div key={step.id} className="tl-item">
                     <div className="tl-left">
@@ -190,10 +264,11 @@ export default function OrderSuccessPage() {
                     <div className="tl-content" style={{ opacity: isDone ? 1 : 0.4, transition: `opacity 0.4s ${i * 0.15}s` }}>
                       <p className={`tl-label ${isDone ? "" : "pending"}`}>{step.label}</p>
                       <p className="tl-desc">{step.desc}</p>
-                      {i === 0 && <p className="tl-time">Just now ✓</p>}
-                      {i === 1 && <p className="tl-time">Expected: 1–2 hours</p>}
-                      {i === 2 && <p className="tl-time">Expected: 2–4 business days</p>}
-                      {i === 3 && <p className="tl-time">By {estimatedDate()}</p>}
+                      {isActive && (
+  <p className="tl-time">
+    Current Status ✓
+  </p>
+)}
                     </div>
                   </div>
                 );

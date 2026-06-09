@@ -12,4 +12,5 @@ urlpatterns = [
         "<int:pk>/status/",
         update_order_status
     ),
+    path("<int:pk>/", get_order),
 ]

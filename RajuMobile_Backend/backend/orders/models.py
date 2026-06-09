@@ -8,6 +8,8 @@ class Order(models.Model):
         ("pending", "Pending"),
         ("confirmed", "Confirmed"),
         ("packed", "Packed"),
+        ("shipped", "Shipped"),
+("out_for_delivery", "Out For Delivery"),
         ("delivered", "Delivered"),
         ("cancelled", "Cancelled"),
     ]
