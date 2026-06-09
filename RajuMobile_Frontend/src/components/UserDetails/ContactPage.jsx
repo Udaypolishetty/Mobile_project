@@ -21,7 +21,10 @@ const STORE_IMAGES = [
   { src: "/store5.jpeg", alt: "Phone repair and service counter" },
 ];
 
+const SHOP_WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER;
+
 export default function ContactPage() {
+  const [location, setLocation] = useState(null);
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", requirement: "" });
 
@@ -351,7 +354,7 @@ export default function ContactPage() {
                   </form>
                 )}
               </div>
-            </AnimatedSection>
+                        </AnimatedSection>
           </div>
         </div>
       </div>
