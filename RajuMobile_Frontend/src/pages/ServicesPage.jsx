@@ -45,6 +45,12 @@ const SERVICES = [
     tag:   "Same Day",
     tagBg: "#dcfce7",
     tagText: "#16a34a",
+    description: "Careful diagnostics and precision repairs using quality-tested replacement parts.",
+    images: [
+      "https://images.unsplash.com/photo-1603891128711-11b4b03bb138?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1592286927505-1def25115558?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "30-90 min", label: "Typical repair" }, { value: "Tested", label: "Before return" }],
     points: ["Screen Replacement", "Battery Swap", "Charging Port", "Water Damage"],
   },
   {
@@ -56,6 +62,12 @@ const SERVICES = [
     tag:   "All Brands",
     tagBg: "#eff6ff",
     tagText: "#1d4ed8",
+    description: "Reliable repairs for popular Android phones, from everyday fixes to deeper hardware issues.",
+    images: [
+      "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "Multi-brand", label: "Repair support" }, { value: "Full", label: "Device check" }],
     points: ["Samsung", "OnePlus", "Redmi / Mi", "Realme & Vivo"],
   },
   {
@@ -67,6 +79,12 @@ const SERVICES = [
     tag:   "Buy & Sell",
     tagBg: "#fff7ed",
     tagText: "#c2410c",
+    description: "Buy or sell with confidence. Every phone is inspected for performance, battery and condition.",
+    images: [
+      "https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "40+ point", label: "Quality check" }, { value: "Instant", label: "Price quote" }],
     points: ["Quality Checked", "All Brands", "Best Resale Value", "Instant Buy Price"],
   },
   {
@@ -78,6 +96,12 @@ const SERVICES = [
     tag:   "Instant",
     tagBg: "#fdf4ff",
     tagText: "#7e22ce",
+    description: "New connections, porting and recharge assistance for every major mobile network.",
+    images: [
+      "https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "4 networks", label: "Available here" }, { value: "Quick", label: "Activation help" }],
     points: ["Jio", "Airtel", "Vi (Vodafone)", "BSNL","RECHARGE","DTH"],
     networks: [
       { name: "Jio",    color: "#0047ab" },
@@ -95,6 +119,12 @@ const SERVICES = [
     tag:   "Premium",
     tagBg: "#fef9c3",
     tagText: "#854d0e",
+    description: "Memorable number patterns selected for personal identity, business and premium use.",
+    images: [
+      "https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1520923642038-b4259acecbd7?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "Curated", label: "Number patterns" }, { value: "All", label: "Major networks" }],
     points: ["Easy to Remember", "All Networks", "Fancy Patterns", "Business Numbers"],
   },
   {
@@ -106,6 +136,12 @@ const SERVICES = [
     tag:   "Free",
     tagBg: "#dcfce7",
     tagText: "#16a34a",
+    description: "A convenient doorstep repair experience with careful pickup and timely return.",
+    images: [
+      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=700&q=80",
+    ],
+    details: [{ value: "12 KM", label: "Service radius" }, { value: "Same day", label: "Fast return" }],
     points: ["Free of Cost", "Within 12 KM", "Same Day Return", "Doorstep Service"],
   },
 ];
@@ -123,131 +159,179 @@ const CONTACT = {
 export default function ServicesPage() {
   return (
     <div className="min-h-screen" style={{ background: "#f5f0eb", fontFamily: "'DM Sans',sans-serif" }}>
+      <style>{`
+        .service-card {
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 10px 30px -10px rgba(139, 92, 26, 0.05);
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .service-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+          background: linear-gradient(125deg, transparent 20%, rgba(8,145,178,.045), transparent 65%);
+          transform: translateX(-110%);
+          transition: transform .9s cubic-bezier(.16, 1, .3, 1);
+        }
+        .service-content { position: relative; z-index: 2; }
+        .service-carousel {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          overscroll-behavior-inline: contain;
+        }
+        .service-carousel::-webkit-scrollbar { display: none; }
+        .service-photo {
+          transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .5s ease;
+        }
+        .image-badge {
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity .35s ease .12s, transform .45s cubic-bezier(.16, 1, .3, 1) .12s;
+        }
+        .service-icon {
+          border-radius: 30%;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px -12px rgba(0,0,0,.35);
+          transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+        }
+        .point-dot { transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s ease; }
+        @media (hover: hover) and (pointer: fine) {
+          .service-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(8,145,178,.18);
+            box-shadow: 0 30px 70px -20px rgba(50,38,28,.24);
+          }
+          .service-card:hover::before { transform: translateX(110%); }
+          .service-card:hover .service-photo { transform: scale(1.05); }
+          .image-link:hover .image-badge { opacity: 1; transform: translateY(0); }
+          .service-card:hover .service-icon { transform: scale(1.1); }
+          .service-card:hover .point-dot {
+            transform: translateX(2px) scale(1.15);
+            box-shadow: 0 0 0 4px rgba(34,211,238,.12);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .service-card, .service-photo, .service-icon, .service-card::before, .image-badge, .point-dot {
+            transition: none !important;
+          }
+        }
+      `}</style>
 
       {/* ── Hero ──────────────────────────────────────── */}
-      <div className="max-w-4xl mx-auto px-5 pt-12 pb-8 text-center">
+      <div className="max-w-4xl mx-auto px-5 pt-16 md:pt-24 pb-10 md:pb-14 text-center">
         <Reveal delay={0}>
           <span className="inline-block text-xs font-bold uppercase tracking-[3px] text-cyan-600 mb-3">
             Our Services
           </span>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-3"
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-950 tracking-[-0.045em] leading-[1.04] mb-5"
             style={{ fontFamily: "'Syne',sans-serif" }}>
             We Care,{" "}
             <span className="text-cyan-600">We Repair</span>
           </h1>
-          <p className="text-gray-500 text-sm max-w-lg mx-auto">
-            One-stop solution for all your mobile needs in Karimnagar — repairs, SIMs, second-hand phones and more.
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
+            One-stop solution for all your mobile needs in Karimnagar - repairs, SIMs, second-hand phones and more.
           </p>
         </Reveal>
       </div>
 
       {/* ── Cards grid ────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-5 pb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 md:pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {SERVICES.map((svc, i) => (
             <Reveal key={svc.title} delay={i * 70}>
               <div
-                className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-3 h-full"
-                style={{ transition: "box-shadow 0.25s ease, transform 0.25s ease" }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.boxShadow = "0 8px 28px rgba(0,0,0,0.10)";
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.boxShadow = "none";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="service-card group bg-white rounded-[28px] border border-white/80 p-3 sm:p-4 flex flex-col h-full"
               >
-                {/* Icon + tag row */}
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: svc.iconBg }}>
-                    <svc.Icon style={{ color: svc.iconColor, fontSize: "18px" }} />
-                  </div>
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                    style={{ background: svc.tagBg, color: svc.tagText }}>
-                    {svc.tag}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <div>
-                  <h3 className="font-bold text-gray-900 text-base leading-tight">{svc.title}</h3>
-                  <p className="text-gray-400 text-xs mt-0.5">{svc.sub}</p>
-                </div>
-
-                {/* Network chips (SIM only) */}
-                {svc.networks && (
-                  <div className="flex gap-1.5 flex-wrap">
-                    {svc.networks.map(n => (
-                      <span key={n.name} className="text-[10px] font-bold px-2 py-0.5 rounded-md"
-                        style={{ background: `${n.color}15`, color: n.color, border: `1px solid ${n.color}30` }}>
-                        {n.name}
+                {/* Swipeable service gallery */}
+                <div className="service-carousel flex overflow-x-auto snap-x snap-mandatory scrollbar-none rounded-[22px] bg-gray-100">
+                  {svc.images.map((image, imageIndex) => (
+                    <a
+                      key={image}
+                      href={image.split("?")[0]}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`View ${svc.title} image ${imageIndex + 1}`}
+                      className="image-link relative min-w-full h-56 md:h-[16.5rem] snap-center overflow-hidden"
+                    >
+                      <img
+                        src={image}
+                        alt={`${svc.title} ${imageIndex + 1}`}
+                        className="service-photo h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+                      <span className="image-badge absolute right-4 bottom-4 rounded-full border border-white/30 bg-white/20 px-3 py-1.5 text-[10px] font-bold tracking-wide text-white shadow-lg backdrop-blur-xl">
+                        {"View Image \u2197"}
                       </span>
+                      <span className="absolute left-4 bottom-4 text-[10px] font-semibold text-white/80">
+                        {String(imageIndex + 1).padStart(2, "0")} / {String(svc.images.length).padStart(2, "0")}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="service-content flex flex-1 flex-col gap-5 px-2 sm:px-3 pt-5 pb-3">
+                  {/* Icon + tag row */}
+                  <div className="flex items-center justify-between">
+                    <div className="service-icon w-12 h-12 flex items-center justify-center flex-shrink-0 group-hover:scale-110"
+                      style={{ background: svc.iconBg }}>
+                      <svc.Icon style={{ color: svc.iconColor, fontSize: "20px" }} />
+                    </div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] px-3 py-1.5 rounded-full"
+                      style={{ background: svc.tagBg, color: svc.tagText }}>
+                      {svc.tag}
+                    </span>
+                  </div>
+
+                  {/* Editorial content */}
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-cyan-600 mb-2">{svc.sub}</p>
+                    <h3 className="font-extrabold text-gray-950 text-2xl tracking-[-0.03em] leading-tight">{svc.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed mt-3">{svc.description}</p>
+                  </div>
+
+                  {/* Network chips (SIM only) */}
+                  {svc.networks && (
+                    <div className="flex gap-2 flex-wrap">
+                      {svc.networks.map(n => (
+                        <span key={n.name} className="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                          style={{ background: `${n.color}15`, color: n.color, border: `1px solid ${n.color}30` }}>
+                          {n.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Quick details */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {svc.details.map(detail => (
+                      <div key={detail.label} className="rounded-2xl px-4 py-3 border border-gray-100"
+                        style={{ background: `${svc.iconBg}90` }}>
+                        <p className="text-sm font-extrabold text-gray-950">{detail.value}</p>
+                        <p className="text-[10px] text-gray-500 mt-1">{detail.label}</p>
+                      </div>
                     ))}
                   </div>
-                )}
 
-                {/* Points */}
-                <ul className="space-y-1.5 mt-auto">
-                  {svc.points.map(p => (
-                    <li key={p} className="flex items-center gap-2 text-xs text-gray-600">
-                      <span className="w-1 h-1 rounded-full bg-cyan-400 flex-shrink-0" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
+                  {/* Service points */}
+                  <ul className="grid grid-cols-2 gap-3 mt-auto pt-1">
+                    {svc.points.map(p => (
+                      <li key={p} className="flex items-start gap-2.5 text-xs leading-snug text-gray-600">
+                        <span className="point-dot w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 mt-1" />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </Reveal>
           ))}
         </div>
       </div>
 
-      {/* ── Contact strip ─────────────────────────────── */}
-      {/* <div className="max-w-5xl mx-auto px-5 pb-12">
-        <Reveal delay={0}>
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-[3px] text-cyan-600 mb-1">Get in Touch</p>
-            <h2 className="font-extrabold text-gray-900 text-xl mb-1"
-              style={{ fontFamily: "'Syne',sans-serif" }}>
-              Raju Mobiles, Karimnagar
-            </h2>
-            <p className="text-gray-400 text-sm mb-5">
-              Call, WhatsApp or DM us on Instagram — we're always available
-            </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {[
-                {
-                  label: `📞 ${CONTACT.phone1}`,
-                  href: `tel:${CONTACT.phone1}`,
-                  style: { background: "#0f172a", color: "white" },
-                },
-                {
-                  label: `📞 ${CONTACT.phone2}`,
-                  href: `tel:${CONTACT.phone2}`,
-                  style: { background: "#0f172a", color: "white" },
-                },
-                {
-                  label: "💬 WhatsApp",
-                  href: `https://wa.me/91${CONTACT.phone1}`,
-                  style: { background: "#25D366", color: "white" },
-                },
-                {
-                  label: `📸 ${CONTACT.ig}`,
-                  href: CONTACT.igLink,
-                  style: { background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", color: "white" },
-                },
-              ].map(btn => (
-                <a key={btn.href} href={btn.href} target="_blank" rel="noreferrer"
-                  className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
-                  style={btn.style}>
-                  {btn.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </div> */}
 
     </div>
   );
