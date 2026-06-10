@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   FaApple, FaAndroid, FaMobileAlt, FaSimCard, FaCrown,
-  FaTruck, FaPhone, FaInstagram, FaWhatsapp,
+  FaTruck, FaPhone, FaInstagram, FaWhatsapp, FaChevronLeft, FaChevronRight,
 } from "react-icons/fa";
 import { MdSignalCellularAlt } from "react-icons/md";
 
@@ -13,7 +13,7 @@ function useReveal() {
     const el = ref.current; if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setV(true); obs.disconnect(); } },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -26,10 +26,74 @@ function Reveal({ children, delay = 0 }) {
   return (
     <div ref={ref} style={{
       opacity: v ? 1 : 0,
-      transform: v ? "translateY(0)" : "translateY(20px)",
-      transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms`,
+      transform: v ? "translateY(0)" : "translateY(24px)",
+      transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
     }}>
       {children}
+    </div>
+  );
+}
+
+/* ── Carousel component ──────────────────────────────────── */
+function ImageCarousel({ images, title }) {
+  const [idx, setIdx] = useState(0);
+  const [hovering, setHovering] = useState(false);
+  const total = images.length;
+
+  const prev = (e) => { e.stopPropagation(); setIdx((i) => (i - 1 + total) % total); };
+  const next = (e) => { e.stopPropagation(); setIdx((i) => (i + 1) % total); };
+
+  return (
+    <div
+      className="carousel-wrap"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      <div className="carousel-track" style={{ transform: `translateX(-${idx * 100}%)` }}>
+        {images.map((src, i) => (
+          <a
+            key={src}
+            href={src.split("?")[0]}
+            target="_blank"
+            rel="noreferrer"
+            className="carousel-slide"
+            tabIndex={i === idx ? 0 : -1}
+          >
+            <img
+              src={src}
+              alt={`${title} ${i + 1}`}
+              className={`carousel-img ${hovering ? "zoomed" : ""}`}
+              loading="lazy"
+            />
+            <span className="carousel-gradient" />
+            <span className={`view-badge ${hovering && i === idx ? "visible" : ""}`}>
+              View Image ↗
+            </span>
+            <span className="slide-counter">{i + 1} / {total}</span>
+          </a>
+        ))}
+      </div>
+
+      {total > 1 && (
+        <>
+          <button className={`carousel-btn left ${hovering ? "show" : ""}`} onClick={prev} aria-label="Previous image">
+            <FaChevronLeft />
+          </button>
+          <button className={`carousel-btn right ${hovering ? "show" : ""}`} onClick={next} aria-label="Next image">
+            <FaChevronRight />
+          </button>
+          <div className="carousel-dots">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                className={`dot ${i === idx ? "active" : ""}`}
+                onClick={(e) => { e.stopPropagation(); setIdx(i); }}
+                aria-label={`Go to image ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -39,29 +103,31 @@ const SERVICES = [
   {
     Icon: FaApple,
     iconColor: "#1d1d1f",
-    iconBg:  "#f5f5f7",
+    iconBg: "#f5f5f7",
+    accentColor: "#0891b2",
     title: "iPhone Fix",
-    sub:   "We Care, We Repair",
-    tag:   "Same Day",
+    sub: "We Care, We Repair",
+    tag: "Same Day",
     tagBg: "#dcfce7",
-    tagText: "#16a34a",
-    description: "Careful diagnostics and precision repairs using quality-tested replacement parts.",
+    tagColor: "#15803d",
+    description: "Careful diagnostics and precision repairs using quality-tested replacement parts — done right the first time.",
     images: [
       "https://images.unsplash.com/photo-1603891128711-11b4b03bb138?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1592286927505-1def25115558?auto=format&fit=crop&w=700&q=80",
     ],
-    details: [{ value: "30-90 min", label: "Typical repair" }, { value: "Tested", label: "Before return" }],
+    details: [{ value: "30–90 min", label: "Typical repair" }, { value: "Tested", label: "Before return" }],
     points: ["Screen Replacement", "Battery Swap", "Charging Port", "Water Damage"],
   },
   {
     Icon: FaAndroid,
     iconColor: "#3ddc84",
-    iconBg:  "#f0fdf4",
+    iconBg: "#f0fdf4",
+    accentColor: "#1d4ed8",
     title: "Android Repair",
-    sub:   "All Brands, All Models",
-    tag:   "All Brands",
+    sub: "All Brands, All Models",
+    tag: "All Brands",
     tagBg: "#eff6ff",
-    tagText: "#1d4ed8",
+    tagColor: "#1d4ed8",
     description: "Reliable repairs for popular Android phones, from everyday fixes to deeper hardware issues.",
     images: [
       "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=900&q=80",
@@ -73,13 +139,14 @@ const SERVICES = [
   {
     Icon: FaMobileAlt,
     iconColor: "#f59e0b",
-    iconBg:  "#fffbeb",
+    iconBg: "#fffbeb",
+    accentColor: "#c2410c",
     title: "2nd Hand Phones",
-    sub:   "Sales & Purchase",
-    tag:   "Buy & Sell",
+    sub: "Sales & Purchase",
+    tag: "Buy & Sell",
     tagBg: "#fff7ed",
-    tagText: "#c2410c",
-    description: "Buy or sell with confidence. Every phone is inspected for performance, battery and condition.",
+    tagColor: "#c2410c",
+    description: "Buy or sell with confidence. Every phone is inspected for performance, battery health and overall condition.",
     images: [
       "https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=700&q=80",
@@ -90,19 +157,20 @@ const SERVICES = [
   {
     Icon: MdSignalCellularAlt,
     iconColor: "#e11d48",
-    iconBg:  "#fff1f2",
+    iconBg: "#fff1f2",
+    accentColor: "#7e22ce",
     title: "SIM Cards",
-    sub:   "All Networks Available",
-    tag:   "Instant",
+    sub: "All Networks Available",
+    tag: "Instant",
     tagBg: "#fdf4ff",
-    tagText: "#7e22ce",
-    description: "New connections, porting and recharge assistance for every major mobile network.",
+    tagColor: "#7e22ce",
+    description: "New connections, porting and recharge assistance for every major mobile network in India.",
     images: [
       "https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=700&q=80",
     ],
     details: [{ value: "4 networks", label: "Available here" }, { value: "Quick", label: "Activation help" }],
-    points: ["Jio", "Airtel", "Vi (Vodafone)", "BSNL","RECHARGE","DTH"],
+    points: ["Jio", "Airtel", "Vi (Vodafone)", "BSNL", "Recharge", "DTH"],
     networks: [
       { name: "Jio",    color: "#0047ab" },
       { name: "Airtel", color: "#e00"    },
@@ -113,13 +181,14 @@ const SERVICES = [
   {
     Icon: FaCrown,
     iconColor: "#d97706",
-    iconBg:  "#fffbeb",
+    iconBg: "#fffbeb",
+    accentColor: "#854d0e",
     title: "VIP Numbers",
-    sub:   "Stand Out from the Crowd",
-    tag:   "Premium",
+    sub: "Stand Out from the Crowd",
+    tag: "Premium",
     tagBg: "#fef9c3",
-    tagText: "#854d0e",
-    description: "Memorable number patterns selected for personal identity, business and premium use.",
+    tagColor: "#854d0e",
+    description: "Memorable number patterns for personal identity, business presence and premium recognition.",
     images: [
       "https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1520923642038-b4259acecbd7?auto=format&fit=crop&w=700&q=80",
@@ -130,13 +199,14 @@ const SERVICES = [
   {
     Icon: FaTruck,
     iconColor: "#0891b2",
-    iconBg:  "#ecfeff",
+    iconBg: "#ecfeff",
+    accentColor: "#0e7490",
     title: "Free Pickup & Delivery",
-    sub:   "Upto 12 KM",
-    tag:   "Free",
+    sub: "Upto 12 KM",
+    tag: "Free",
     tagBg: "#dcfce7",
-    tagText: "#16a34a",
-    description: "A convenient doorstep repair experience with careful pickup and timely return.",
+    tagColor: "#15803d",
+    description: "A convenient doorstep repair experience with careful pickup, real-time updates and timely return.",
     images: [
       "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=700&q=80",
@@ -149,7 +219,7 @@ const SERVICES = [
 const CONTACT = {
   phone1: "9000112262",
   phone2: "9652407756",
-  ig:     "Raju_mobiles_Knr",
+  ig: "Raju_mobiles_Knr",
   igLink: "https://www.instagram.com/raju_mobiles_knr/",
 };
 
@@ -158,13 +228,133 @@ const CONTACT = {
 ═══════════════════════════════════════════════════════════════ */
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen" style={{ background: "#f5f0eb", fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#f5f0eb", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
+
+        /* ── carousel ── */
+        .carousel-wrap {
+          position: relative;
+          border-radius: 20px;
+          overflow: hidden;
+          background: #e8e8e8;
+          aspect-ratio: 16/9;
+          flex-shrink: 0;
+        }
+        .carousel-track {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+        }
+        .carousel-slide {
+          min-width: 100%;
+          height: 100%;
+          position: relative;
+          display: block;
+          overflow: hidden;
+          cursor: pointer;
+          text-decoration: none;
+        }
+        .carousel-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
+          display: block;
+        }
+        .carousel-img.zoomed { transform: scale(1.05); }
+        .carousel-gradient {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%);
+          pointer-events: none;
+        }
+        .view-badge {
+          position: absolute;
+          right: 14px;
+          bottom: 14px;
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.3);
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          padding: 5px 10px;
+          border-radius: 20px;
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1);
+          pointer-events: none;
+        }
+        .view-badge.visible { opacity: 1; transform: translateY(0); }
+        .slide-counter {
+          position: absolute;
+          left: 14px;
+          bottom: 14px;
+          color: rgba(255,255,255,0.75);
+          font-size: 10px;
+          font-weight: 600;
+          pointer-events: none;
+        }
+        .carousel-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 36px; height: 36px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.3);
+          color: white;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 12px;
+          opacity: 0;
+          transition: opacity 0.25s ease, background 0.2s ease, transform 0.2s ease;
+          z-index: 2;
+        }
+        .carousel-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-50%) scale(1.1); }
+        .carousel-btn.show { opacity: 1; }
+        .carousel-btn.left  { left: 12px; }
+        .carousel-btn.right { right: 12px; }
+        .carousel-dots {
+          position: absolute;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 5px;
+          z-index: 2;
+        }
+        .dot {
+          width: 5px; height: 5px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.45);
+          border: none; cursor: pointer;
+          padding: 0;
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .dot.active { background: white; transform: scale(1.35); }
+
+        /* ── service card ── */
         .service-card {
+          background: white;
+          border-radius: 28px;
+          border: 1px solid rgba(255,255,255,0.85);
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          box-shadow: 0 4px 24px -8px rgba(139,92,26,0.08);
+          transition: transform 0.5s cubic-bezier(0.16,1,0.3,1),
+                      box-shadow 0.5s cubic-bezier(0.16,1,0.3,1),
+                      border-color 0.3s ease;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 10px 30px -10px rgba(139, 92, 26, 0.05);
-          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .service-card::before {
           content: "";
@@ -172,155 +362,222 @@ export default function ServicesPage() {
           inset: 0;
           pointer-events: none;
           z-index: 1;
-          background: linear-gradient(125deg, transparent 20%, rgba(8,145,178,.045), transparent 65%);
+          background: linear-gradient(125deg, transparent 20%, rgba(8,145,178,0.04), transparent 65%);
           transform: translateX(-110%);
-          transition: transform .9s cubic-bezier(.16, 1, .3, 1);
+          transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
         }
-        .service-content { position: relative; z-index: 2; }
-        .service-carousel {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          overscroll-behavior-inline: contain;
-        }
-        .service-carousel::-webkit-scrollbar { display: none; }
-        .service-photo {
-          transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .5s ease;
-        }
-        .image-badge {
-          opacity: 0;
-          transform: translateY(8px);
-          transition: opacity .35s ease .12s, transform .45s cubic-bezier(.16, 1, .3, 1) .12s;
-        }
-        .service-icon {
-          border-radius: 30%;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px -12px rgba(0,0,0,.35);
-          transition: transform .35s cubic-bezier(.16, 1, .3, 1);
-        }
-        .point-dot { transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s ease; }
         @media (hover: hover) and (pointer: fine) {
           .service-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(8,145,178,.18);
-            box-shadow: 0 30px 70px -20px rgba(50,38,28,.24);
+            transform: translateY(-7px);
+            box-shadow: 0 32px 72px -20px rgba(50,38,28,0.22);
+            border-color: rgba(8,145,178,0.2);
           }
           .service-card:hover::before { transform: translateX(110%); }
-          .service-card:hover .service-photo { transform: scale(1.05); }
-          .image-link:hover .image-badge { opacity: 1; transform: translateY(0); }
-          .service-card:hover .service-icon { transform: scale(1.1); }
-          .service-card:hover .point-dot {
-            transform: translateX(2px) scale(1.15);
-            box-shadow: 0 0 0 4px rgba(34,211,238,.12);
-          }
+          .service-card:hover .svc-icon { transform: scale(1.12); }
+          .service-card:hover .point-dot { transform: translateX(2px) scale(1.2); }
         }
+        .card-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 18px; padding: 6px 6px 4px; margin-top: 14px; flex: 1; }
+        .svc-icon {
+          width: 48px; height: 48px;
+          border-radius: 30%;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 6px 18px -10px rgba(0,0,0,0.3);
+          transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .tag-pill {
+          font-size: 10px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          padding: 5px 12px;
+          border-radius: 20px;
+        }
+        .detail-box {
+          border-radius: 16px;
+          padding: 12px 14px;
+          border: 1px solid rgba(0,0,0,0.05);
+        }
+        .point-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: #22d3ee;
+          flex-shrink: 0;
+          margin-top: 5px;
+          transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
+        }
+        .network-chip {
+          font-size: 10px;
+          font-weight: 700;
+          padding: 4px 10px;
+          border-radius: 20px;
+        }
+
+        /* ── contact strip ── */
+        .contact-link {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: white;
+          border-radius: 18px;
+          padding: 14px 18px;
+          text-decoration: none;
+          color: #1e293b;
+          border: 1px solid rgba(0,0,0,0.06);
+          font-weight: 600;
+          font-size: 14px;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 12px -4px rgba(0,0,0,0.06);
+        }
+        .contact-link:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px -8px rgba(0,0,0,0.12);
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .service-card, .service-photo, .service-icon, .service-card::before, .image-badge, .point-dot {
-            transition: none !important;
-          }
+          .service-card, .carousel-img, .svc-icon, .service-card::before,
+          .view-badge, .point-dot, .carousel-track, .carousel-btn { transition: none !important; }
         }
       `}</style>
 
       {/* ── Hero ──────────────────────────────────────── */}
-      <div className="max-w-4xl mx-auto px-5 pt-16 md:pt-24 pb-10 md:pb-14 text-center">
+      <div style={{ maxWidth: "840px", margin: "0 auto", padding: "72px 24px 48px", textAlign: "center" }}>
         <Reveal delay={0}>
-          <span className="inline-block text-xs font-bold uppercase tracking-[3px] text-cyan-600 mb-3">
+          <span style={{
+            display: "inline-block",
+            fontSize: "11px",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "3px",
+            color: "#0891b2",
+            marginBottom: "16px",
+          }}>
             Our Services
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-950 tracking-[-0.045em] leading-[1.04] mb-5"
-            style={{ fontFamily: "'Syne',sans-serif" }}>
+          <h1 style={{
+            fontFamily: "'Syne', sans-serif",
+            fontSize: "clamp(30px, 6vw, 60px)",
+            fontWeight: 800,
+            color: "#0a0a0a",
+            letterSpacing: "-0.045em",
+            lineHeight: 1.04,
+            margin: "0 0 18px",
+          }}>
             We Care,{" "}
-            <span className="text-cyan-600">We Repair</span>
+            <span style={{ color: "#0891b2" }}>We Repair</span>
           </h1>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-            One-stop solution for all your mobile needs in Karimnagar - repairs, SIMs, second-hand phones and more.
+          <p style={{
+            fontSize: "16px",
+            color: "#64748b",
+            lineHeight: 1.7,
+            maxWidth: "520px",
+            margin: "0 auto 32px",
+          }}>
+            One-stop solution for all your mobile needs in Karimnagar — repairs, SIMs, second-hand phones and more.
           </p>
+
+          {/* Contact quick-links */}
+          <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href={`tel:${CONTACT.phone1}`} className="contact-link">
+              <span style={{ width: 34, height: 34, borderRadius: "50%", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FaPhone style={{ color: "#16a34a", fontSize: "14px" }} />
+              </span>
+              {CONTACT.phone1}
+            </a>
+            <a href={`https://wa.me/91${CONTACT.phone1}`} target="_blank" rel="noreferrer" className="contact-link">
+              <span style={{ width: 34, height: 34, borderRadius: "50%", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FaWhatsapp style={{ color: "#16a34a", fontSize: "16px" }} />
+              </span>
+              WhatsApp
+            </a>
+            <a href={CONTACT.igLink} target="_blank" rel="noreferrer" className="contact-link">
+              <span style={{ width: 34, height: 34, borderRadius: "50%", background: "#fdf2f8", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FaInstagram style={{ color: "#db2777", fontSize: "15px" }} />
+              </span>
+              @{CONTACT.ig}
+            </a>
+          </div>
         </Reveal>
       </div>
 
       {/* ── Cards grid ────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 md:pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div style={{ maxWidth: "1120px", margin: "0 auto", padding: "0 20px 80px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))", gap: "24px" }}>
           {SERVICES.map((svc, i) => (
-            <Reveal key={svc.title} delay={i * 70}>
-              <div
-                className="service-card group bg-white rounded-[28px] border border-white/80 p-3 sm:p-4 flex flex-col h-full"
-              >
-                {/* Swipeable service gallery */}
-                <div className="service-carousel flex overflow-x-auto snap-x snap-mandatory scrollbar-none rounded-[22px] bg-gray-100">
-                  {svc.images.map((image, imageIndex) => (
-                    <a
-                      key={image}
-                      href={image.split("?")[0]}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`View ${svc.title} image ${imageIndex + 1}`}
-                      className="image-link relative min-w-full h-56 md:h-[16.5rem] snap-center overflow-hidden"
-                    >
-                      <img
-                        src={image}
-                        alt={`${svc.title} ${imageIndex + 1}`}
-                        className="service-photo h-full w-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <span className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
-                      <span className="image-badge absolute right-4 bottom-4 rounded-full border border-white/30 bg-white/20 px-3 py-1.5 text-[10px] font-bold tracking-wide text-white shadow-lg backdrop-blur-xl">
-                        {"View Image \u2197"}
-                      </span>
-                      <span className="absolute left-4 bottom-4 text-[10px] font-semibold text-white/80">
-                        {String(imageIndex + 1).padStart(2, "0")} / {String(svc.images.length).padStart(2, "0")}
-                      </span>
-                    </a>
-                  ))}
-                </div>
+            <Reveal key={svc.title} delay={i * 65}>
+              <div className="service-card">
 
-                <div className="service-content flex flex-1 flex-col gap-5 px-2 sm:px-3 pt-5 pb-3">
+                {/* Carousel */}
+                <ImageCarousel images={svc.images} title={svc.title} />
+
+                {/* Card body */}
+                <div className="card-body">
+
                   {/* Icon + tag row */}
-                  <div className="flex items-center justify-between">
-                    <div className="service-icon w-12 h-12 flex items-center justify-center flex-shrink-0 group-hover:scale-110"
-                      style={{ background: svc.iconBg }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div className="svc-icon" style={{ background: svc.iconBg }}>
                       <svc.Icon style={{ color: svc.iconColor, fontSize: "20px" }} />
                     </div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] px-3 py-1.5 rounded-full"
-                      style={{ background: svc.tagBg, color: svc.tagText }}>
+                    <span className="tag-pill" style={{ background: svc.tagBg, color: svc.tagColor }}>
                       {svc.tag}
                     </span>
                   </div>
 
-                  {/* Editorial content */}
+                  {/* Text */}
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-cyan-600 mb-2">{svc.sub}</p>
-                    <h3 className="font-extrabold text-gray-950 text-2xl tracking-[-0.03em] leading-tight">{svc.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mt-3">{svc.description}</p>
+                    <p style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em", color: "#0891b2", marginBottom: "6px" }}>
+                      {svc.sub}
+                    </p>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, color: "#0a0a0a", fontSize: "24px", letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 10px" }}>
+                      {svc.title}
+                    </h3>
+                    <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.65, margin: 0 }}>
+                      {svc.description}
+                    </p>
                   </div>
 
-                  {/* Network chips (SIM only) */}
+                  {/* Network chips */}
                   {svc.networks && (
-                    <div className="flex gap-2 flex-wrap">
-                      {svc.networks.map(n => (
-                        <span key={n.name} className="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                          style={{ background: `${n.color}15`, color: n.color, border: `1px solid ${n.color}30` }}>
+                    <div style={{ display: "flex", gap: "7px", flexWrap: "wrap" }}>
+                      {svc.networks.map((n) => (
+                        <span
+                          key={n.name}
+                          className="network-chip"
+                          style={{
+                            background: `${n.color}15`,
+                            color: n.color,
+                            border: `1px solid ${n.color}30`,
+                          }}
+                        >
                           {n.name}
                         </span>
                       ))}
                     </div>
                   )}
 
-                  {/* Quick details */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {svc.details.map(detail => (
-                      <div key={detail.label} className="rounded-2xl px-4 py-3 border border-gray-100"
-                        style={{ background: `${svc.iconBg}90` }}>
-                        <p className="text-sm font-extrabold text-gray-950">{detail.value}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">{detail.label}</p>
+                  {/* Detail boxes */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                    {svc.details.map((d) => (
+                      <div
+                        key={d.label}
+                        className="detail-box"
+                        style={{ background: `${svc.iconBg}90` }}
+                      >
+                        <p style={{ fontSize: "14px", fontWeight: 800, color: "#0a0a0a", margin: "0 0 3px" }}>
+                          {d.value}
+                        </p>
+                        <p style={{ fontSize: "11px", color: "#64748b", margin: 0 }}>
+                          {d.label}
+                        </p>
                       </div>
                     ))}
                   </div>
 
-                  {/* Service points */}
-                  <ul className="grid grid-cols-2 gap-3 mt-auto pt-1">
-                    {svc.points.map(p => (
-                      <li key={p} className="flex items-start gap-2.5 text-xs leading-snug text-gray-600">
-                        <span className="point-dot w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 mt-1" />
+                  {/* Points grid */}
+                  <ul style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", margin: "auto 0 0", padding: 0, listStyle: "none" }}>
+                    {svc.points.map((p) => (
+                      <li key={p} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#475569", lineHeight: 1.45 }}>
+                        <span className="point-dot" />
                         {p}
                       </li>
                     ))}
@@ -331,8 +588,6 @@ export default function ServicesPage() {
           ))}
         </div>
       </div>
-
-
     </div>
   );
 }

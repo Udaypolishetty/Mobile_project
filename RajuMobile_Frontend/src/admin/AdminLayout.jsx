@@ -4,22 +4,22 @@ import AdminSidebar from "./AdminSidebar";
 
 export default function AdminLayout({ children }) {
 
-  const { user } = useAuth();
+    const { user, loadingUser } = useAuth();
 
-  if (!user) {
-    return <Navigate to="/" />;
-  }
+    if (loadingUser) {
+        return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    }
 
-//   if (!user.is_staff) {
-//     return <Navigate to="/" />;
-//   }
-console.log(user)
-  return (
-    <div className="bg-[#f5f0eb] min-h-screen">
-      <AdminSidebar />
-      <main className="ml-64 p-8">
-        {children}
-      </main>
-    </div>
-  );
+    if (!user || !user.is_staff) {
+        return <Navigate to="/" />;
+    }
+
+    return (
+        <div className="bg-[#f5f0eb] min-h-screen">
+            <AdminSidebar />
+            <main className="ml-64 p-8">
+                {children}
+            </main>
+        </div>
+    );
 }
