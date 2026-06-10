@@ -11,6 +11,8 @@ import { updateProfile } from "../../api/authApi";
 import AnimatedSection from "../AnimatedSection";
 import { useCart } from "../../context/CartContext";
 import { getProductImage } from "../../utils/imageHelper";
+import { useEffect } from "react";
+import { getMyOrders } from "../../api/orderApi";
 
 
 /* ─── tiny reusable info row ─────────────────────────────────── */
@@ -64,8 +66,37 @@ const MOCK_ORDERS = [];   // empty = shows "no orders yet" state
 ═══════════════════════════════════════════════════════════════ */
 export default function AccountPage() {
 const { user, logout, updateUser, setShowAuthModal, setAuthMode } = useAuth();
-const { orders } = useCart();
+const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+
+
+useEffect(() => {
+  const loadOrders = async () => {
+    try {
+      const data = await getMyOrders();
+
+      const formattedOrders = data.map((order) => ({
+        id: order.id,
+        status: order.status,
+        date: order.created_at,
+        total: order.total_amount,
+        items: order.items.map((item) => ({
+          id: item.id,
+          name: item.product_name || item.product?.name,
+          qty: item.quantity,
+          price: item.price,
+          image: item.image,
+        })),
+      }));
+
+      setOrders(formattedOrders);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadOrders();
+}, []);
 
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "orders" | "settings"
   const [editing, setEditing]     = useState(false);
@@ -108,7 +139,7 @@ const { orders } = useCart();
     await logout();
     navigate("/");
   };
-
+console.log("ORDERS:", orders);
   // ── Not signed in ─────────────────────────────────────────────
   if (!user) {
     return (

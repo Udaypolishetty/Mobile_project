@@ -622,7 +622,7 @@ export default function CheckoutPage() {
     }, () => setLocLoading(false));
   };
 
-const handleWhatsAppOrder = () => {
+const handleWhatsAppOrder = async () =>  {
   const useSavedAddress =
   user?.address &&
   !newAddr.name &&
@@ -698,9 +698,55 @@ ${products}
     message
   )}`;
 
+  const token = localStorage.getItem("access_token");
+console.log("TOKEN:", token);
+const orderPayload = {
+  customer_name: customerName,
+  phone: customerPhone,
+  address: customerAddress,
+  city: customerCity,
+  state: customerState,
+  pincode: customerPincode,
+  total_amount: total,
+  items: cartItems.map((item) => ({
+    product_id: item.id,
+    quantity: item.qty,
+  })),
+};
+
+try {
+  const response = await fetch(
+    "http://127.0.0.1:8000/api/orders/create/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(orderPayload),
+    }
+  );
+
+  const data = await response.json();
+
+  console.log("Order Saved:", data);
+
+
+
+  if (!response.ok) {
+    alert("Order save failed");
+    return;
+  }
+
+} catch (error) {
+  console.error(error);
+  alert("Failed to save order");
+  return;
+}
+
   window.open(whatsappUrl, "_blank");
 
-  
+  return;
 };
 
 const handlePlaceOrder = async () => {
@@ -733,7 +779,7 @@ const handlePlaceOrder = async () => {
         }
       : newAddr;
 
-  const token = localStorage.getItem("access"); // or wherever your JWT is stored
+  const token = localStorage.getItem("access_token"); // or wherever your JWT is stored
 
   try {
     setPlacing(true);
@@ -787,6 +833,10 @@ const handlePlaceOrder = async () => {
       },
       body: JSON.stringify(orderPayload),
     });
+    console.log(
+  "TOKEN:",
+  localStorage.getItem("access_token")
+);
 
     const orderData = await orderRes.json();
 
@@ -798,7 +848,7 @@ const handlePlaceOrder = async () => {
     console.log("Navigating with order:", orderData);
 navigate("/order-success", {
   state: {
-    order: savedOrder,
+    order: orderData,
   },
 });  } catch (err) {
     alert("Something went wrong while placing the order.");

@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { getOrder } from "../../api/orderApi";
 import {
   FaCheckCircle,
   FaBoxOpen,
@@ -15,19 +17,40 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 export default function OrderDetailsPage() {
   const { id } = useParams();
+  const [order, setOrder] = useState(null);
+const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { orders } = useCart();
 
-  const order = orders.find((o) => String(o.id) === String(id));
+  useEffect(() => {
+  getOrder(id)
+    .then((data) => {
+      setOrder(data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
+}, [id]);
+  
+
+  
 
   const timeline = useMemo(() => {
     const status = order?.status?.toLowerCase?.() || "";
 
-    const currentStep =
-      status.includes("deliver") ? 4 :
-      status.includes("ship") ? 3 :
-      status.includes("pack") ? 2 :
-      1;
+const currentStepMap = {
+  pending: 0,
+  confirmed: 1,
+  packed: 2,
+  shipped: 3,
+  out_for_delivery: 3,
+  delivered: 4,
+  cancelled: -1,
+};
+
+const currentStep =
+  currentStepMap[status] ?? 0;
 
     return [
       { key: 1, label: "Confirmed", icon: FaCheckCircle },
@@ -48,6 +71,10 @@ export default function OrderDetailsPage() {
         100
       : 0;
 
+if (status.includes("cancel")) {
+  return "bg-red-100 text-red-700 border-red-200";
+}
+
   const statusClasses = useMemo(() => {
     const status = order?.status?.toLowerCase?.() || "";
 
@@ -62,6 +89,14 @@ export default function OrderDetailsPage() {
     }
     return "bg-violet-100 text-violet-700 border-violet-200";
   }, [order]);
+
+if (loading) {
+  return (
+    <div className="p-10 text-center">
+      Loading...
+    </div>
+  );
+}
 
   if (!order) {
     return (
@@ -120,7 +155,7 @@ export default function OrderDetailsPage() {
                       Order #{order.id}
                     </h1>
                     <p className="text-sm text-gray-500 mt-2">
-                      Placed on {new Date(order.date).toLocaleString()}
+                     Placed on {new Date(order.created_at).toLocaleString()}
                     </p>
                   </div>
 
@@ -133,6 +168,17 @@ export default function OrderDetailsPage() {
               </div>
 
               <div className="p-5 md:p-7">
+                 {order.status?.toLowerCase() === "cancelled" ? (
+    <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-center">
+      <h3 className="text-red-600 font-bold text-lg">
+        Order Cancelled
+      </h3>
+
+      <p className="text-gray-600 mt-2">
+        This order has been cancelled and will not be delivered.
+      </p>
+    </div>
+  ) : (
                 <div className="relative">
                   <div className="absolute top-5 left-0 right-0 h-[3px] bg-gray-200 rounded-full" />
 
@@ -181,6 +227,7 @@ export default function OrderDetailsPage() {
                     })}
                   </div>
                 </div>
+  )}
               </div>
             </div>
 
@@ -208,8 +255,8 @@ export default function OrderDetailsPage() {
                   >
                     <div className="w-full sm:w-28 h-48 sm:h-28 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.product_image}
+                        alt={item.product_name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
@@ -218,10 +265,10 @@ export default function OrderDetailsPage() {
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                         <div>
                           <h3 className="text-base md:text-lg font-bold text-gray-900">
-                            {item.name}
+                            {item.product_name}
                           </h3>
                           <p className="text-sm text-gray-500 mt-1">
-                            Quantity: {item.qty}
+                            Quantity: {item.quantity}
                           </p>
                         </div>
 
@@ -256,7 +303,7 @@ export default function OrderDetailsPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between text-gray-500">
                   <span>Subtotal</span>
-                  <span>₹{Number(order.total).toLocaleString()}</span>
+                  <span>₹{Number(order.total_amount).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between text-gray-500">
                   <span>Shipping</span>
@@ -269,7 +316,7 @@ export default function OrderDetailsPage() {
                 <div className="border-t border-dashed border-gray-200 pt-3 flex items-center justify-between">
                   <span className="text-base font-bold text-gray-900">Total paid</span>
                   <span className="text-xl font-black text-gray-900">
-                    ₹{Number(order.total).toLocaleString()}
+                    ₹{Number(order.total_amount).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -293,13 +340,13 @@ export default function OrderDetailsPage() {
 
               <div className="rounded-2xl bg-gray-50 border border-gray-100 p-4 space-y-1">
                 <p className="font-bold text-gray-900">
-                  {order.deliveryAddress?.name}
+                  {order.customer_name}
                 </p>
                 <p className="text-sm text-gray-600 leading-6">
-                  {order.deliveryAddress?.address}
+                  {order.address}
                 </p>
                 <p className="text-sm text-gray-500">
-                  PIN: {order.deliveryAddress?.pincode}
+                  PIN: {order.pincode}
                 </p>
               </div>
             </motion.div>
