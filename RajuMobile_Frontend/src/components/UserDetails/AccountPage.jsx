@@ -101,7 +101,8 @@ useEffect(() => {
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "orders" | "settings"
   const [editing, setEditing]     = useState(false);
   const [saving, setSaving]       = useState(false);
-  const [saveMsg, setSaveMsg]     = useState("");         // success flash
+  const [saveMsg, setSaveMsg]     = useState("");   
+  const [loggingOut, setLoggingOut] = useState(false);
 
   // Edit form state — prefill from user
   const [form, setForm] = useState({
@@ -135,10 +136,23 @@ useEffect(() => {
     setSaving(false);
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
+  const handleLogout = () => {
+  setLoggingOut(true);
+
+  setTimeout(async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error(err);
+    }
+
+    navigate("/", { replace: true });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 50);
+  }, 700);
+};
 console.log("ORDERS:", orders);
   // ── Not signed in ─────────────────────────────────────────────
   if (!user) {
@@ -168,6 +182,50 @@ console.log("ORDERS:", orders);
       </div>
     );
   }
+
+  if (loggingOut) {
+  return (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
+
+      <div className="w-[420px] max-w-[90%] bg-[#111827] rounded-3xl overflow-hidden shadow-2xl border border-cyan-500/20">
+
+        <div className="h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-red-500"></div>
+
+        <div className="p-10 text-center">
+
+          <div className="w-32 h-32 mx-auto bg-white rounded-3xl flex items-center justify-center shadow-lg mb-6">
+            <img
+              src="/mobile_logo.png"
+              alt="Raju Mobile"
+              className="w-24 h-24 object-contain"
+            />
+          </div>
+
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Raju Mobile
+          </h1>
+
+          <p className="text-cyan-400 text-lg mb-8">
+            Signing Out...
+          </p>
+
+          <div className="flex justify-center">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-white/20 rounded-full"></div>
+
+              <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin"></div>
+            </div>
+          </div>
+
+          <p className="text-gray-400 text-sm mt-8">
+            Thank you for visiting Raju Mobile
+          </p>
+
+        </div>
+      </div>
+    </div>
+  );
+}
 
   const initials = (user.name || "U").split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 

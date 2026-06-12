@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { loginUser, getMe, logoutUser } from "../api/authApi";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -9,6 +10,7 @@ export function AuthProvider({ children }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode]           = useState("login");    // "login" | "register"
   const [authRedirectAction, setAuthRedirectAction] = useState(null);
+  const navigate = useNavigate();
 
   // ── On mount: restore session from localStorage ──────────────
   useEffect(() => {
@@ -37,9 +39,9 @@ const login = useCallback(async (email, password) => {
   setShowAuthModal(false);
 
   if (data.user.is_staff) {
-    window.location.href = "/admin-dashboard";
+    navigate("/admin-dashboard");
   } else {
-    window.location.href = "/";
+    navigate("/");
   }
 }, []);
 

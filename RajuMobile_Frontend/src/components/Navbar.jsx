@@ -561,6 +561,7 @@ function Navbar({ onSearchOpen }) {
   const [accountOpen,        setAccountOpen]        = useState(false);
   const [logoutConfirm,      setLogoutConfirm]      = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const { cartCount, wishlist } = useCart();
   const { user, logout, setShowAuthModal } = useAuth();
@@ -584,6 +585,28 @@ function Navbar({ onSearchOpen }) {
     { label: "Power Banks",   cat: "Power Banks" },
     { label: "Accessories",   cat: "Accessories" },
   ];
+
+  const handleLogout = () => {
+  setLoggingOut(true);
+
+  setTimeout(async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error(err);
+    }
+
+    setAccountOpen(false);
+    setLogoutConfirm(false);
+    setMenuOpen(false);
+
+    navigate("/", { replace: true });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  }, 500);
+};
 
   const goToCatalog = (cat) => {
     navigate(cat === "All" ? "/catalog" : `/catalog?category=${encodeURIComponent(cat)}`);
@@ -843,7 +866,7 @@ console.log(user);
                   <p className="text-sm font-semibold text-slate-800 mb-3">Sign out of your account?</p>
                   <div className="flex gap-2">
                     <button className="flex-1 py-2 rounded-xl text-sm font-bold text-white" style={{ background: "#ef4444" }}
-                      onClick={() => { logout(); setLogoutConfirm(false); setMenuOpen(false); }}>
+                      onClick={handleLogout}>
                       Yes, Sign Out
                     </button>
                     <button className="flex-1 py-2 rounded-xl text-sm font-semibold text-slate-700" style={{ border: "1.5px solid #e2e8f0", background: "white" }}
@@ -976,7 +999,7 @@ console.log(user);
                               <div className="px-4 py-3">
                                 <p className="text-xs text-gray-400 mb-2">Confirm sign out?</p>
                                 <div className="flex gap-2">
-                                  <button onClick={() => { logout(); setAccountOpen(false); setLogoutConfirm(false); navigate("/"); }}
+                                  <button onClick={handleLogout}
                                     className="flex-1 py-1.5 rounded-lg text-xs font-bold text-white" style={{ background: "#ef4444" }}>
                                     Yes
                                   </button>
@@ -1090,6 +1113,50 @@ console.log(user);
           </div>
 
         </div>
+
+      {loggingOut && (
+  <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
+
+    <div className="w-[420px] max-w-[90%] bg-[#111827] rounded-3xl shadow-2xl overflow-hidden border border-cyan-500/20">
+
+      {/* Top Accent */}
+      <div className="h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-red-500"></div>
+
+      <div className="p-10 text-center">
+
+        <div className="w-32 h-32 mx-auto bg-white rounded-3xl flex items-center justify-center shadow-lg mb-6">
+          <img
+            src="/mobile_logo.png"
+            alt="Raju Mobile"
+            className="w-24 h-24 object-contain"
+          />
+        </div>
+
+        <h1 className="text-5xl font-bold text-white mb-3">
+          Raju Mobile
+        </h1>
+
+        <p className="text-cyan-400 text-lg mb-8">
+          Signing Out...
+        </p>
+
+        <div className="flex justify-center">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-white/20 rounded-full"></div>
+
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <p className="text-gray-400 text-sm mt-8">
+          Thank you for visiting Raju Mobile
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+)}
       </nav>
     </>
   );

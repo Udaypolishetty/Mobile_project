@@ -12,7 +12,7 @@ from orders.serializers import OrderSerializer
 
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
-
+from users.models import UserProfile
 
 @api_view(["GET"])
 def dashboard_stats(request):
@@ -49,10 +49,18 @@ def admin_customers(request):
     data = []
 
     for user in users:
+
+        profile = getattr(user, "profile", None)
+
         data.append({
             "id": user.id,
-            "name": user.first_name,
+            "name": user.first_name or user.username,
             "email": user.email,
+            "phone": profile.phone if profile else "",
+            "address": profile.address if profile else "",
+            "city": profile.city if profile else "",
+            "state": profile.state if profile else "",
+            "pincode": profile.pincode if profile else "",
             "joined": user.date_joined,
         })
 
