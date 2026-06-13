@@ -26,9 +26,21 @@ const whyUs = [
   },
 ];
 const testimonials = [
-  { name: "Shreya, Vizag", text: "Every purchase has been top quality. The buying experience is smooth and hassle-free", rating: 5 },
-  { name: "Samir, Hyderabad", text: "I've been shopping here for 6 months and the products are great. Customer support is excellent too", rating: 5 },
-  { name: "Riya, Delhi", text: "I was hesitant to buy from a new website, but the customer service manager helped me through it!", rating: 5 },
+  { 
+    name: "Suresh Kumar, Karimnagar", 
+    text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!", 
+    rating: 5 
+  },
+  { 
+    name: "Anjali Rao, Karimnagar", 
+    text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.", 
+    rating: 5 
+  },
+  { 
+    name: "Mohammad Ali, siricilla", 
+    text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.", 
+    rating: 5 
+  },
 ];
 
 function OurService() {

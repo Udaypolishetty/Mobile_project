@@ -58,12 +58,14 @@ const handleWishlist = () => {
           position: relative;
           overflow: hidden;
           background: #f8f9fb;
-          aspect-ratio: 1 / 0.7;
+          aspect-ratio: 1 / 0.85;
         }
         .pc-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+  object-fit: scale-down; 
+  padding: 8px;           
+  background-color: #ffffff; 
           transition: transform 0.5s cubic-bezier(.4,0,.2,1);
           display: block;
         }

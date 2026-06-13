@@ -49,13 +49,25 @@ function CartPage() {
                 key={item.id}
                 className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-4 items-center"
               >
-                <Link to={`/product/${item.id}`}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-20 h-20 object-cover rounded-xl flex-shrink-0 bg-gray-50"
-                  />
-                </Link>
+{/* Replace the image section inside cartItems.map with this: */}
+<Link to={`/product/${item.id}`} className="flex-shrink-0">
+  <img
+    src={
+      item.image 
+        ? (item.image.startsWith('http') ? item.image : `http://127.0.0.1:8000${item.image}`)
+        : (item.images && item.images.length > 0 
+            ? (item.images[0].image?.startsWith('http') ? item.images[0].image : `http://127.0.0.1:8000${item.images[0].image}`)
+            : 'https://via.placeholder.com/150')
+    }
+    alt={item.name}
+    className="w-20 h-20 object-cover rounded-xl bg-gray-50 border border-gray-100"
+    onError={(e) => {
+      // If the image fails entirely, fall back to a clean placeholder and stop the blinking loop
+      e.target.onerror = null; 
+      e.target.src = "https://via.placeholder.com/150?text=No+Image";
+    }}
+  />
+</Link>
                 <div className="flex-1 min-w-0">
                   <Link to={`/product/${item.id}`}>
                     <p className="text-gray-800 font-semibold text-sm line-clamp-2 hover:text-cyan-700 transition mb-0.5">

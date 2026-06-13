@@ -1,54 +1,110 @@
 import axios from "axios";
 
-const BASE = "http://127.0.0.1:8000/api/admin";
+const BASE        = "http://127.0.0.1:8000/api/admin";
+const PRODUCTS    = "http://127.0.0.1:8000/api/products";
 
+// ── Auth header ───────────────────────────────────────────────────
+const auth = () => ({
+  Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+});
+
+// ── Dashboard ─────────────────────────────────────────────────────
 export const getDashboardStats = () =>
-  axios.get(`${BASE}/dashboard/`).then((r) => r.data);
+  axios.get(`${BASE}/dashboard/`, { headers: auth() }).then((r) => r.data);
 
-export const getProducts = () =>
-  axios.get(`${BASE}/products/`).then((r) => r.data);
-
-export const getOrders = () =>
-  axios.get(`${BASE}/orders/`).then((r) => r.data);
-
+// ── Customers ─────────────────────────────────────────────────────
 export const getCustomers = () =>
-  axios.get(`${BASE}/customers/`).then((r) => r.data);
+  axios.get(`${BASE}/customers/`, { headers: auth() }).then((r) => r.data);
 
-export const addProduct = (data) =>
-  axios.post(
-    "http://127.0.0.1:8000/api/products/add/",
-    data
-  ).then((r) => r.data);
+// ── Orders ────────────────────────────────────────────────────────
+export const getOrders = () =>
+  axios.get(`${BASE}/orders/`, { headers: auth() }).then((r) => r.data);
 
-  export const updateProduct = (id, data) =>
-  axios.put(
-    `http://127.0.0.1:8000/api/products/update/${id}/`,
-    data
-  ).then((r) => r.data);
+// ── Products ──────────────────────────────────────────────────────
+export const getProducts = () =>
+  axios.get(`${PRODUCTS}/`).then((r) => r.data);
 
-  export const deleteProduct = (id) =>
-  axios.delete(
-    `http://127.0.0.1:8000/api/products/delete/${id}/`
-  );
-
-  export const updateStock = async (id, stock) => {
-
-  const products = await getProducts();
-
-  const product = products.find(
-    (p) => p.id === id
-  );
-
-  return axios.put(
-    `http://127.0.0.1:8000/api/products/update/${id}/`,
-    {
-      stock,
-      price: product.price,
-      name: product.name,
-      brand: product.brand,
-      category: product.category,
-      description: product.description,
-      badge: product.badge,
-    }
-  );
+// ── ADD PRODUCT ───────────────────────────────────────────────────
+// Pass a plain JS object {name, brand, price, ...} + imageFiles array
+export const addProduct = (fields, imageFiles = []) => {
+  const fd = buildFormData(fields, imageFiles);
+  return axios.post(`${PRODUCTS}/add/`, fd, {
+    headers: {
+      ...auth(),
+    //   "Content-Type": "multipart/form-data",   // required for file upload
+    },
+  }).then((r) => r.data);
 };
+
+// ── UPDATE PRODUCT ────────────────────────────────────────────────
+// imageFiles is optional — pass [] if not changing images
+export const updateProduct = (id, fields, imageFiles = []) => {
+  const fd = buildFormData(fields, imageFiles);
+  return axios.put(`${PRODUCTS}/update/${id}/`, fd, {
+    headers: {
+      ...auth(),
+    //   "Content-Type": "multipart/form-data",
+    },
+  }).then((r) => r.data);
+};
+
+// ── DELETE PRODUCT ────────────────────────────────────────────────
+export const deleteProduct = (id) =>
+  axios.delete(`${PRODUCTS}/delete/${id}/`, { headers: auth() })
+    .then((r) => r.data);
+
+// ── UPDATE STOCK ──────────────────────────────────────────────────
+// Efficient: only sends the stock field, no need to re-fetch all products
+export const updateStock = (id, stock) =>
+  axios.put(
+    `${PRODUCTS}/update/${id}/`,
+    { stock },
+    { headers: { ...auth(), "Content-Type": "application/json" } }
+  ).then((r) => r.data);
+
+
+// ── Helper: build FormData from a plain object + files ────────────
+function buildFormData(fields, imageFiles = []) {
+  const fd = new FormData();
+
+  // Append all text fields
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      fd.append(key, value);
+    }
+  });
+
+  // Append each image file under the key "images"
+  imageFiles.forEach((file) => {
+    fd.append("images", file);
+  });
+
+  return fd;
+}
+
+
+// ── HOW TO USE IN ProductModal.jsx ────────────────────────────────
+//
+// ADD:
+//   const [imageFiles, setImageFiles] = useState([]);
+//
+//   // In your file input:
+//   <input
+//     type="file"
+//     multiple
+//     accept="image/*"
+//     onChange={(e) => setImageFiles(Array.from(e.target.files))}
+//   />
+//
+//   // On submit:
+//   if (isEdit) {
+//     await updateProduct(product.id, {
+//       name, brand, category, price, original_price,
+//       description, badge, stock,
+//     }, imageFiles);
+//   } else {
+//     await addProduct({
+//       name, brand, category, price, original_price,
+//       description, badge, stock,
+//     }, imageFiles);
+//   }
