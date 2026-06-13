@@ -67,12 +67,14 @@ const MOCK_ORDERS = [];   // empty = shows "no orders yet" state
 export default function AccountPage() {
 const { user, logout, updateUser, setShowAuthModal, setAuthMode } = useAuth();
 const [orders, setOrders] = useState([]);
+const [loadingOrders, setLoadingOrders] = useState(true);
   const navigate = useNavigate();
 
 
 useEffect(() => {
   const loadOrders = async () => {
     try {
+      setLoadingOrders(true);
       const data = await getMyOrders();
 
       const formattedOrders = data.map((order) => ({
@@ -93,6 +95,9 @@ useEffect(() => {
     } catch (err) {
       console.error(err);
     }
+    finally {
+  setLoadingOrders(false);
+}
   };
 
   loadOrders();
@@ -394,7 +399,30 @@ console.log("ORDERS:", orders);
         ════════════════════════════════════════════════════════ */}
 {activeTab === "orders" && (
   <AnimatedSection direction="up" delay={100}>
-    {orders.length === 0 ? (
+    {loadingOrders  ? (
+      <div className="space-y-4">
+  {[1, 2, 3].map((item) => (
+    <div
+      key={item}
+      className="bg-white rounded-3xl shadow-sm border border-gray-100 p-5"
+    >
+      <div className="animate-pulse">
+        <div className="h-5 bg-gray-200 rounded w-1/3 mb-4"></div>
+
+        <div className="flex gap-3">
+          <div className="w-20 h-20 bg-gray-200 rounded-xl"></div>
+
+          <div className="flex-1">
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+) : orders.length === 0 ? (
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 text-center">
         <FaBoxOpen className="text-5xl text-gray-200 mx-auto mb-4" />
         <h3 className="font-bold text-gray-700 mb-1">No orders yet</h3>
