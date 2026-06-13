@@ -21,11 +21,22 @@ const categories = [
   { label: "Power Banks", emoji: "🔋", color: "from-red-600 to-pink-600" },
   { label: "Accessories", emoji: "🎮", color: "from-indigo-600 to-blue-500" },
 ];
-
 const testimonials = [
-  { name: "Shreya, Vizag", text: "Every purchase has been top quality. The buying experience is smooth and hassle-free", rating: 5 },
-  { name: "Samir, Hyderabad", text: "I've been shopping here for 6 months and the products are great. Customer support is excellent too", rating: 5 },
-  { name: "Riya, Delhi", text: "I was hesitant to buy from a new website, but the customer service manager helped me through it!", rating: 5 },
+  {
+    name: "Suresh Kumar, Karimnagar",
+    text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!",
+    rating: 5
+  },
+  {
+    name: "Anjali Rao, Karimnagar",
+    text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.",
+    rating: 5
+  },
+  {
+    name: "Mohammad Ali, Karimnagar",
+    text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.",
+    rating: 5
+  },
 ];
 
 // const whyUs = [
@@ -124,11 +135,11 @@ function HomePage() {
         <div className="relative rounded-3xl overflow-hidden  shadow-xl min-h-[380px] md:min-h-[440px] flex flex-col md:flex-row items-end md:items-stretch">
           {/* Red bg image side */}
           <div className="w-full md:w-3/5 relative flex-shrink-0 min-h-[200px] md:min-h-0">
-<img
-  src="./homepageimg.png"
-  alt="Mobile Accessories"
-  className="absolute inset-0 w-full h-full object-cover object-top"
-/>
+            <img
+              src="./homepageimg.png"
+              alt="Mobile Accessories"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
             {/* Accessories flat lay overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#c8102e]/20 to-[#8b0000]/10" />
             {/* Store Logo */}
@@ -148,19 +159,19 @@ function HomePage() {
           {/* Bottom / Right text panel */}
           <div className="w-full md:w-2/5 bg-white md:rounded-none rounded-b-3xl px-6 py-6 md:py-8 md:px-8 flex flex-col justify-center">
             <AnimatedSection direction="left" delay={100}>
-<p className="text-gray-600 text-xs font-bold uppercase tracking-widest mb-1">
-   SALES • REPAIRS • ACCESSORIES
-</p>
+              <p className="text-gray-600 text-xs font-bold uppercase tracking-widest mb-1">
+                SALES • REPAIRS • ACCESSORIES
+              </p>
 
-<h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-  We Care.<br />
-  We <span className="text-[#C70000]">Repair.</span><br />
-  We Upgrade.
-</h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
+                We Care.<br />
+                We <span className="text-[#C70000]">Repair.</span><br />
+                We Upgrade.
+              </h1>
 
-<p className="text-gray-500 text-sm mb-5">
-  Mobile Accessories, Repairs & SIM Services at Best Prices
-</p>
+              <p className="text-gray-500 text-sm mb-5">
+                Mobile Accessories, Repairs & SIM Services at Best Prices
+              </p>
               <div className="flex gap-3 flex-wrap">
                 <button
                   onClick={() => navigate("/catalog")}
@@ -169,10 +180,10 @@ function HomePage() {
                   Shop now
                 </button>
                 <button
-                  onClick={() => navigate("/catalog?sale=true")}
+                  onClick={() => navigate("/services")}
                   className="bg-black/5 border border-gray-200 hover:border-red-400 text-gray-700 font-semibold px-5 py-2.5 rounded-xl text-sm transition"
                 >
-                  View Offers
+                  View Services
                 </button>
               </div>
             </AnimatedSection>

@@ -18,8 +18,8 @@ export default function ProductModal({
     stock: "",
   });
 
-  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [imageFiles, setImageFiles] = useState([]);
 
   useEffect(() => {
     if (product) {
@@ -46,8 +46,8 @@ export default function ProductModal({
       });
     }
 
-    setImages([]);
-  }, [product]);
+    setImageFiles([]);
+  }, [product, show]);
 
   if (!show) return null;
 
@@ -62,50 +62,57 @@ export default function ProductModal({
     try {
       setLoading(true);
 
-      const formData = new FormData();
+      // Ensure numeric fields are numbers
+      const productData = {
+        name: form.name.trim(),
+        brand: form.brand.trim(),
+        category: form.category.trim(),
+        price: parseFloat(form.price) || 0,
+        original_price: parseFloat(form.original_price) || 0,
+        description: form.description.trim(),
+        badge: form.badge.trim(),
+        stock: parseInt(form.stock) || 0,
+      };
 
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
-      });
-
-      images.forEach((img) => {
-        formData.append("images", img);
-      });
+      console.log("Submitting product data:", productData);
+      console.log("Images count:", imageFiles.length);
 
       if (product) {
-        await updateProduct(product.id, formData);
+        console.log("Updating product ID:", product.id);
+        await updateProduct(product.id, productData, imageFiles);
       } else {
-        await addProduct(formData);
+        console.log("Adding new product");
+        await addProduct(productData, imageFiles);
       }
 
       if (onSuccess) onSuccess();
-
       onClose();
     } catch (err) {
-      console.log(err);
-      alert("Something went wrong");
+      console.error("Product submission error:", err);
+      const errorMsg = err.response?.data?.error ||
+        err.response?.data?.detail ||
+        err.message ||
+        "Something went wrong";
+      alert(`Error: ${errorMsg}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-
-      <div className="bg-white rounded-3xl w-full max-w-2xl p-7 overflow-y-auto max-h-[90vh]">
-
-        <h2 className="text-2xl font-bold mb-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-7">
+        <h2 className="mb-6 text-2xl font-bold">
           {product ? "Edit Product" : "Add Product"}
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-4">
-
+        <div className="grid gap-4 md:grid-cols-2">
           <input
             name="name"
             placeholder="Product Name"
             value={form.name}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -113,7 +120,7 @@ export default function ProductModal({
             placeholder="Brand"
             value={form.brand}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -121,7 +128,7 @@ export default function ProductModal({
             placeholder="Category"
             value={form.category}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -129,7 +136,7 @@ export default function ProductModal({
             placeholder="Price"
             value={form.price}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -137,7 +144,7 @@ export default function ProductModal({
             placeholder="Original Price"
             value={form.original_price}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -145,7 +152,7 @@ export default function ProductModal({
             placeholder="Stock"
             value={form.stock}
             onChange={handleChange}
-            className="border rounded-xl p-3"
+            className="rounded-xl border p-3"
           />
 
           <input
@@ -153,7 +160,7 @@ export default function ProductModal({
             placeholder="Badge"
             value={form.badge}
             onChange={handleChange}
-            className="border rounded-xl p-3 md:col-span-2"
+            className="rounded-xl border p-3 md:col-span-2"
           />
 
           <textarea
@@ -162,30 +169,31 @@ export default function ProductModal({
             rows="4"
             value={form.description}
             onChange={handleChange}
-            className="border rounded-xl p-3 md:col-span-2"
+            className="rounded-xl border p-3 md:col-span-2"
           />
 
           <div className="md:col-span-2">
-            <label className="font-semibold">
-              Upload Images
-            </label>
-
+            <label className="mb-2 block font-semibold">Upload Images</label>
             <input
               type="file"
               multiple
-              className="mt-2"
-              onChange={(e) =>
-                setImages(Array.from(e.target.files))
-              }
+              accept="image/*"
+              onChange={(e) => setImageFiles(Array.from(e.target.files || []))}
+              className="w-full rounded-xl border p-3"
             />
+
+            {imageFiles.length > 0 && (
+              <p className="mt-2 text-sm text-gray-600">
+                {imageFiles.length} image(s) selected
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 mt-8">
-
+        <div className="mt-8 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-5 py-3 rounded-xl border"
+            className="rounded-xl border px-5 py-3"
           >
             Cancel
           </button>
@@ -193,15 +201,14 @@ export default function ProductModal({
           <button
             disabled={loading}
             onClick={handleSubmit}
-            className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold px-6 py-3 rounded-xl"
+            className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-black hover:bg-cyan-400 disabled:opacity-60"
           >
             {loading
               ? "Saving..."
               : product
-              ? "Update Product"
-              : "Add Product"}
+                ? "Update Product"
+                : "Add Product"}
           </button>
-
         </div>
       </div>
     </div>

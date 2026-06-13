@@ -98,23 +98,41 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#f6f6f4]">
       {/* HERO */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-10 md:py-14">
-          <AnimatedSection direction="up">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-600 font-bold mb-2">
-              Get In Touch
-            </p>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-zinc-900 mb-3 leading-tight">
-              Raju Mobiles
-            </h1>
-            <p className="text-gray-500 text-sm md:text-base max-w-xl">
-              We Care, We Repair! Visit our store, give us a call, or drop a
-              message — our team is ready to assist you with all brands and
-              models.
-            </p>
-          </AnimatedSection>
+{/* HERO */}
+<div className="bg-white border-b border-gray-100">
+  <div className="max-w-7xl mx-auto px-6 py-10 md:py-14">
+    <AnimatedSection direction="up">
+      {/* Container holding both Text (left) and Image (right) */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+        
+        {/* Left Column: Text Content */}
+        <div className="max-w-xl">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-600 font-bold mb-2">
+            Get In Touch
+          </p>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-zinc-900 mb-3 leading-tight">
+            Raju Mobiles
+          </h1>
+          <p className="text-gray-500 text-sm md:text-base">
+            We Care, We Repair! Visit our store, give us a call, or drop a
+            message — our team is ready to assist you with all brands and
+            models.
+          </p>
         </div>
+
+        {/* Right Column: Hero Image */}
+<div className="w-full md:w-auto flex-shrink-0">
+  <img 
+    src="/mobile_logos.png" 
+    alt="Raju Mobiles Support"
+    className="w-full max-w-[150px] md:max-w-[200px] h-auto object-contain mx-auto rounded-2xl"
+  />
+</div>
+
       </div>
+    </AnimatedSection>
+  </div>
+</div>
 
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid lg:grid-cols-3 gap-6">

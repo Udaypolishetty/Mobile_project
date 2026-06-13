@@ -14,19 +14,33 @@ export function AuthProvider({ children }) {
 
   // ── On mount: restore session from localStorage ──────────────
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      getMe()
-        .then((data) => setUser(data))
-        .catch(() => {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-        })
-        .finally(() => setLoadingUser(false));
-    } else {
-      setLoadingUser(false);
-    }
-  }, []);
+  const savedUser = localStorage.getItem("user");
+
+  if (savedUser) {
+    setUser(JSON.parse(savedUser));
+  }
+
+  const token = localStorage.getItem("access_token");
+
+  if (token) {
+    getMe()
+      .then((data) => {
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data));
+      })
+      .catch(() => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
+        setUser(null);
+      })
+      .finally(() => {
+        setLoadingUser(false);
+      });
+  } else {
+    setLoadingUser(false);
+  }
+}, []);
 
   // ── Login: call API, store tokens, set user ───────────────────
 const login = useCallback(async (email, password) => {
@@ -36,6 +50,7 @@ const login = useCallback(async (email, password) => {
   localStorage.setItem("refresh_token", data.refresh);
 
   setUser(data.user);
+  localStorage.setItem("user", JSON.stringify(data.user));
   setShowAuthModal(false);
 
   if (data.user.is_staff) {
@@ -51,6 +66,7 @@ const login = useCallback(async (email, password) => {
     try { await logoutUser(refresh); } catch { /* ignore */ }
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
     setUser(null);
   }, []);
 

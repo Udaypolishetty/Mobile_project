@@ -11,16 +11,33 @@ function Footer() {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h2 className="text-white font-extrabold text-xl mb-1">
-                <span className="text-cyan-400">Raju</span> Mobile
+                <span className="text-cyan-400">Raju Mobiles</span> 
               </h2>
               <p className="text-gray-500 text-xs leading-relaxed mt-2">
-                Your one-stop shop for mobile phones and accessories. Best prices, genuine products, delivered fast.
+                The Definitive Destination for Mobile Sales, Service, and Care.
               </p>
-              <div className="flex gap-4 mt-4">
-                {[FaFacebook, FaInstagram, FaYoutube].map((Icon, i) => (
-                  <Icon key={i} className="text-gray-500 hover:text-cyan-400 text-lg cursor-pointer transition" />
-                ))}
-              </div>
+<div className="flex gap-4 mt-4">
+  {[FaInstagram,FaFacebook,  FaYoutube].map((Icon, i) => {
+    // Check if the current icon is the Instagram icon
+    if (Icon === FaInstagram) {
+      return (
+        <a 
+          key={i} 
+          href="https://www.instagram.com/Raju_mobiles_Knr" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          <Icon className="text-gray-500 hover:text-cyan-400 text-lg cursor-pointer transition" />
+        </a>
+      );
+    }
+
+    // Return the normal icons for Facebook and YouTube
+    return (
+      <Icon key={i} className="text-gray-500 hover:text-cyan-400 text-lg cursor-pointer transition" />
+    );
+  })}
+</div>
             </div>
 
             <div>
@@ -49,10 +66,10 @@ function Footer() {
                   <FaEnvelope className="text-gray-600 " /> raju.mobile@gmail.com
                 </a>
                 <p className="flex items-center gap-2 text-gray-400 text-sm">
-                  <FaPhone className="text-gray-600 flex-shrink-0" /> +91 98765 43210
+                  <FaPhone className="text-gray-600 flex-shrink-0" /> +91 9652407756
                 </p>
                 <p className="flex items-center gap-2 text-gray-400 text-sm">
-                  <FaMapMarkerAlt className="text-gray-600 flex-shrink-0" /> Hyderabad, Telangana, India
+                  <FaMapMarkerAlt className="text-gray-600 flex-shrink-0" /> Karimnagar, Telangana, India
                 </p>
               </div>
             </div>
