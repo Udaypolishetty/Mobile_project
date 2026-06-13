@@ -36,3 +36,7 @@ venv/
 
 # Django Database
 db.sqlite3
+
+# Environment files
+.env
+.env.*
