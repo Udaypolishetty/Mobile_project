@@ -6,12 +6,13 @@ import {
   FaUsers,
   FaSignOutAlt,
    FaSpinner,
+   FaTimes
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logoutUser } from "../api/authApi";
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onClose }) {
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
@@ -64,6 +65,11 @@ const [loading, setLoading] = useState(false);
 };
   return (
     <aside className="w-64 bg-[#0a0f1e] text-white min-h-screen fixed left-0 top-0">
+      <div className="lg:hidden flex justify-end p-4">
+  <button onClick={onClose}>
+    <FaTimes className="text-white text-xl" />
+  </button>
+</div>
       <div className="p-6 border-b border-white/10">
         <h1 className="font-black text-xl">
           Raju <span className="text-cyan-400">Admin</span>
@@ -77,16 +83,17 @@ const [loading, setLoading] = useState(false);
       <nav className="p-4 space-y-2">
         {menu.map((item) => (
           <NavLink
-            key={item.name}
-            to={item.path}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                isActive
-                  ? "bg-cyan-500 text-black font-semibold"
-                  : "hover:bg-white/10"
-              }`
-            }
-          >
+  key={item.name}
+  to={item.path}
+  onClick={() => onClose?.()}
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+      isActive
+        ? "bg-cyan-500 text-black font-semibold"
+        : "hover:bg-white/10"
+    }`
+  }
+>
             {item.icon}
             {item.name}
           </NavLink>

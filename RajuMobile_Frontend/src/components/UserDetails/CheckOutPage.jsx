@@ -24,6 +24,10 @@ export default function CheckoutPage() {
   const [payment, setPayment] = useState("cod");
   const [placing, setPlacing] = useState(false);
   const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false);
+  const [whatsappLoading, setWhatsappLoading] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(
+  localStorage.getItem("orderPlaced") === "true"
+);
 
   const [newAddr, setNewAddr] = useState({
     name: "", phone: "", address: "", city: "", state: "", pincode: "",
@@ -57,6 +61,11 @@ export default function CheckoutPage() {
   };
 
 const handleWhatsAppOrder = async () =>  {
+ if (whatsappLoading) return;
+
+  setWhatsappLoading(true);
+
+
   const useSavedAddress =
   user?.address &&
   !newAddr.name &&
@@ -102,28 +111,28 @@ const locationLink = `https://www.google.com/maps/search/?api=1&query=${encodeUR
 
 
 const message = `
-🛒 *NEW ORDER REQUEST*
+*NEW ORDER REQUEST*
 
-👤 Customer Details
+  Customer Details
 
 Name: ${customerName}
 Phone: ${customerPhone}
 
-📍 Delivery Address
+Delivery Address
 
 ${customerAddress}
 
 City: ${customerCity}
 State: ${customerState}
 Pincode: ${customerPincode}
-🗺️ Map Location:
+Map Location:
 ${locationLink}
 
-📦 Products
+Products
 
 ${products}
 
-💰 Total Amount: ₹${total}
+Total Amount: ₹${total}
 `;
 
 
@@ -171,6 +180,8 @@ try {
     alert("Order save failed");
     return;
   }
+  setOrderPlaced(true);
+  localStorage.setItem("orderPlaced", "true");
 
 } catch (error) {
   console.error(error);
@@ -522,8 +533,18 @@ useEffect(() => {
                   className="place-btn" 
                   style={{ marginTop: "16px" }} 
                   onClick={handleWhatsAppOrder}
-                  disabled={placing}>
-                    {placing ? <><span className="spinner-w" /> Processing…</> : <><FaCheckCircle style={{ fontSize: "14px" }} /> Continue on WhatsApp · ₹{total.toLocaleString()}</>}
+                  disabled={orderPlaced}>
+                   {orderPlaced ? (
+  <>
+    <FaCheckCircle style={{ fontSize: "14px" }} />
+    Order Submitted
+  </>
+) : (
+  <>
+    <FaCheckCircle style={{ fontSize: "14px" }} />
+    Continue on WhatsApp · ₹{total.toLocaleString()}
+  </>
+)}
                   </button>
 
                   <p style={{ fontSize: "11px", color: "#94a3b8", textAlign: "center", marginTop: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>

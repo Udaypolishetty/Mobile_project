@@ -19,7 +19,7 @@ function Navbar({ onSearchOpen }) {
   const [loggingOut, setLoggingOut] = useState(false);
 
   const { cartCount, wishlist } = useCart();
-  const { user, logout, setShowAuthModal } = useAuth();
+  const { user, loadingUser, logout, setShowAuthModal } = useAuth();
   const navigate  = useNavigate();
   const location  = useLocation();
 
@@ -69,6 +69,7 @@ function Navbar({ onSearchOpen }) {
     setMobileProductsOpen(false);
   };
 console.log(user);
+
   return (
     <>
       <style>{`
@@ -183,10 +184,12 @@ console.log(user);
               {cartCount > 0 && <span className="badge bg-cyan-400 text-black">{cartCount}</span>}
             </Link>
             <button
-              onClick={() => user ? navigate("/account") : setShowAuthModal(true)}
+              onClick={() => {
+    if (loadingUser) return;
+    user ? navigate("/account") : setShowAuthModal(true);}}
               className="text-gray-300 hover:text-cyan-400 transition"
             >
-              {user ? (
+              {loadingUser ? null : user  ? (
                 <div className="w-8 h-8 rounded-full bg-cyan-700 flex items-center justify-center text-white text-xs font-bold">
                   {(user.name || "U")[0].toUpperCase()}
                 </div>
@@ -416,12 +419,13 @@ console.log(user);
                       <FaUserCircle className="text-base text-cyan-400" />
                     </div>
                     <div>
-                      <div className="text-[9px] text-gray-600 uppercase tracking-widest leading-none mb-0.5">
-                        {user ? "Hello" : "Account"}
-                      </div>
-                      <div className="text-xs font-semibold text-gray-300 group-hover:text-cyan-400 transition leading-none">
-                        {user ? user.name.split(" ")[0] : "Sign In"}
-                      </div>
+<div className="text-[9px] text-gray-600 uppercase tracking-widest leading-none mb-0.5">
+  {loadingUser ? "" : user ? "Hello" : "Account"}
+</div>
+
+<div className="text-xs font-semibold text-gray-300 group-hover:text-cyan-400 transition leading-none">
+  {loadingUser ? "" : user ? user.name.split(" ")[0] : "Sign In"}
+</div>
                     </div>
                   </button>
 
