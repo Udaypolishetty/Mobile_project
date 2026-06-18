@@ -25,25 +25,23 @@ export const getProducts = () =>
   axios.get(`${PRODUCTS}/`).then((r) => r.data);
 
 // ── ADD PRODUCT ───────────────────────────────────────────────────
-// Pass a plain JS object {name, brand, price, ...} + imageFiles array
 export const addProduct = (fields, imageFiles = []) => {
   const fd = buildFormData(fields, imageFiles);
   return axios.post(`${PRODUCTS}/add/`, fd, {
     headers: {
       ...auth(),
-    //   "Content-Type": "multipart/form-data",   // required for file upload
+      "Content-Type": "multipart/form-data", // Restored to safely transmit showcase image data
     },
   }).then((r) => r.data);
 };
 
 // ── UPDATE PRODUCT ────────────────────────────────────────────────
-// imageFiles is optional — pass [] if not changing images
 export const updateProduct = (id, fields, imageFiles = []) => {
   const fd = buildFormData(fields, imageFiles);
   return axios.put(`${PRODUCTS}/update/${id}/`, fd, {
     headers: {
       ...auth(),
-    //   "Content-Type": "multipart/form-data",
+      "Content-Type": "multipart/form-data", // Restored for secure multi-image payload updates
     },
   }).then((r) => r.data);
 };
@@ -54,13 +52,22 @@ export const deleteProduct = (id) =>
     .then((r) => r.data);
 
 // ── UPDATE STOCK ──────────────────────────────────────────────────
-// Efficient: only sends the stock field, no need to re-fetch all products
-export const updateStock = (id, stock) =>
-  axios.put(
+// Fixed to safely handle cases where the component passes either a single value or an accidental extra payload
+export const updateStock = (id, stockValue, fallbackDelta) => {
+  // If the second parameter passed was the whole product object, extract the fallbackDelta number instead
+  const cleanStock = typeof stockValue === "object" ? fallbackDelta : stockValue;
+
+  return axios.put(
     `${PRODUCTS}/update/${id}/`,
-    { stock },
-    { headers: { ...auth(), "Content-Type": "application/json" } }
+    { stock: cleanStock },
+    { 
+      headers: { 
+        ...auth(), 
+        "Content-Type": "application/json" 
+      } 
+    }
   ).then((r) => r.data);
+};
 
 
 // ── Helper: build FormData from a plain object + files ────────────
@@ -81,7 +88,6 @@ function buildFormData(fields, imageFiles = []) {
 
   return fd;
 }
-
 
 // ── HOW TO USE IN ProductModal.jsx ────────────────────────────────
 //

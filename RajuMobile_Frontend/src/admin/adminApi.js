@@ -76,14 +76,7 @@ export const deleteProduct = (id) =>
     );
 
 
-export const updateStock = async (id, stock) => {
-
-    const products = await getProducts();
-
-    const product = products.find(
-        (p) => p.id === id
-    );
-
+export const updateStock = (id, product, stock) => {
     return axios.put(
         `http://127.0.0.1:8000/api/products/update/${id}/`,
         {

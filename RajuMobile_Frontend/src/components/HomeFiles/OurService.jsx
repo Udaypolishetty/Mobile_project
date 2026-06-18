@@ -4,6 +4,10 @@ const whyUs = [
     image: "/star.png",
     title: "Top Rated Products",
   },
+    {
+    image: "/repair.png",
+    title: "All Types Repair Available",
+  },
   {
     image: "/deliverytruck.png",
     title: "Free & Fast Delivery",
@@ -20,10 +24,7 @@ const whyUs = [
     image: "/verified.png",
     title: "100% Genuine Products",
   },
-  {
-    image: "/repair.png",
-    title: "All Types Repair Available",
-  },
+
 ];
 const testimonials = [
   { 

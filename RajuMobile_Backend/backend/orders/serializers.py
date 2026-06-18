@@ -8,10 +8,18 @@ class OrderItemSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
-    product_image = serializers.ImageField(
-        source="product.image",
-        read_only=True
-    )
+    product_image = serializers.SerializerMethodField()
+
+    def get_product_image(self, obj):
+        request = self.context.get("request")
+        # Try product.images (related images model) first
+        first_img = obj.product.images.first() if hasattr(obj.product, "images") else None
+        if first_img and hasattr(first_img, "image") and first_img.image:
+            return request.build_absolute_uri(first_img.image.url) if request else first_img.image.url
+        # Fall back to product.image (single image field)
+        if obj.product.image:
+            return request.build_absolute_uri(obj.product.image.url) if request else obj.product.image.url
+        return None
 
     class Meta:
         model = OrderItem
