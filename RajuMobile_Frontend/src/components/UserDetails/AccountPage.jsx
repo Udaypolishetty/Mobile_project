@@ -87,7 +87,7 @@ useEffect(() => {
           name: item.product_name || item.product?.name,
           qty: item.quantity,
           price: item.price,
-          image: item.image,
+          image: item.product_image,
         })),
       }));
 
@@ -158,7 +158,8 @@ useEffect(() => {
     }, 50);
   }, 700);
 };
-console.log("ORDERS:", orders);
+// console.log("ORDERS:", orders);
+
   // ── Not signed in ─────────────────────────────────────────────
   if (!user) {
     return (
@@ -463,6 +464,7 @@ console.log("ORDERS:", orders);
                 key={item.id}
                 className="flex gap-3 py-2 border-t border-gray-100"
               >
+                
 <img src={getProductImage(item)} alt={item.name} className="w-20 h-20 object-cover rounded-xl" />
 
 

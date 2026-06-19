@@ -114,6 +114,7 @@ const currentStep =
 console.log("ORDER STATUS:", order?.status);
 console.log("CURRENT STEP:", currentStep);
 
+
   return (
     <>
       <style>{`
@@ -304,6 +305,7 @@ const isActive = i === currentStep - 1;
               </p>
               {order.items.map((item) => (
                 <div key={item.id} className="oi-row">
+                  
                   <img src={item.image} alt={item.name} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "10px", background: "#f8fafc", flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</p>

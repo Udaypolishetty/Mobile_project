@@ -25,9 +25,7 @@ export default function CheckoutPage() {
   const [placing, setPlacing] = useState(false);
   const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false);
   const [whatsappLoading, setWhatsappLoading] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(
-  localStorage.getItem("orderPlaced") === "true"
-);
+  
 
   const [newAddr, setNewAddr] = useState({
     name: "", phone: "", address: "", city: "", state: "", pincode: "",
@@ -61,6 +59,22 @@ export default function CheckoutPage() {
   };
 
 const handleWhatsAppOrder = async () =>  {
+
+  if (!user) {
+  setShowAuthModal(true);
+  return;
+}
+
+if (
+  addressMode === "new" &&
+  (!newAddr.name ||
+    !newAddr.phone ||
+    !newAddr.address ||
+    !newAddr.pincode)
+) {
+  alert("Please fill all address fields.");
+  return;
+}
  if (whatsappLoading) return;
 
   setWhatsappLoading(true);
@@ -177,19 +191,24 @@ try {
 
 
   if (!response.ok) {
+     setWhatsappLoading(false);
     alert("Order save failed");
     return;
   }
-  setOrderPlaced(true);
-  localStorage.setItem("orderPlaced", "true");
+ 
+  
 
 } catch (error) {
+  setWhatsappLoading(false);
   console.error(error);
   alert("Failed to save order");
   return;
 }
 
   window.open(whatsappUrl, "_blank");
+  placeOrder();
+
+navigate("/order-success");
 
   return;
 };
@@ -533,11 +552,11 @@ useEffect(() => {
                   className="place-btn" 
                   style={{ marginTop: "16px" }} 
                   onClick={handleWhatsAppOrder}
-                  disabled={orderPlaced}>
-                   {orderPlaced ? (
+                  disabled={whatsappLoading}>
+                   {whatsappLoading ? (
   <>
     <FaCheckCircle style={{ fontSize: "14px" }} />
-    Order Submitted
+     Submitted ....
   </>
 ) : (
   <>

@@ -68,7 +68,7 @@ function Navbar({ onSearchOpen }) {
     setMenuOpen(false);
     setMobileProductsOpen(false);
   };
-console.log(user);
+
 
   return (
     <>

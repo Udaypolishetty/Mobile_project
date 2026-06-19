@@ -106,7 +106,7 @@ const [loading, setLoading] = useState(false);
       <div className="text-center">
 
         <img
-          src="/logo.png"
+          src="/mobile_logos.png"
           alt="Raju Mobile"
           className="w-28 h-28 mx-auto mb-4"
         />

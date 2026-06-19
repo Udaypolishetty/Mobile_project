@@ -143,3 +143,11 @@ EMAIL_USE_TLS      = True
 EMAIL_HOST_USER    = "vmaruthi2004@gmail.com"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")   # ← read from .env
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+print("Cloud:", os.getenv("CLOUDINARY_CLOUD_NAME"))
+print("Key:", os.getenv("CLOUDINARY_API_KEY"))
+print("Secret:", os.getenv("CLOUDINARY_API_SECRET"))
+
+print("BASE_DIR =", BASE_DIR)
+print("ENV PATH =", BASE_DIR / ".env")
