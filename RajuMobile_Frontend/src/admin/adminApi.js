@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = "VITE_API_URL/api/admin";
+const BASE = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 export const getDashboardStats = () =>
     axios.get(`${BASE}/dashboard/`).then((r) => r.data);
