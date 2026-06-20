@@ -102,7 +102,7 @@ const [loading, setLoading] = useState(false);
 
 {
   isLoggingOut && (
-    <div className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/60 backdrop-blur-md"">
+    <div className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
       <div className="relative z-[9999999] bg-[#07132b] rounded-3xl p-10 text-center shadow-2xl border border-cyan-500/20 min-w-[450px]">
 
         <img
