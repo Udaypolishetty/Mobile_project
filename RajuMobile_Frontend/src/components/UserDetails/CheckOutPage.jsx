@@ -10,7 +10,9 @@ import AnimatedSection from "../AnimatedSection";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { getProductImage } from "../../utils/imageHelper";
+import { createOrder } from "../../api/orderApi";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const SHOP_WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER;
 
 export default function CheckoutPage() {
@@ -24,6 +26,7 @@ export default function CheckoutPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [locLoading, setLocLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [whatsappLoading, setWhatsappLoading] = useState(false);
 
   const [newAddr, setNewAddr] = useState({
     name: "", phone: "", address: "", city: "", state: "", pincode: "",
@@ -65,9 +68,25 @@ export default function CheckoutPage() {
     );
   };
 
-  /* ─── Main order handler ──────────────────────────────── */
-  const handleWhatsAppOrder = () => {
-    if (submitting || orderPlaced) return;
+
+  const handleWhatsAppOrder = async () => {
+
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (
+      addressMode === "new" &&
+      (!newAddr.name ||
+        !newAddr.phone ||
+        !newAddr.address ||
+        !newAddr.pincode)
+    ) {
+      alert("Please fill all address fields.");
+      return;
+    }
+    if (whatsappLoading) return;
 
     // ── Resolve address fields ──
     const useSaved = user?.address && addressMode === "saved";
@@ -129,7 +148,7 @@ _Sent via Raju Mobile Website_`;
     setSubmitting(true);
     const token = localStorage.getItem("access_token");
 
-    fetch("http://127.0.0.1:8000/api/orders/create/", {
+    fetch(`${API_URL}/api/orders/create/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

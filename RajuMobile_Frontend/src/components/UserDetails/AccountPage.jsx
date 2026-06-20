@@ -1,4 +1,6 @@
-import { useState } from "react";
+
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit,
@@ -8,18 +10,15 @@ import {
 import { MdVerified, MdLocationCity } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import { updateProfile } from "../../api/authApi";
-import AnimatedSection from "../AnimatedSection";
-import { useCart } from "../../context/CartContext";
-import { getProductImage } from "../../utils/imageHelper";
-import { useEffect } from "react";
 import { getMyOrders } from "../../api/orderApi";
-
+import { getProductImage } from "../../utils/imageHelper";
+import AnimatedSection from "../AnimatedSection";
 
 /* ─── tiny reusable info row ─────────────────────────────────── */
 function InfoRow({ icon: Icon, label, value, iconColor = "text-cyan-500" }) {
   return (
     <div className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0">
-      <div className={`w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0 mt-0.5`}>
+      <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0 mt-0.5">
         <Icon className={`text-sm ${iconColor}`} />
       </div>
       <div className="flex-1 min-w-0">
@@ -58,62 +57,88 @@ function EditField({ label, value, onChange, type = "text", textarea = false }) 
   );
 }
 
-/* ─── mock orders (replace with real API later) ──────────────── */
-const MOCK_ORDERS = [];   // empty = shows "no orders yet" state
+/* ─── status badge color helper ──────────────────────────────── */
+function statusBadgeClass(status) {
+  const s = (status || "").toLowerCase();
+  if (s.includes("deliver")) return "bg-green-100 text-green-700";
+  if (s.includes("cancel")) return "bg-red-100 text-red-600";
+  if (s.includes("ship")) return "bg-cyan-100 text-cyan-700";
+  if (s.includes("process") || s.includes("pack")) return "bg-amber-100 text-amber-700";
+  return "bg-violet-100 text-violet-700"; // pending / confirmed
+}
+
+/* ─── order skeleton ──────────────────────────────────────────── */
+function OrderSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-5">
+          <div className="animate-pulse">
+            <div className="h-5 bg-gray-200 rounded w-1/3 mb-4" />
+            <div className="flex gap-3">
+              <div className="w-20 h-20 bg-gray-200 rounded-xl" />
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/4" />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /* ══════════════════════════════════════════════════════════════
    MAIN ACCOUNT PAGE
 ═══════════════════════════════════════════════════════════════ */
 export default function AccountPage() {
   const { user, logout, updateUser, setShowAuthModal, setAuthMode } = useAuth();
-  const [orders, setOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(true);
-  const [trackingOrderId, setTrackingOrderId] = useState(null);
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        setLoadingOrders(true);
-        const data = await getMyOrders();
-
-        const formattedOrders = data.map((order) => ({
-          id: order.id,
-          status: order.status,
-          date: order.created_at,
-          total: order.total_amount,
-          items: order.items.map((item) => ({
-            id: item.id,
-            name: item.product_name || item.product?.name,
-            qty: item.quantity,
-            price: item.price,
-            image: item.product_image,
-          })),
-        }));
-
-        setOrders(formattedOrders);
-      } catch (err) {
-        console.error(err);
-      }
-      finally {
-        setLoadingOrders(false);
-      }
-    };
-
-    loadOrders();
-  }, []);
 
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "orders" | "settings"
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [trackingOrderId, setTrackingOrderId] = useState(null);
 
-  // Edit form state — prefill from user
   const [form, setForm] = useState({
     name: "", phone: "", address: "", pincode: "", city: "", state: "",
   });
+
+  /* ── load orders once on mount ── */
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        setLoadingOrders(true);
+        const data = await getMyOrders();
+        const formatted = data.map((order) => ({
+          id: order.id,
+          status: order.status,
+          date: order.created_at,
+          total: order.total_amount,
+          items: (order.items || []).map((item) => ({
+            id: item.id,
+            name: item.product_name || item.product?.name || "Product",
+            qty: item.quantity,
+            price: item.price,
+            image: item.product_image,
+          })),
+        }));
+        if (active) setOrders(formatted);
+      } catch (err) {
+        console.error("Failed to load orders:", err);
+      } finally {
+        if (active) setLoadingOrders(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
 
   const openEdit = () => {
     setForm({
@@ -131,7 +156,7 @@ export default function AccountPage() {
     setSaving(true);
     try {
       const result = await updateProfile(form);
-      updateUser(result.user);        // update AuthContext state
+      updateUser(result.user);
       setSaveMsg("Profile updated successfully!");
       setEditing(false);
       setTimeout(() => setSaveMsg(""), 3000);
@@ -144,31 +169,19 @@ export default function AccountPage() {
 
   const handleLogout = () => {
     setLoggingOut(true);
-
     setTimeout(async () => {
-      try {
-        await logout();
-      } catch (err) {
-        console.error(err);
-      }
-
+      try { await logout(); } catch (err) { console.error(err); }
       navigate("/", { replace: true });
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 50);
+      setTimeout(() => window.location.reload(), 50);
     }, 700);
   };
 
   const handleTrackOrder = (orderId) => {
     setTrackingOrderId(orderId);
-    setTimeout(() => {
-      navigate(`/order/${orderId}`);
-    }, 300);
+    setTimeout(() => navigate(`/order/${orderId}`), 300);
   };
 
-  console.log("ORDERS:", orders);
-  // ── Not signed in ─────────────────────────────────────────────
+  /* ── Not signed in ─────────────────────────────────────────── */
   if (!user) {
     return (
       <div className="min-h-screen bg-[#f5f0eb] flex items-center justify-center px-4">
@@ -197,44 +210,25 @@ export default function AccountPage() {
     );
   }
 
+  /* ── Logging out overlay ───────────────────────────────────── */
   if (loggingOut) {
     return (
       <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
-
         <div className="w-[420px] max-w-[90%] bg-[#111827] rounded-3xl overflow-hidden shadow-2xl border border-cyan-500/20">
-
-          <div className="h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-red-500"></div>
-
+          <div className="h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-red-500" />
           <div className="p-10 text-center">
-
             <div className="w-32 h-32 mx-auto bg-white rounded-3xl flex items-center justify-center shadow-lg mb-6">
-              <img
-                src="/mobile_logo.png"
-                alt="Raju Mobile"
-                className="w-24 h-24 object-contain"
-              />
+              <img src="/mobile_logo.png" alt="Raju Mobile" className="w-24 h-24 object-contain" />
             </div>
-
-            <h1 className="text-4xl font-bold text-white mb-2">
-              Raju Mobile
-            </h1>
-
-            <p className="text-cyan-400 text-lg mb-8">
-              Signing Out...
-            </p>
-
+            <h1 className="text-4xl font-bold text-white mb-2">Raju Mobile</h1>
+            <p className="text-cyan-400 text-lg mb-8">Signing Out...</p>
             <div className="flex justify-center">
               <div className="relative">
-                <div className="w-16 h-16 border-4 border-white/20 rounded-full"></div>
-
-                <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-white/20 rounded-full" />
+                <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-cyan-400 rounded-full animate-spin" />
               </div>
             </div>
-
-            <p className="text-gray-400 text-sm mt-8">
-              Thank you for visiting Raju Mobile
-            </p>
-
+            <p className="text-gray-400 text-sm mt-8">Thank you for visiting Raju Mobile</p>
           </div>
         </div>
       </div>
@@ -246,27 +240,22 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen bg-[#f5f0eb]">
       <div className="max-w-3xl mx-auto px-4 py-8">
+
+        {/* ── Hero header card ───────────────────────────────── */}
         <AnimatedSection direction="up">
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-5">
-
-            {/* Gradient top strip */}
             <div className="h-24 bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-900 relative">
               <div
                 className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 30% 50%, #06b6d4 0%, transparent 60%)",
-                }}
+                style={{ backgroundImage: "radial-gradient(circle at 30% 50%, #06b6d4 0%, transparent 60%)" }}
               />
             </div>
 
             <div className="px-6 pb-6 relative">
-              {/* Avatar overlapping strip */}
               <div className="flex items-end justify-between -mt-8 mb-4 relative z-10">
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white text-2xl font-black shadow-lg border-4 border-white">
                   {initials}
                 </div>
-
                 <button
                   onClick={openEdit}
                   className="flex items-center gap-1.5 bg-black hover:bg-cyan-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
@@ -275,26 +264,23 @@ export default function AccountPage() {
                 </button>
               </div>
 
-              <div className="flex items-start justify-between flex-wrap gap-2">
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h1 className="text-xl font-extrabold text-gray-900">{user.name}</h1>
-                    <MdVerified className="text-cyan-500 text-base" />
-                  </div>
-                  <p className="text-gray-400 text-sm">{user.email}</p>
-                  {user.member_since && (
-                    <p className="text-[11px] text-gray-300 mt-0.5 flex items-center gap-1">
-                      <FaCalendarAlt className="text-[10px]" />
-                      Member since {user.member_since}
-                    </p>
-                  )}
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-xl font-extrabold text-gray-900">{user.name}</h1>
+                  <MdVerified className="text-cyan-500 text-base" />
                 </div>
+                <p className="text-gray-400 text-sm">{user.email}</p>
+                {user.member_since && (
+                  <p className="text-[11px] text-gray-300 mt-0.5 flex items-center gap-1">
+                    <FaCalendarAlt className="text-[10px]" /> Member since {user.member_since}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </AnimatedSection>
 
-        {/* ── Tabs ────────────────────────────────────────────── */}
+        {/* ── Tabs ──────────────────────────────────────────── */}
         <AnimatedSection direction="up" delay={80}>
           <div className="flex gap-2 mb-5 bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm">
             {[
@@ -306,8 +292,8 @@ export default function AccountPage() {
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition ${activeTab === id
-                  ? "bg-black text-white shadow-sm"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                    ? "bg-black text-white shadow-sm"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                   }`}
               >
                 <Icon className="text-xs" /> {label}
@@ -316,20 +302,18 @@ export default function AccountPage() {
           </div>
         </AnimatedSection>
 
-        {/* ── SUCCESS FLASH ────────────────────────────────────── */}
+        {/* ── Success flash ───────────────────────────────────── */}
         {saveMsg && (
           <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-medium mb-4 ${saveMsg.startsWith("❌")
-            ? "bg-red-50 text-red-600 border border-red-100"
-            : "bg-green-50 text-green-700 border border-green-100"
+              ? "bg-red-50 text-red-600 border border-red-100"
+              : "bg-green-50 text-green-700 border border-green-100"
             }`}>
             <FaCheckCircle className="flex-shrink-0" />
             {saveMsg}
           </div>
         )}
 
-        {/* ════════════════════════════════════════════════════════
-            TAB: PROFILE
-        ════════════════════════════════════════════════════════ */}
+        {/* ════════════ TAB: PROFILE ════════════ */}
         {activeTab === "profile" && !editing && (
           <AnimatedSection direction="up" delay={100}>
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-4">
@@ -353,7 +337,7 @@ export default function AccountPage() {
           </AnimatedSection>
         )}
 
-        {/* ── Edit Profile Form ──────────────────────────────── */}
+        {/* ── Edit Profile Form ─────────────────────────────── */}
         {activeTab === "profile" && editing && (
           <AnimatedSection direction="up">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
@@ -390,45 +374,20 @@ export default function AccountPage() {
                   disabled={saving}
                   className="flex-1 bg-black hover:bg-cyan-600 text-white font-bold py-3 rounded-2xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  {saving ? (
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <><FaSave className="text-xs" /> Save Changes</>
-                  )}
+                  {saving
+                    ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    : <><FaSave className="text-xs" /> Save Changes</>}
                 </button>
               </div>
             </div>
           </AnimatedSection>
         )}
 
-        {/* ════════════════════════════════════════════════════════
-            TAB: ORDERS
-        ════════════════════════════════════════════════════════ */}
+        {/* ════════════ TAB: ORDERS ════════════ */}
         {activeTab === "orders" && (
           <AnimatedSection direction="up" delay={100}>
             {loadingOrders ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((item) => (
-                  <div
-                    key={item}
-                    className="bg-white rounded-3xl shadow-sm border border-gray-100 p-5"
-                  >
-                    <div className="animate-pulse">
-                      <div className="h-5 bg-gray-200 rounded w-1/3 mb-4"></div>
-
-                      <div className="flex gap-3">
-                        <div className="w-20 h-20 bg-gray-200 rounded-xl"></div>
-
-                        <div className="flex-1">
-                          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                          <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <OrderSkeleton />
             ) : orders.length === 0 ? (
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 text-center">
                 <FaBoxOpen className="text-5xl text-gray-200 mx-auto mb-4" />
@@ -446,68 +405,48 @@ export default function AccountPage() {
             ) : (
               <div className="space-y-3">
                 {orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4"
-                  >
+                  <div key={order.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+
+                    {/* Order header */}
                     <div className="flex justify-between mb-3">
                       <div>
-                        <p className="font-bold text-gray-800">
-                          Order #{order.id}
-                        </p>
+                        <p className="font-bold text-gray-800">Order #{order.id}</p>
                         <p className="text-xs text-gray-500">
                           {order.date ? new Date(order.date).toLocaleString() : "Date unavailable"}
                         </p>
                       </div>
-
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${order.status?.toLowerCase().includes("deliver") ? "bg-green-100 text-green-700"
-                        : order.status?.toLowerCase().includes("cancel") ? "bg-red-100 text-red-600"
-                          : order.status?.toLowerCase().includes("ship") ? "bg-cyan-100 text-cyan-700"
-                            : order.status?.toLowerCase().includes("pack") ? "bg-amber-100 text-amber-700"
-                              : "bg-violet-100 text-violet-700"
-                        }`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${statusBadgeClass(order.status)}`}>
                         {order.status || "Pending"}
                       </span>
                     </div>
 
+                    {/* Items */}
                     {order.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex gap-3 py-2 border-t border-gray-100"
-                      >
+                      <div key={item.id} className="flex gap-3 py-2 border-t border-gray-100">
                         <img
-                          src={item.image || `https://placehold.co/80x80/f1f5f9/94a3b8?text=${encodeURIComponent((item.name || "").split(" ").slice(0, 2).join(" "))}`}
+                          src={item.image || getProductImage(item)}
                           alt={item.name}
                           className="w-20 h-20 object-cover rounded-xl bg-gray-50"
                           onError={(e) => {
                             e.currentTarget.onerror = null;
-                            e.currentTarget.src = `https://placehold.co/80x80/f1f5f9/94a3b8?text=img`;
+                            e.currentTarget.src = `https://placehold.co/80x80/f1f5f9/94a3b8?text=${encodeURIComponent((item.name || "").split(" ").slice(0, 2).join(" "))}`;
                           }}
                         />
-
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-gray-800">
-                            {item.name}
-                          </h4>
-                          <p className="text-sm text-gray-500">
-                            Qty: {item.qty}
-                          </p>
-                          <p className="font-bold text-cyan-600">
-                            ₹{item.price}
-                          </p>
+                          <h4 className="font-semibold text-gray-800">{item.name}</h4>
+                          <p className="text-sm text-gray-500">Qty: {item.qty}</p>
+                          <p className="font-bold text-cyan-600">₹{item.price}</p>
                         </div>
                       </div>
                     ))}
 
+                    {/* Total */}
                     <div className="border-t border-gray-100 pt-3 mt-3 flex justify-between">
-                      <span className="font-semibold text-gray-700">
-                        Total
-                      </span>
-                      <span className="font-bold text-gray-900">
-                        ₹{order.total}
-                      </span>
+                      <span className="font-semibold text-gray-700">Total</span>
+                      <span className="font-bold text-gray-900">₹{order.total}</span>
                     </div>
 
+                    {/* Track button */}
                     <button
                       onClick={() => handleTrackOrder(order.id)}
                       disabled={trackingOrderId === order.id}
@@ -532,9 +471,7 @@ export default function AccountPage() {
           </AnimatedSection>
         )}
 
-        {/* ════════════════════════════════════════════════════════
-            TAB: SETTINGS
-        ════════════════════════════════════════════════════════ */}
+        {/* ════════════ TAB: SETTINGS ════════════ */}
         {activeTab === "settings" && (
           <AnimatedSection direction="up" delay={100}>
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-4">

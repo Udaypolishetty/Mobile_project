@@ -54,9 +54,9 @@ function CartPage() {
   <img
     src={
       item.image 
-        ? (item.image.startsWith('http') ? item.image : `http://127.0.0.1:8000${item.image}`)
+        ? (item.image.startsWith('http') ? item.image : `VITE_API_URL${item.image}`)
         : (item.images && item.images.length > 0 
-            ? (item.images[0].image?.startsWith('http') ? item.images[0].image : `http://127.0.0.1:8000${item.images[0].image}`)
+            ? (item.images[0].image?.startsWith('http') ? item.images[0].image : `VITE_API_URL${item.images[0].image}`)
             : 'https://via.placeholder.com/150')
     }
     alt={item.name}

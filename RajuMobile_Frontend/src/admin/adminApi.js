@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = "http://127.0.0.1:8000/api/admin";
+const BASE = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 export const getDashboardStats = () =>
     axios.get(`${BASE}/dashboard/`).then((r) => r.data);
@@ -16,7 +16,7 @@ export const getCustomers = () =>
 
 export const createProduct = (data) =>
     axios.post(
-        "http://127.0.0.1:8000/api/admin/products/create/",
+        `${import.meta.env.VITE_API_URL}/api/admin/products/create/`,
         data
     );
 
@@ -39,7 +39,7 @@ export const addProduct = (data, imageFiles = []) => {
     });
 
     return axios.post(
-        "http://127.0.0.1:8000/api/products/add/",
+        `${import.meta.env.VITE_API_URL}/api/products/add/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
     ).then((r) => r.data);
@@ -64,7 +64,7 @@ export const updateProduct = (id, data, imageFiles = []) => {
     });
 
     return axios.put(
-        `http://127.0.0.1:8000/api/products/update/${id}/`,
+        `${import.meta.env.VITE_API_URL}/api/products/update/${id}/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
     ).then((r) => r.data);
@@ -72,13 +72,13 @@ export const updateProduct = (id, data, imageFiles = []) => {
 
 export const deleteProduct = (id) =>
     axios.delete(
-        `http://127.0.0.1:8000/api/products/delete/${id}/`
+        `${import.meta.env.VITE_API_URL}/api/products/delete/${id}/`
     );
 
 
 export const updateStock = (id, product, stock) => {
     return axios.put(
-        `http://127.0.0.1:8000/api/products/update/${id}/`,
+        `${import.meta.env.VITE_API_URL}/api/products/update/${id}/`,
         {
             ...product,
             stock,

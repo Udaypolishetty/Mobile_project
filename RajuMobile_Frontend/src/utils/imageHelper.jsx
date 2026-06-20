@@ -1,9 +1,19 @@
-const API = "http://127.0.0.1:8000";
+const API = import.meta.env.VITE_API_URL;
 
 export function getProductImage(product) {
+  if (product?.image) {
+    return product.image.startsWith("http")
+      ? product.image
+      : `${API}${product.image}`;
+  }
+
   const img = product?.images?.[0]?.image;
-  if (!img) return null ;
-  return img.startsWith("http") ? img : `${API}${img}`;
+
+  if (!img) return "/no-image.png";
+
+  return img.startsWith("http")
+    ? img
+    : `${API}${img}`;
 }
 
 export function getAllImages(product) {

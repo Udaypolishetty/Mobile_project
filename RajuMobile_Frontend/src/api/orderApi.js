@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const BASE = "http://127.0.0.1:8000/api/orders";
+const BASE = `${import.meta.env.VITE_API_URL}/api/orders`;
 
+
+console.log("API URL:", import.meta.env.VITE_API_URL);
+console.log("ORDER URL:", `${BASE}/create/`);
 export const createOrder = (data) =>
   axios.post(`${BASE}/create/`, data).then((r) => r.data);
 
@@ -19,7 +22,7 @@ export const getMyOrders = async () => {
   const token = localStorage.getItem("access_token");
 
   const response = await fetch(
-    "http://127.0.0.1:8000/api/orders/my-orders/",
+    `${BASE}/my-orders/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -39,7 +42,7 @@ export const getOrder = async (id) => {
   const token = localStorage.getItem("access_token");
 
   const response = await fetch(
-    `http://127.0.0.1:8000/api/orders/${id}/`,
+    `${BASE}/${id}/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
