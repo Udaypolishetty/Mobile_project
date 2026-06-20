@@ -173,7 +173,7 @@ const orderPayload = {
 
 try {
   const response = await fetch(
-    "http://127.0.0.1:8000/api/orders/create/",
+    "VITE_API_URL/api/orders/create/",
     {
       method: "POST",
       headers: {
@@ -248,7 +248,7 @@ const handlePlaceOrder = async () => {
   try {
     setPlacing(true);
 
-    const stockRes = await fetch("http://127.0.0.1:8000/api/products/validate-stock/", {
+    const stockRes = await fetch("VITE_API_URL/api/products/validate-stock/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -289,7 +289,7 @@ const handlePlaceOrder = async () => {
       shipping_cost: shipping,
     };
 
-    const orderRes = await fetch("http://127.0.0.1:8000/api/orders/create/", {
+    const orderRes = await fetch("VITE_API_URL/api/orders/create/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

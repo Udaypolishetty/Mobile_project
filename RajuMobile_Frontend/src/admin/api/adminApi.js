@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE        = "http://127.0.0.1:8000/api/admin";
-const PRODUCTS    = "http://127.0.0.1:8000/api/products";
+const BASE        = "VITE_API_URL/api/admin";
+const PRODUCTS    = "VITE_API_URL/api/products";
 
 // ── Auth header ───────────────────────────────────────────────────
 const auth = () => ({

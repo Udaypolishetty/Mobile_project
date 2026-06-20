@@ -16,7 +16,7 @@ import AnimatedSection from "../AnimatedSection";
 import OurService from "../HomeFiles/OurService";
 import { getAllImages } from "../../utils/imageHelper";
 
-const API = "http://127.0.0.1:8000";
+const API = "VITE_API_URL";
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function StarRow({ rating, size = "text-sm" }) {

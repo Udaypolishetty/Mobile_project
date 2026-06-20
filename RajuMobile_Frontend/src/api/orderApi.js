@@ -39,7 +39,7 @@ export const getOrder = async (id) => {
   const token = localStorage.getItem("access_token");
 
   const response = await fetch(
-    `http://127.0.0.1:8000/api/orders/${id}/`,
+    `VITE_API_URL/api/orders/${id}/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

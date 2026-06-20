@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "VITE_API_URL";
 
 export function getProductImage(product) {
   if (product?.image) {
