@@ -9,7 +9,7 @@ export function getProductImage(product) {
 
   const img = product?.images?.[0]?.image;
 
-  if (!img) return "https://via.placeholder.com/300x300?text=No+Image";
+  if (!img) return "/no-image.png";
 
   return img.startsWith("http")
     ? img
