@@ -421,9 +421,8 @@ export default function AccountPage() {
                     </div>
 
                     {/* Items */}
-                    {order.items.map((item) => {
-                    console.log("ORDER ITEM:", item)
-                    console.log("ORDER ITEM IMAGE:", item.image)
+                    {order.items.map((item) => (
+                   
                       <div key={item.id} className="flex gap-3 py-2 border-t border-gray-100">
                         <img
                           src={item.image || getProductImage(item)}
@@ -440,7 +439,7 @@ export default function AccountPage() {
                           <p className="font-bold text-cyan-600">₹{item.price}</p>
                         </div>
                       </div>
-                  })}
+                  ))}
 
                     {/* Total */}
                     <div className="border-t border-gray-100 pt-3 mt-3 flex justify-between">
