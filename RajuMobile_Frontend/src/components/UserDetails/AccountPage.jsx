@@ -139,6 +139,7 @@ export default function AccountPage() {
     })();
     return () => { active = false; };
   }, []);
+  console.log("Orders:", formatted);
 
   const openEdit = () => {
     setForm({
