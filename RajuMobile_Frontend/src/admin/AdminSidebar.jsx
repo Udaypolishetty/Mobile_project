@@ -102,25 +102,25 @@ const [loading, setLoading] = useState(false);
 
 {
   isLoggingOut && (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white">
-      <div className="text-center">
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
+      <div className="bg-[#07132b] rounded-3xl p-10 text-center shadow-2xl border border-cyan-500/20 min-w-[450px]"">
 
         <img
           src="/mobile_logos.png"
           alt="Raju Mobile"
-          className="w-28 h-28 mx-auto mb-4"
+          className="w-28 h-28 mx-auto mb-6 rounded-3xl bg-white p-3"
         />
 
-        <h1 className="text-3xl font-bold text-blue-700">
+        <h1 className="text-5xl font-black text-white">
           Raju Mobile
         </h1>
 
-        <p className="text-gray-600 mt-2">
-          Admin Logout...
-        </p>
+       <p className="text-cyan-400 text-xl mt-3">
+  Signing Out...
+</p>
 
         <div className="mt-6 flex justify-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-16 h-16 border-4 border-white/20 border-t-cyan-400 rounded-full animate-spin"></div>
         </div>
 
       </div>
