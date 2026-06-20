@@ -139,7 +139,7 @@ export default function AccountPage() {
     })();
     return () => { active = false; };
   }, []);
-  console.log("Orders:", formatted);
+  console.log("product image", item.product_image);
 
   const openEdit = () => {
     setForm({
