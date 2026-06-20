@@ -422,8 +422,8 @@ export default function AccountPage() {
 
                     {/* Items */}
                     {order.items.map((item) => (
-                    console.log("ORDER ITEM:", item);
-                    console.log("ORDER ITEM IMAGE:", item.image);
+                    {console.log("ORDER ITEM:", item)}
+                    {console.log("ORDER ITEM IMAGE:", item.image)}
                       <div key={item.id} className="flex gap-3 py-2 border-t border-gray-100">
                         <img
                           src={item.image || getProductImage(item)}
