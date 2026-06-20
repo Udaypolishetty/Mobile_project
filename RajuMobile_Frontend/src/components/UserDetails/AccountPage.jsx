@@ -130,7 +130,7 @@ export default function AccountPage() {
             image: item.product_image,
           })),
         })
-                                   console.log("product image", item.product_image););
+                                   console.log("product image", item.product_image));
         if (active) setOrders(formatted);
       } catch (err) {
         console.error("Failed to load orders:", err);
