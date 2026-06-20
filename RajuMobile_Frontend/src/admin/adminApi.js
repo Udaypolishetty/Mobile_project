@@ -16,7 +16,7 @@ export const getCustomers = () =>
 
 export const createProduct = (data) =>
     axios.post(
-        "VITE_API_URL/api/admin/products/create/",
+        `${import.meta.env.VITE_API_URL}/api/admin/products/create/`,
         data
     );
 
@@ -39,7 +39,7 @@ export const addProduct = (data, imageFiles = []) => {
     });
 
     return axios.post(
-        "VITE_API_URL/api/products/add/",
+        `${import.meta.env.VITE_API_URL}/api/products/add/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
     ).then((r) => r.data);
@@ -64,7 +64,7 @@ export const updateProduct = (id, data, imageFiles = []) => {
     });
 
     return axios.put(
-        `VITE_API_URL/api/products/update/${id}/`,
+        `${import.meta.env.VITE_API_URL}/api/products/update/${id}/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
     ).then((r) => r.data);
@@ -72,7 +72,7 @@ export const updateProduct = (id, data, imageFiles = []) => {
 
 export const deleteProduct = (id) =>
     axios.delete(
-        `VITE_API_URL/api/products/delete/${id}/`
+        `${import.meta.env.VITE_API_URL}/api/products/delete/${id}/`
     );
 
 
@@ -85,7 +85,7 @@ export const updateStock = async (id, stock) => {
     );
 
     return axios.put(
-        `VITE_API_URL/api/products/update/${id}/`,
+        `${import.meta.env.VITE_API_URL}/api/products/update/${id}/`,
         {
             ...product,
             stock,
