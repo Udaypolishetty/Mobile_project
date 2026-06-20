@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = "VITE_API_URL/api/auth";
+const BASE = `${import.meta.env.VITE_API_URL}/api/auth`;
 
 // ── Attach token to every request if present ──────────────────
 axios.interceptors.request.use((config) => {
