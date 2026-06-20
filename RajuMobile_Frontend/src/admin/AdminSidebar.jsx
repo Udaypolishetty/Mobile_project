@@ -12,9 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logoutUser } from "../api/authApi";
 
-export default function AdminSidebar({ onClose }) {
+export default function AdminSidebar({ onClose, isLoggingOut,
+  setIsLoggingOut,}) {
 
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+ 
   const navigate = useNavigate();
 const [loading, setLoading] = useState(false);
 
@@ -100,33 +101,7 @@ const [loading, setLoading] = useState(false);
         ))}
       </nav>
 
-{
-  isLoggingOut && (
-    <div className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/60 backdrop-blur-md">
-      <div className="relative z-[9999999] bg-[#07132b] rounded-3xl p-10 text-center shadow-2xl border border-cyan-500/20 min-w-[450px]">
 
-        <img
-          src="/mobile_logos.png"
-          alt="Raju Mobile"
-          className="w-28 h-28 mx-auto mb-6 rounded-3xl bg-white p-3"
-        />
-
-        <h1 className="text-5xl font-black text-white">
-          Raju Mobile
-        </h1>
-
-       <p className="text-cyan-400 text-xl mt-3">
-  Signing Out...
-</p>
-
-        <div className="mt-6 flex justify-center">
-          <div className="w-16 h-16 border-4 border-white/20 border-t-cyan-400 rounded-full animate-spin"></div>
-        </div>
-
-      </div>
-    </div>
-  )
-}
       <div className="absolute bottom-5 left-0 w-full px-4">
         <button
   onClick={handleLogout}
