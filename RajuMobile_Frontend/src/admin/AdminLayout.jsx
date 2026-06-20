@@ -8,6 +8,7 @@ import { FaBars } from "react-icons/fa";
 
 export default function AdminLayout({ children }) {
 const [sidebarOpen, setSidebarOpen] = useState(false);
+const [isLoggingOut, setIsLoggingOut] = useState(false);
     const { user, loadingUser } = useAuth();
 
     if (loadingUser) {
@@ -37,7 +38,10 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 
     {/* Desktop Sidebar */}
     <div className="hidden lg:block">
-      <AdminSidebar />
+      <AdminSidebar 
+           isLoggingOut={isLoggingOut}
+           setIsLoggingOut={setIsLoggingOut}
+          />
     </div>
 
     {/* Mobile Sidebar */}
@@ -49,7 +53,9 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
         />
 
         <div className="fixed left-0 top-0 h-full z-50">
-          <AdminSidebar onClose={() => setSidebarOpen(false)} />
+          <AdminSidebar onClose={() => setSidebarOpen(false)}
+  isLoggingOut={isLoggingOut}
+  setIsLoggingOut={setIsLoggingOut} />
         </div>
       </>
     )}
