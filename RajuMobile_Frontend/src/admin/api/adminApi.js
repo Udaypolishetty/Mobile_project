@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE        = "VITE_API_URL/api/admin";
-const PRODUCTS    = "VITE_API_URL/api/products";
+const BASE        = `${import.meta.env.VITE_API_URL}/api/admin`;
+const PRODUCTS    = `${import.meta.env.VITE_API_URL}/api/products`;
 
 // ── Auth header ───────────────────────────────────────────────────
 const auth = () => ({
