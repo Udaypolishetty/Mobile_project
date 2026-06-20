@@ -37,6 +37,7 @@ export default function OrderDetailsPage() {
   useEffect(() => {
     getOrder(id)
       .then((data) => {
+        console.log("ORDER DATA:", data);
         setOrder(data);
         setLoading(false);
       })

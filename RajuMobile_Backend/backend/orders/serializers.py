@@ -34,10 +34,14 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(
-        many=True,
-        read_only=True
-    )
+    items = serializers.SerializerMethodField()
+
+    def get_items(self, obj):
+        return OrderItemSerializer(
+            obj.items.all(),
+            many=True,
+            context=self.context
+        ).data
 
     class Meta:
         model = Order
