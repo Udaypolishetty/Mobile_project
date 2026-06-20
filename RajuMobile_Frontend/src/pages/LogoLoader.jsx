@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 // Replace this with your actual image path or asset setup from Solution 1/2
-import LogoImage from '/logoloader.png';
+import LogoImage from '/logoloder.png';
 
 const LogoLoader = () => {
   // Ultra-smooth physical transitions for a high-end application feel
