@@ -10,16 +10,16 @@ export default function WishlistPage() {
     const { user, setShowAuthModal } = useAuth();
     const navigate = useNavigate();
 
-    if (!user) return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center px-4">
-                <FaHeart className="text-6xl text-gray-200 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-gray-700 mb-2">Sign in to view wishlist</h2>
-                <p className="text-gray-400 text-sm mb-6">Save items you love and access them anytime</p>
-                <button onClick={() => setShowAuthModal(true)} className="bg-black hover:bg-cyan-600 text-white font-bold px-6 py-3 rounded-xl transition">Sign In / Register</button>
-            </div>
-        </div>
-    );
+    // if (!user) return (
+    //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    //         <div className="text-center px-4">
+    //             <FaHeart className="text-6xl text-gray-200 mx-auto mb-4" />
+    //             <h2 className="text-xl font-bold text-gray-700 mb-2">Sign in to view wishlist</h2>
+    //             <p className="text-gray-400 text-sm mb-6">Save items you love and access them anytime</p>
+    //             <button onClick={() => setShowAuthModal(true)} className="bg-black hover:bg-cyan-600 text-white font-bold px-6 py-3 rounded-xl transition">Sign In / Register</button>
+    //         </div>
+    //     </div>
+    // );
 
     if (wishlist.length === 0) return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
