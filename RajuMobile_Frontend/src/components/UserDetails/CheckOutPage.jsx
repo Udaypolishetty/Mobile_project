@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getProductImage } from "../../utils/imageHelper";
 import { createOrder } from "../../api/orderApi";
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 const SHOP_WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER;
 
 export default function CheckoutPage() {
@@ -173,7 +173,7 @@ const orderPayload = {
 
 try {
   const response = await fetch(
-    "VITE_API_URL/api/orders/create/",
+    `${API_URL}/api/orders/create/`,
     {
       method: "POST",
       headers: {
@@ -248,7 +248,7 @@ const handlePlaceOrder = async () => {
   try {
     setPlacing(true);
 
-    const stockRes = await fetch("VITE_API_URL/api/products/validate-stock/", {
+    const stockRes = await fetch(`${API_URL}/api/products/validate-stock/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
