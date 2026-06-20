@@ -6,7 +6,7 @@ import ProductCard from "./ProductCard";
 import AnimatedSection from "../AnimatedSection";
 import OurService from "../HomeFiles/OurService";
 
-const API = `${import.meta.env.VITE_API_URL}`;
+const API = import.meta.env.VITE_API_URL;
 
 const SORT_OPTIONS = [
   { label: "Relevance",          value: "relevance" },
