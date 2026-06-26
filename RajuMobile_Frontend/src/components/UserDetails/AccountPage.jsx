@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit,
   FaSignOutAlt, FaShoppingBag, FaHeart, FaHeadset,
-  FaCheckCircle, FaTimes, FaSave, FaBoxOpen, FaCalendarAlt,
+  FaCheckCircle, FaTimes, FaSave, FaBoxOpen, FaCalendarAlt,FaStar,
 } from "react-icons/fa";
 import { MdVerified, MdLocationCity } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
@@ -99,13 +99,15 @@ export default function AccountPage() {
 
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "orders" | "settings"
   const [editing, setEditing] = useState(false);
+  const [ratingShop, setRatingShop] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [trackingOrderId, setTrackingOrderId] = useState(null);
-
+const [rating, setRating] = useState(0);
+const [review, setReview] = useState("");
   const [form, setForm] = useState({
     name: "", phone: "", address: "", pincode: "", city: "", state: "",
   });
@@ -142,6 +144,9 @@ export default function AccountPage() {
  
 
   const openEdit = () => {
+    setRatingShop(false);
+    setRating(0);
+    setReview("");
     setForm({
       name: user?.name || "",
       phone: user?.phone || "",
@@ -257,12 +262,34 @@ export default function AccountPage() {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white text-2xl font-black shadow-lg border-4 border-white">
                   {initials}
                 </div>
-                <button
+                {/* <button
                   onClick={openEdit}
                   className="flex items-center gap-1.5 bg-black hover:bg-cyan-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
                 >
                   <FaEdit className="text-[10px]" /> Edit Profile
-                </button>
+                </button> */}
+                <div className="flex gap-2">
+    <button
+      onClick={openEdit}
+      className="flex items-center gap-2 bg-black hover:bg-cyan-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
+    >
+      <FaEdit className="text-[10px]" />
+      Edit Profile
+    </button>
+
+    <button
+      onClick={() => {
+    setEditing(false);
+    setRatingShop(true);
+        setRating(0);
+    setReview("");
+}}
+      className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm"
+    >
+      <FaStar className="text-[10px]" />
+      Rate Shop
+    </button>
+  </div>
               </div>
 
               <div>
@@ -315,7 +342,7 @@ export default function AccountPage() {
         )}
 
         {/* ════════════ TAB: PROFILE ════════════ */}
-        {activeTab === "profile" && !editing && (
+        {activeTab === "profile" && !editing  && !ratingShop && (
           <AnimatedSection direction="up" delay={100}>
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-4">
               <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2 text-base">
@@ -344,7 +371,7 @@ export default function AccountPage() {
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-bold text-gray-800 text-base">Edit Profile</h2>
-                <button onClick={() => setEditing(false)} className="text-gray-400 hover:text-gray-700 transition">
+                <button onClick={() => {setEditing(false);setRatingShop(false);}} className="text-gray-400 hover:text-gray-700 transition">
                   <FaTimes />
                 </button>
               </div>
@@ -365,7 +392,7 @@ export default function AccountPage() {
 
               <div className="flex gap-3 mt-4">
                 <button
-                  onClick={() => setEditing(false)}
+                  onClick={() =>{ setEditing(false);setRatingShop(false);}}
                   className="flex-1 border-2 border-gray-100 hover:border-gray-200 text-gray-600 font-semibold py-3 rounded-2xl transition text-sm"
                 >
                   Cancel
@@ -383,6 +410,95 @@ export default function AccountPage() {
             </div>
           </AnimatedSection>
         )}
+        {/* ── Shop Rating Form ─────────────────────────────── */}
+{activeTab === "profile" && ratingShop && (
+  <AnimatedSection direction="up">
+    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="font-bold text-gray-800 text-base">
+          Rate Raju Mobile Shop
+        </h2>
+
+        <button
+          onClick={() => {
+            setRatingShop(false);
+          setRating(0);
+    setReview("");}}
+          className="text-gray-400 hover:text-gray-700"
+        >
+          <FaTimes />
+        </button>
+      </div>
+
+      <div className="text-center mb-6">
+    <h3 className="text-lg font-bold text-gray-800">
+        How was your experience?
+    </h3>
+
+    <p className="text-gray-500 text-sm mt-2">
+        Your feedback helps us improve our service.
+    </p>
+</div>
+
+      <div className="flex justify-center gap-3 mb-6">
+        {[1,2,3,4,5].map((star)=>(
+         <FaStar
+  key={star}
+  size={42}
+  onClick={() => setRating(star)}
+  className={`cursor-pointer transition-all duration-200 hover:scale-125 ${
+    rating >= star
+      ? "text-yellow-400"
+      : "text-gray-300 hover:text-yellow-300"
+  }`}
+/>
+    
+        ))}
+      </div>
+    <div className="text-center mb-5">
+    {rating > 0 && (
+        <p className="text-sm font-semibold text-gray-700">
+            You selected {rating} Star{rating > 1 ? "s" : ""}
+        </p>
+    )}
+</div>
+
+      <textarea
+        rows={6}
+        value={review}
+        onChange={(e)=>setReview(e.target.value)}
+        placeholder="Tell us what you liked, how our service was, suggestions..."
+        className="w-full border border-gray-200 rounded-xl p-3 outline-none focus:border-cyan-500"
+      />
+
+      <div className="flex gap-3 mt-5">
+
+        <button
+          onClick={() => {setRatingShop(false);
+          setRating(0);
+    setReview("");}}
+          className="flex-1 border border-gray-300 rounded-xl py-3 font-semibold"
+        >
+          Cancel
+        </button>
+
+       <button
+    disabled={rating === 0}
+    className={`flex-1 rounded-xl py-3 font-semibold transition ${
+        rating === 0
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-black hover:bg-cyan-600 text-white"
+    }`}
+>
+    Submit Review
+</button>
+
+      </div>
+
+    </div>
+  </AnimatedSection>
+)}
 
         {/* ════════════ TAB: ORDERS ════════════ */}
         {activeTab === "orders" && (
