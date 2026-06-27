@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight, FaChevronDown } from "react-icons/fa";
 import ProductCard from "../Products/ProductCard";
@@ -11,6 +11,7 @@ import deliverytruck from "/deliverytruck.png";
 import star from "/star.png"
 import customerservice from "/customerservice.png"
 import OurService from "./OurService";
+import { getReviews } from "../../api/reviewApi";
 
 const categories = [
   { label: "Mobiles", emoji: "📱", color: "from-blue-600 to-cyan-500" },
@@ -21,23 +22,23 @@ const categories = [
   { label: "Power Banks", emoji: "🔋", color: "from-red-600 to-pink-600" },
   { label: "Accessories", emoji: "🎮", color: "from-indigo-600 to-blue-500" },
 ];
-const testimonials = [
-  {
-    name: "Suresh Kumar, Karimnagar",
-    text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!",
-    rating: 5
-  },
-  {
-    name: "Anjali Rao, Karimnagar",
-    text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.",
-    rating: 5
-  },
-  {
-    name: "Mohammad Ali, Karimnagar",
-    text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.",
-    rating: 5
-  },
-];
+// const testimonials = [
+//   {
+//     name: "Suresh Kumar, Karimnagar",
+//     text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!",
+//     rating: 5
+//   },
+//   {
+//     name: "Anjali Rao, Karimnagar",
+//     text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.",
+//     rating: 5
+//   },
+//   {
+//     name: "Mohammad Ali, Karimnagar",
+//     text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.",
+//     rating: 5
+//   },
+// ];
 
 // const whyUs = [
 //   {
@@ -126,7 +127,21 @@ function ProductSection({ title, filterKey, emoji = "" }) {
 
 function HomePage() {
   const navigate = useNavigate();
+const [reviews, setReviews] = useState([]);
 
+  useEffect(() => {
+  const fetchReviews = async () => {
+    try {
+      const data = await getReviews();
+      setReviews(data);
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+    }
+  };
+
+  fetchReviews();
+}, []);
+  
   return (
     <div className="min-h-screen bg-[#f5f0eb]">
 
@@ -201,7 +216,7 @@ function HomePage() {
 
 
       {/* ── TESTIMONIALS ── */}
-      {/* <section className="bg-[#f5f0eb] py-16">
+       <section className="bg-[#f5f0eb] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection direction="up">
             <div className="mb-10">
@@ -220,8 +235,8 @@ function HomePage() {
           </AnimatedSection>
 
           <div className="grid gap-5 md:grid-cols-3">
-            {testimonials.map((t, i) => (
-              <AnimatedSection key={t.name} direction="up" delay={i * 100}>
+            {reviews.map((t, i) => (
+              <AnimatedSection key={t.id} direction="up" delay={i * 100}>
                 <div className="h-full rounded-2xl bg-[#fafafa] p-6 ring-1 ring-gray-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <div className="flex items-center gap-1 mb-4">
                     {[...Array(t.rating)].map((_, j) => (
@@ -230,11 +245,11 @@ function HomePage() {
                   </div>
 
                   <p className="text-sm leading-7 text-gray-600 mb-5">
-                    “{t.text}”
+                    “{t.review}”
                   </p>
 
                   <div className="border-t border-gray-200 pt-4">
-                    <p className="text-sm font-semibold text-gray-900">{t.name}</p>
+                    <p className="text-sm font-semibold text-gray-900">{t.user_name}</p>
                     <p className="text-xs text-gray-400 mt-1">Verified customer</p>
                   </div>
                 </div>
@@ -242,7 +257,7 @@ function HomePage() {
             ))}
           </div>
         </div>
-      </section> */}
+      </section> 
 
 
 
