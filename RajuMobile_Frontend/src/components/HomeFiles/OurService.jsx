@@ -26,23 +26,23 @@ const whyUs = [
   },
 
 ];
-const testimonials = [
-  { 
-    name: "Suresh Kumar, Karimnagar", 
-    text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!", 
-    rating: 5 
-  },
-  { 
-    name: "Anjali Rao, Karimnagar", 
-    text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.", 
-    rating: 5 
-  },
-  { 
-    name: "Mohammad Ali, siricilla", 
-    text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.", 
-    rating: 5 
-  },
-];
+// const testimonials = [
+//   { 
+//     name: "Suresh Kumar, Karimnagar", 
+//     text: "Got my iPhone screen fixed here. Very professional work and used genuine parts. The display looks brand new now!", 
+//     rating: 5 
+//   },
+//   { 
+//     name: "Anjali Rao, Karimnagar", 
+//     text: "Best place for premium mobile accessories. I bought a heavy-duty back case and tempered glass. Prices are very competitive compared to other shops.", 
+//     rating: 5 
+//   },
+//   { 
+//     name: "Mohammad Ali, siricilla", 
+//     text: "Excellent service! They picked up my phone and delivered it back after repair within the same day. The 12km free pickup service is a lifesaver.", 
+//     rating: 5 
+//   },
+// ];
 
 function OurService() {
   return (
@@ -87,7 +87,7 @@ function OurService() {
 
 
             {/* ── TESTIMONIALS ── */}
-      <section className="bg-[#f5f0eb] py-16">
+      {/* <section className="bg-[#f5f0eb] py-16">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection direction="up">
             <div className="mb-10">
@@ -128,7 +128,7 @@ function OurService() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* SUBSCRIBE */}
       <AnimatedSection direction="up">
