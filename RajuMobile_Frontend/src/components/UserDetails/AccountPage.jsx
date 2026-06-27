@@ -12,6 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 import { updateProfile } from "../../api/authApi";
 import { getMyOrders } from "../../api/orderApi";
 import { getProductImage } from "../../utils/imageHelper";
+import { createReview } from "../../api/reviewApi";
 import AnimatedSection from "../AnimatedSection";
 
 /* ─── tiny reusable info row ─────────────────────────────────── */
@@ -186,6 +187,29 @@ const [review, setReview] = useState("");
     setTrackingOrderId(orderId);
     setTimeout(() => navigate(`/order/${orderId}`), 300);
   };
+  const handleSubmitReview = async () => {
+  try {
+    const token = localStorage.getItem("access_token");
+
+    await createReview(
+      {
+        rating: rating,
+        review: review,
+      },
+      token
+    );
+
+    alert("Review submitted successfully!");
+
+    setRating(0);
+    setReview("");
+    setRatingShop(false);
+
+  } catch (error) {
+    console.error(error);
+    alert("Failed to submit review.");
+  }
+};
 
   /* ── Not signed in ─────────────────────────────────────────── */
   if (!user) {
@@ -484,6 +508,7 @@ const [review, setReview] = useState("");
         </button>
 
        <button
+         onClick={handleSubmitReview}
     disabled={rating === 0}
     className={`flex-1 rounded-xl py-3 font-semibold transition ${
         rating === 0
