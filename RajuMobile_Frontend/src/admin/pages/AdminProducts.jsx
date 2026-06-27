@@ -1,10 +1,11 @@
 
 
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import { getProducts, deleteProduct, updateStock } from "../adminApi";
 import ProductModal from "../ProductModal";
 import { FaEdit, FaTrash, FaSearch, FaPlus, FaBoxOpen, FaSort, FaTimes } from "react-icons/fa";
-import { MdInventory, MdCloudUpload } from "react-icons/md";
+import { MdInventory, MdCloudUpload, MdOutlinePhoto } from "react-icons/md";
 
 const API = `${import.meta.env.VITE_API_URL}`;
 
